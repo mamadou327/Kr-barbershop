@@ -20,10 +20,7 @@ writeFileSync(join(here, 'render.html'), `<!doctype html>\n<html lang="en">\n<he
 
 const font = (pkg, file) => readFileSync(join(dirname(req.resolve(`${pkg}/package.json`)), 'files', file)).toString('base64');
 const fonts = `
-@font-face{font-family:"Bricolage Grotesque Variable";font-style:normal;font-display:swap;font-weight:200 800;src:url(data:font/woff2;base64,${font('@fontsource-variable/bricolage-grotesque', 'bricolage-grotesque-latin-wght-normal.woff2')}) format("woff2-variations")}
-@font-face{font-family:"Instrument Sans";font-style:normal;font-display:swap;font-weight:400;src:url(data:font/woff2;base64,${font('@fontsource/instrument-sans', 'instrument-sans-latin-400-normal.woff2')}) format("woff2")}
-@font-face{font-family:"Instrument Sans";font-style:normal;font-display:swap;font-weight:500;src:url(data:font/woff2;base64,${font('@fontsource/instrument-sans', 'instrument-sans-latin-500-normal.woff2')}) format("woff2")}
-@font-face{font-family:"Instrument Sans";font-style:normal;font-display:swap;font-weight:600;src:url(data:font/woff2;base64,${font('@fontsource/instrument-sans', 'instrument-sans-latin-600-normal.woff2')}) format("woff2")}`;
+@font-face{font-family:"Archivo";font-style:normal;font-display:swap;font-weight:100 900;font-stretch:62% 125%;src:url(data:font/woff2;base64,${font('@fontsource-variable/archivo', 'archivo-latin-standard-normal.woff2')}) format("woff2-variations")}`;
 
 const body = readFileSync(join(here, 'src/template.html'), 'utf8')
   .replace('/*FONTS*/', () => fonts)

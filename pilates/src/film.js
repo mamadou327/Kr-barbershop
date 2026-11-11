@@ -17,7 +17,7 @@ export function createFilm(canvas, { count, onProgress, onReady }) {
       while (active < 6 && next < order.length) {
         const i = order[next++]; active++;
         const im = new Image(); im.decoding = 'async';
-        im.onload = () => { done[i] = 1; s.n++; active--; if (set === s) { onProgress && onProgress(s.n / count); if (i === 0) { onReady && onReady(); } last = -1; } pump(); };
+        im.onload = () => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()).then(() => { done[i] = 1; s.n++; active--; if (set === s) { onProgress && onProgress(s.n / count); if (i === 0) { onReady && onReady(); } last = -1; } pump(); });
         im.onerror = () => { active--; pump(); };
         im.src = `frames/${kind}/${String(i).padStart(3, '0')}.webp`;
         imgs[i] = im;
