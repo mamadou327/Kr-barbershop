@@ -9,11 +9,14 @@ const here = dirname(fileURLToPath(import.meta.url));
 const req = createRequire(join(process.env.NODE_PATH || here, 'x.js'));
 const esbuild = req('esbuild');
 
-const out = await esbuild.build({
-  entryPoints: [join(here, 'src/main.js')], bundle: true, minify: true, format: 'iife', write: false,
+const bundle = async (entry) => (await esbuild.build({
+  entryPoints: [join(here, entry)], bundle: true, minify: true, format: 'iife', write: false,
   target: ['es2020', 'safari15'], nodePaths: [process.env.NODE_PATH || ''], legalComments: 'none',
-});
-const js = out.outputFiles[0].text.replace(/<\/script/gi, '<\\/script');
+})).outputFiles[0].text.replace(/<\/script/gi, '<\\/script');
+const js = await bundle('src/main.js');
+// render.html: the 3D studio used to render the camera move that Higgsfield turns photoreal
+const renderPage = readFileSync(join(here, 'src/render.html'), 'utf8').replace('<!--APP-->', `<script>${await bundle('src/render-entry.js')}</script>`);
+writeFileSync(join(here, 'render.html'), `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n${renderPage}\n</html>\n`);
 
 const font = (pkg, file) => readFileSync(join(dirname(req.resolve(`${pkg}/package.json`)), 'files', file)).toString('base64');
 const fonts = `

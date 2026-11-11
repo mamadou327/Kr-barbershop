@@ -96,7 +96,14 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .rail li.on { opacity: 1; color: var(--ink); }
 .rail li.on::after { background: currentColor; }
 @media (max-width: 720px) { .rail { top: calc(76px + env(safe-area-inset-top, 0px)); transform: none; gap: 8px; } .rail span { display: none; } }
-#yours-tag { position: fixed; left: 0; top: 0; z-index: 2; pointer-events: none; opacity: 0; }
+#yours-tag { position: fixed; left: var(--tag-x, 47%); top: var(--tag-y, 37%); z-index: 2; pointer-events: none; opacity: 0; }
+@media (max-aspect-ratio: 9/10) { #yours-tag { left: var(--tag-xp, 43%); top: var(--tag-yp, 38%); } }
+/* the film is always the daylit room, so the hero keeps dark ink in both themes */
+.chap.hero, .chap.hero p { color: #241d17; }
+.chap.hero::before { content: ""; position: absolute; inset: -70px -90px; z-index: -1; background: radial-gradient(closest-side, rgba(242, 235, 225, .78), rgba(242, 235, 225, 0)); pointer-events: none; }
+.chap.hero .eyebrow, .chap.hero .cue { color: #4f4337; }
+.chap.hero .cue i { background: #241d17; }
+#stage::after { content: ""; position: absolute; inset: 0 0 auto; height: 160px; background: linear-gradient(rgba(235, 226, 213, .55), rgba(235, 226, 213, 0)); pointer-events: none; }
 #yours-tag b { position: absolute; left: 0; bottom: 14px; transform: translateX(-50%); white-space: nowrap; padding: 8px 14px; border-radius: 999px;
   background: var(--ink); color: var(--bg); font: 600 .85rem/1 var(--body); }
 #yours-tag b::after { content: ""; position: absolute; left: 50%; bottom: -14px; width: 1px; height: 14px; background: var(--ink); }
@@ -168,6 +175,7 @@ footer { position: relative; z-index: 3; background: var(--bg); border-top: 1px 
 footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; }
 .big { font: 700 clamp(5rem, 22vw, 17rem)/.8 var(--display); letter-spacing: -.07em; color: var(--ink); opacity: .08; margin-top: 40px; user-select: none; }
 
+.render .top, .render .chaps, .render .rail, .render #yours-tag, .render #loader { display: none !important; }
 @media (prefers-reduced-motion: reduce) { .hero .cue i { animation: none; } #scene { transition: none; } }
 </style>
 
@@ -180,28 +188,28 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: 
 <div id="stage" aria-hidden="true"><canvas id="scene"></canvas><div id="loader"></div></div>
 
 <div class="chaps">
-  <section class="chap hero" data-in="-1" data-out="0.13" aria-label="Introduction">
+  <section class="chap hero" data-in="-1" data-out="0.1" aria-label="Introduction">
     <p class="eyebrow">Reformer Pilates · Bermondsey, SE1</p>
     <h1>Olea</h1>
     <p>Eight reformers in one warm room. Scroll to walk in.</p>
     <span class="cue"><i></i>Scroll</span>
   </section>
-  <section class="chap" data-in="0.15" data-out="0.33">
-    <p class="eyebrow">The room</p>
-    <h2>Small on purpose.</h2>
-    <p>Eight reformers and never more. Your teacher can see every carriage and knows your name by week two.</p>
-  </section>
-  <section class="chap" data-in="0.40" data-out="0.55">
+  <section class="chap" data-in="0.13" data-out="0.30">
     <p class="eyebrow">Arrive</p>
     <h2>Through the arch.</h2>
     <p>Limewash walls, oak floors and warm light. Shoes off at the bench, mats are ready.</p>
   </section>
-  <section class="chap" data-in="0.58" data-out="0.74">
+  <section class="chap" data-in="0.33" data-out="0.50">
+    <p class="eyebrow">The room</p>
+    <h2>Small on purpose.</h2>
+    <p>Eight reformers and never more. Your teacher can see every carriage and knows your name by week two.</p>
+  </section>
+  <section class="chap" data-in="0.55" data-out="0.78">
     <p class="eyebrow">Inside</p>
     <h2>Mirrors on one side. Daylight at the end.</h2>
     <p>Arched mirrors to check your form, two tall windows and an olive tree at the back of the room.</p>
   </section>
-  <section class="chap" data-in="0.80" data-out="1.5">
+  <section class="chap" data-in="0.84" data-out="1.5">
     <p class="eyebrow">Thursday 07:30 · Flow with Amara</p>
     <h2>This one's yours.</h2>
     <p>Reformer 3 is free. Third on the right, facing the mirror.</p>
@@ -209,10 +217,10 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: 
   </section>
 </div>
 <ol class="rail" aria-hidden="true">
-  <li data-at="0"><span>Above</span></li>
-  <li data-at="0.45"><span>Door</span></li>
-  <li data-at="0.58"><span>Room</span></li>
-  <li data-at="0.8"><span>Your spot</span></li>
+  <li data-at="0"><span>Outside</span></li>
+  <li data-at="0.26"><span>Door</span></li>
+  <li data-at="0.4"><span>Room</span></li>
+  <li data-at="0.84"><span>Your spot</span></li>
 </ol>
 <div id="yours-tag" aria-hidden="true"><b>Reformer 3 · yours</b></div>
 

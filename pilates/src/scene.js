@@ -40,8 +40,8 @@ function wallGeo(width, height, holes = []) {
   return new THREE.ExtrudeGeometry(s, { depth: T, bevelEnabled: false, curveSegments: 28 });
 }
 
-export function createStudio(canvas, { isMobile, onProgress, onReady }) {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile, powerPreference: 'high-performance' });
+export function createStudio(canvas, { isMobile, onProgress, onReady, exporting = false }) {
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile, powerPreference: 'high-performance', preserveDrawingBuffer: exporting });
   const DPR = Math.min(window.devicePixelRatio || 1, isMobile ? 1.6 : 2);
   renderer.setPixelRatio(DPR);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -228,7 +228,7 @@ export function createStudio(canvas, { isMobile, onProgress, onReady }) {
     c.beginPath(); c.roundRect(x, y, ww, hh, r); c.stroke(); c.stroke();
   }, false);
   const ring = new THREE.Mesh(new THREE.PlaneGeometry(2.95, 1.35), new THREE.MeshBasicMaterial({ color: 0xffc58c, alphaMap: ringTex, transparent: true, opacity: 0, depthWrite: false, toneMapped: false, blending: THREE.AdditiveBlending }));
-  ring.rotation.x = -Math.PI / 2; ring.position.set(6.8, 0.012, 5.1); world.add(ring);
+  ring.rotation.x = -Math.PI / 2; ring.position.set(6.8, 0.012, 5.1); ring.visible = !exporting; world.add(ring);
 
   // ---------- mirrors with warm LED halo ----------
   const cubeRT = new THREE.WebGLCubeRenderTarget(isMobile ? 256 : 512, { type: THREE.UnsignedByteType });

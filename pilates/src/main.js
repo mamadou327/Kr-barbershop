@@ -1,42 +1,31 @@
 import Lenis from 'lenis';
-import { createStudio } from './scene.js';
+import { createFilm } from './film.js';
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const INSTANT = location.search.includes('shot');
-const isMobile = matchMedia('(pointer: coarse)').matches || Math.min(innerWidth, innerHeight) < 600;
+const FRAMES = 169;
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
-// ---------- 3D film ----------
+// ---------- photoreal film: frames rendered from the 3D studio, made photoreal with Higgsfield ----------
 const stage = $('#stage'), canvas = $('#scene'), film = $('#film');
 const chapters = $$('.chap'), ticks = $$('.rail li'), tag = $('#yours-tag'), loader = $('#loader');
-let studio = null;
-try {
-  studio = createStudio(canvas, {
-    isMobile,
-    onProgress: (f) => loader.style.setProperty('--f', f.toFixed(3)),
-    onReady: () => document.documentElement.classList.add('ready'),
-  });
-} catch (e) {
-  document.documentElement.classList.add('no-webgl');
-}
-
-if (studio) {
-  const readVoid = () => studio.setVoid(getComputedStyle(document.documentElement).getPropertyValue('--void'));
-  readVoid();
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readVoid);
-  new MutationObserver(readVoid).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-
-  const size = () => studio.resize(stage.clientWidth, stage.clientHeight);
-  size();
-  let lastW = innerWidth;
-  addEventListener('resize', () => { if (!isMobile || innerWidth !== lastW) { lastW = innerWidth; size(); } });
-  if (!reduce) addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') { studio.pointer.x = e.clientX / innerWidth - 0.5; studio.pointer.y = e.clientY / innerHeight - 0.5; } });
-}
+const studio = createFilm(canvas, {
+  count: FRAMES,
+  onProgress: (f) => loader.style.setProperty('--f', f.toFixed(3)),
+  onReady: () => document.documentElement.classList.add('ready'),
+});
+const size = () => studio.resize(stage.clientWidth, stage.clientHeight);
+size();
+let lastW = innerWidth, lastH = innerHeight;
+addEventListener('resize', () => {
+  // ignore the phone URL bar showing and hiding; react to rotation and real resizes
+  if (innerWidth !== lastW || Math.abs(innerHeight - lastH) > 160) { lastW = innerWidth; lastH = innerHeight; size(); }
+});
 
 const lenis = reduce ? null : new Lenis({ lerp: 0.085, wheelMultiplier: 0.9 });
-let target = 0, p = 0, visible = true, lastLabel = '';
+let target = 0, p = 0, visible = true;
 
 function progress() {
   const top = film.offsetTop, span = film.offsetHeight - innerHeight;
@@ -61,16 +50,8 @@ function frame(t) {
       c.toggleAttribute('inert', o < 0.5);
     });
     ticks.forEach((li) => li.classList.toggle('on', p >= +li.dataset.at - 0.001));
-    if (studio) {
-      const r = studio.render(p, t, !reduce);
-      const L = r.label;
-      const s = `${L.x.toFixed(0)},${L.y.toFixed(0)},${L.on.toFixed(2)}`;
-      if (s !== lastLabel) {
-        lastLabel = s;
-        tag.style.transform = `translate3d(${L.x.toFixed(1)}px, ${L.y.toFixed(1)}px, 0)`;
-        tag.style.opacity = L.behind ? 0 : L.on.toFixed(2);
-      }
-    }
+    studio.render(p);
+    tag.style.opacity = clamp((p - 0.88) / 0.06, 0, 1).toFixed(2);
   }
   requestAnimationFrame(frame);
 }
