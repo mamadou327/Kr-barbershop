@@ -1,0 +1,304 @@
+<title>Olea Pilates Studio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Olea is a reformer Pilates studio in Bermondsey, SE1. Eight reformers in one warm room. Walk through the studio in 3D and book your reformer.">
+<style>
+/*FONTS*/
+/* Layout: a fixed full-bleed 3D stage scrubbed by scroll, chapter captions over it, then solid content bands that slide over the room. */
+:root {
+  --bg: #ebe2d5;        /* limewash */
+  --surface: #f5efe6;
+  --ink: #241d17;
+  --muted: #6b5d4f;
+  --olive: #45502e;
+  --on-olive: #f3eee4;
+  --clay: #9c5636;
+  --line: rgba(36, 29, 23, .14);
+  --void: #e3d8c8;      /* the space around the 3D model */
+  --scrim: rgba(235, 226, 213, .82);
+  --display: "Bricolage Grotesque Variable", "Helvetica Neue", Arial, sans-serif;
+  --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --gut: max(16px, env(safe-area-inset-left, 0px));
+  --gutR: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #1a1612; --surface: #241f19; --ink: #efe6d9; --muted: #b3a593; --olive: #b9c28f; --on-olive: #1d1a12;
+  --clay: #d98d64; --line: rgba(239, 230, 217, .14); --void: #14110e; --scrim: rgba(20, 17, 14, .78); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #1a1612; --surface: #241f19; --ink: #efe6d9; --muted: #b3a593; --olive: #b9c28f; --on-olive: #1d1a12;
+  --clay: #d98d64; --line: rgba(239, 230, 217, .14); --void: #14110e; --scrim: rgba(20, 17, 14, .78); color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.6 var(--body); }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--clay); outline-offset: 3px; border-radius: 6px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; letter-spacing: -0.035em; line-height: .95; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.eyebrow { font: 600 .74rem/1.2 var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+/* header */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.top { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; right: 0; z-index: 9; display: flex; align-items: center; gap: 24px;
+  padding: 14px var(--gutR) 14px var(--gut); transition: background .3s, box-shadow .3s; }
+.past .top { background: var(--bg); box-shadow: 0 1px 0 var(--line); }
+.logo { font: 700 1.35rem/1 var(--display); letter-spacing: -.04em; text-decoration: none; margin-right: auto; }
+.logo span { font: 500 .7rem/1 var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-left: 8px; vertical-align: 3px; }
+.top nav { display: flex; gap: 22px; font-size: .92rem; }
+.top nav a { text-decoration: none; color: var(--muted); transition: color .2s; }
+.top nav a:hover { color: var(--ink); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 20px; border-radius: 999px;
+  background: var(--olive); color: var(--on-olive); font: 600 .95rem/1 var(--body); text-decoration: none; border: 0; cursor: pointer;
+  transition: transform .2s, filter .2s; }
+.btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line); }
+.btn.ghost:hover { box-shadow: inset 0 0 0 1.5px var(--ink); }
+@media (max-width: 720px) { .top nav { display: none; } .top { gap: 12px; } .top .btn { min-height: 40px; padding: 0 16px; } }
+
+/* 3D stage */
+#stage { position: fixed; inset: 0; height: 100lvh; z-index: 0; background: var(--void); transition: opacity .3s; }
+#stage.gone { visibility: hidden; }
+#scene { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity 1.2s ease; }
+.ready #scene { opacity: 1; }
+#loader { position: absolute; left: var(--gut); right: var(--gutR); bottom: calc(28px + env(safe-area-inset-bottom, 0px)); height: 2px; background: var(--line);
+  transform-origin: left; transition: opacity .6s; }
+#loader::after { content: ""; position: absolute; inset: 0; background: var(--olive); transform: scaleX(var(--f, 0)); transform-origin: left; transition: transform .3s; }
+.ready #loader { opacity: 0; }
+.no-webgl #stage { background: var(--void) url("tex/plaster.jpg") center/600px; }
+
+/* chapters */
+.chaps { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
+#stage.gone ~ .chaps { visibility: hidden; }
+.chap { position: absolute; left: var(--gut); max-width: min(30rem, calc(100vw - 32px)); bottom: calc(14vh + env(safe-area-inset-bottom, 0px));
+  padding: 22px 24px; border-radius: 22px; background: var(--scrim); -webkit-backdrop-filter: blur(14px) saturate(1.1); backdrop-filter: blur(14px) saturate(1.1);
+  display: grid; gap: 12px; pointer-events: auto; will-change: opacity, transform; }
+.chap h2 { font-size: clamp(2rem, 4.6vw, 3.3rem); }
+.chap p { color: var(--muted); font-size: 1.02rem; max-width: 34ch; }
+.chap .row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.chap.hero { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; padding: 0; top: calc(16vh + env(safe-area-inset-top, 0px)); bottom: auto; max-width: min(36rem, calc(100vw - 32px)); }
+.hero h1 { font-size: clamp(5.2rem, 17vw, 12.5rem); letter-spacing: -.06em; line-height: .8; margin-left: -.04em; }
+.hero p { color: var(--ink); font-size: 1.12rem; max-width: 26ch; }
+.hero .cue { display: inline-flex; align-items: center; gap: 10px; font-size: .9rem; color: var(--muted); }
+.hero .cue i { width: 1px; height: 34px; background: var(--ink); opacity: .4; transform-origin: top; animation: cue 2.2s ease-in-out infinite; }
+@keyframes cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+@media (max-width: 720px) {
+  .chap { bottom: calc(22px + env(safe-area-inset-bottom, 0px)); right: var(--gutR); max-width: none; padding: 18px 18px 20px; }
+  .chap.hero { top: calc(84px + env(safe-area-inset-top, 0px)); right: var(--gutR); }
+  .hero p { max-width: 22ch; }
+}
+.rail { position: fixed; right: var(--gutR); top: 50%; transform: translateY(-50%); z-index: 2; list-style: none; margin: 0; padding: 0; display: grid; gap: 14px;
+  font: 600 .7rem/1 var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-align: right; }
+#stage.gone ~ .rail { visibility: hidden; }
+.rail li { display: flex; align-items: center; justify-content: flex-end; gap: 10px; opacity: .5; transition: opacity .3s, color .3s; }
+.rail li::after { content: ""; width: 7px; height: 7px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px currentColor; transition: background .3s; }
+.rail li.on { opacity: 1; color: var(--ink); }
+.rail li.on::after { background: currentColor; }
+@media (max-width: 720px) { .rail { top: calc(76px + env(safe-area-inset-top, 0px)); transform: none; gap: 8px; } .rail span { display: none; } }
+#yours-tag { position: fixed; left: 0; top: 0; z-index: 2; pointer-events: none; opacity: 0; }
+#yours-tag b { position: absolute; left: 0; bottom: 14px; transform: translateX(-50%); white-space: nowrap; padding: 8px 14px; border-radius: 999px;
+  background: var(--ink); color: var(--bg); font: 600 .85rem/1 var(--body); }
+#yours-tag b::after { content: ""; position: absolute; left: 50%; bottom: -14px; width: 1px; height: 14px; background: var(--ink); }
+
+#film { position: relative; height: 720vh; }
+@media (max-width: 720px) { #film { height: 620vh; } }
+
+/* content bands */
+.band { position: relative; z-index: 3; background: var(--bg); padding-block: clamp(72px, 11vw, 140px); }
+.band.alt { background: var(--surface); }
+.wrap { max-width: 72rem; margin: 0 auto; padding-left: var(--gut); padding-right: var(--gutR); }
+.head { display: grid; gap: 16px; margin-bottom: clamp(36px, 6vw, 64px); max-width: 44rem; }
+.head h2 { font-size: clamp(2.6rem, 7vw, 5.4rem); }
+.head p { color: var(--muted); font-size: 1.1rem; max-width: 52ch; }
+
+.classes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--line); }
+.cls { display: grid; gap: 14px; align-content: start; padding: 28px 28px 32px 0; min-width: 0; }
+.cls + .cls { padding-left: 28px; border-left: 1px solid var(--line); }
+.cls h3 { font-size: 2.2rem; }
+.cls .meta { font: 600 .78rem/1.2 var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--clay); }
+.cls p { color: var(--muted); }
+.springs { display: flex; align-items: center; gap: 8px; font-size: .88rem; color: var(--muted); padding-top: 14px; border-top: 1px dashed var(--line); }
+.springs i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.s-red { background: #b4432e; } .s-blue { background: #3c5d8c; } .s-yellow { background: #d8af3a; } .s-green { background: #5b7c48; }
+@media (max-width: 820px) { .classes { grid-template-columns: 1fr; } .cls, .cls + .cls { padding: 26px 0; border-left: 0; border-bottom: 1px solid var(--line); } }
+
+/* booking */
+.book { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(28px, 5vw, 64px); align-items: start; }
+@media (max-width: 860px) { .book { grid-template-columns: minmax(0, 1fr); } }
+.book > * { min-width: 0; }
+#days { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 18px; scrollbar-width: none; }
+#days button { flex: 1 1 0; min-width: 42px; min-height: 44px; border-radius: 12px; border: 0; background: transparent; color: var(--muted);
+  box-shadow: inset 0 0 0 1px var(--line); font: 600 .92rem/1 var(--body); cursor: pointer; }
+#days button[aria-selected="true"] { background: var(--ink); color: var(--bg); box-shadow: none; }
+#sessions { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.sess { width: 100%; display: grid; grid-template-columns: 4.2rem minmax(0, 1fr) auto; align-items: center; gap: 14px; text-align: left; padding: 16px 18px;
+  border-radius: 16px; border: 0; background: var(--bg); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); cursor: pointer; font: inherit; transition: box-shadow .2s; }
+.sess:hover { box-shadow: inset 0 0 0 1px var(--ink); }
+.sess.on { box-shadow: inset 0 0 0 2px var(--olive); }
+.sess .t { font: 600 1.25rem/1 var(--display); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.sess .c { font-weight: 600; display: grid; gap: 2px; }
+.sess small { font-weight: 400; color: var(--muted); font-size: .86rem; }
+.sess .l { font-size: .84rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.room { background: var(--bg); border-radius: 24px; padding: 22px; box-shadow: inset 0 0 0 1px var(--line); display: grid; gap: 16px; }
+.room h3 { font-size: 1.5rem; letter-spacing: -.02em; }
+#plan { position: relative; display: grid; grid-template-columns: 1fr 44px 1fr; gap: 10px 0; padding: 0 22px 0 0; }
+#plan .wall, #plan .door { grid-column: 1 / -1; text-align: center; font: 600 .68rem/1 var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+  padding: 8px 0; border-bottom: 2px solid var(--line); }
+#plan .door { border-bottom: 0; border-top: 2px solid var(--line); }
+#plan .mirrorwall { position: absolute; right: 0; top: 30px; bottom: 30px; width: 14px; border-radius: 7px; background: linear-gradient(var(--clay), var(--clay)) center/2px 100% no-repeat;
+  writing-mode: vertical-rl; font: 600 .62rem/14px var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; justify-content: center; }
+.ref { min-height: 48px; border-radius: 10px; border: 0; background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line);
+  font: 600 1.05rem/1 var(--display); cursor: pointer; transition: background .2s, box-shadow .2s; }
+.ref:hover { box-shadow: inset 0 0 0 1px var(--ink); }
+.ref.taken { background: transparent; color: var(--muted); opacity: .45; cursor: not-allowed; text-decoration: line-through; }
+.ref.mine { background: var(--olive); color: var(--on-olive); box-shadow: none; }
+.aisle { display: block; }
+#pick { font-weight: 600; }
+#confirm { padding: 14px 16px; border-radius: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--olive); font-size: .95rem; }
+#confirm em { color: var(--muted); font-style: normal; display: block; margin-top: 4px; font-size: .84rem; }
+
+/* visit */
+.visit { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 4vw, 48px); }
+.visit div { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.visit dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; font-variant-numeric: tabular-nums; }
+.visit dt { color: var(--muted); } .visit dd { margin: 0; }
+@media (max-width: 820px) { .visit { grid-template-columns: 1fr; } }
+footer { position: relative; z-index: 3; background: var(--bg); border-top: 1px solid var(--line); padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); font-size: .88rem; color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; }
+.big { font: 700 clamp(5rem, 22vw, 17rem)/.8 var(--display); letter-spacing: -.07em; color: var(--ink); opacity: .08; margin-top: 40px; user-select: none; }
+
+@media (prefers-reduced-motion: reduce) { .hero .cue i { animation: none; } #scene { transition: none; } }
+</style>
+
+<header class="top">
+  <a class="logo" href="#top">Olea<span>Pilates</span></a>
+  <nav aria-label="Main"><a href="#classes">Classes</a><a href="#book">Timetable</a><a href="#visit">Visit</a></nav>
+  <a class="btn" href="#book">Book now</a>
+</header>
+
+<div id="stage" aria-hidden="true"><canvas id="scene"></canvas><div id="loader"></div></div>
+
+<div class="chaps">
+  <section class="chap hero" data-in="-1" data-out="0.13" aria-label="Introduction">
+    <p class="eyebrow">Reformer Pilates · Bermondsey, SE1</p>
+    <h1>Olea</h1>
+    <p>Eight reformers in one warm room. Scroll to walk in.</p>
+    <span class="cue"><i></i>Scroll</span>
+  </section>
+  <section class="chap" data-in="0.15" data-out="0.33">
+    <p class="eyebrow">The room</p>
+    <h2>Small on purpose.</h2>
+    <p>Eight reformers and never more. Your teacher can see every carriage and knows your name by week two.</p>
+  </section>
+  <section class="chap" data-in="0.40" data-out="0.55">
+    <p class="eyebrow">Arrive</p>
+    <h2>Through the arch.</h2>
+    <p>Limewash walls, oak floors and warm light. Shoes off at the bench, mats are ready.</p>
+  </section>
+  <section class="chap" data-in="0.58" data-out="0.74">
+    <p class="eyebrow">Inside</p>
+    <h2>Mirrors on one side. Daylight at the end.</h2>
+    <p>Arched mirrors to check your form, two tall windows and an olive tree at the back of the room.</p>
+  </section>
+  <section class="chap" data-in="0.80" data-out="1.5">
+    <p class="eyebrow">Thursday 07:30 · Flow with Amara</p>
+    <h2>This one's yours.</h2>
+    <p>Reformer 3 is free. Third on the right, facing the mirror.</p>
+    <div class="row"><a class="btn" href="#book">Book reformer 3</a><a class="btn ghost" href="#classes">See the classes</a></div>
+  </section>
+</div>
+<ol class="rail" aria-hidden="true">
+  <li data-at="0"><span>Above</span></li>
+  <li data-at="0.45"><span>Door</span></li>
+  <li data-at="0.58"><span>Room</span></li>
+  <li data-at="0.8"><span>Your spot</span></li>
+</ol>
+<div id="yours-tag" aria-hidden="true"><b>Reformer 3 · yours</b></div>
+
+<main id="top">
+  <div id="film"></div>
+
+  <section class="band" id="classes">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Classes</p>
+        <h2>Three classes. Pick your pace.</h2>
+        <p>Every class runs on the reformer with a teacher in the room. New to it? Start with Foundations and we'll show you the springs, the straps and the footbar.</p>
+      </div>
+      <div class="classes">
+        <article class="cls">
+          <span class="meta">50 min · New to reformer</span>
+          <h3>Foundations</h3>
+          <p>Slower and clear. You learn the set-up, breathing and the core moves, so you can join any class after four sessions.</p>
+          <span class="springs"><i class="s-red"></i><i class="s-blue"></i>Typical springs: 1 red, 1 blue</span>
+        </article>
+        <article class="cls">
+          <span class="meta">50 min · All levels</span>
+          <h3>Flow</h3>
+          <p>One move into the next with few breaks. Long lines, steady breath and a good stretch at the end.</p>
+          <span class="springs"><i class="s-red"></i><i class="s-yellow"></i>Typical springs: 1 red, 1 yellow</span>
+        </article>
+        <article class="cls">
+          <span class="meta">45 min · Some experience</span>
+          <h3>Sculpt</h3>
+          <p>Heavier springs, slower reps and more holds. Legs, glutes and arms, with your core working the whole time.</p>
+          <span class="springs"><i class="s-red"></i><i class="s-red"></i><i class="s-blue"></i>Typical springs: 2 red, 1 blue</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" id="book">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Timetable</p>
+        <h2>Choose a class, then your reformer.</h2>
+        <p>The plan matches the room you just walked through. Mirrors are on the right, windows at the back.</p>
+      </div>
+      <form class="book" id="book-form">
+        <div>
+          <div id="days" role="tablist" aria-label="Day"></div>
+          <ul id="sessions" aria-label="Classes"></ul>
+        </div>
+        <div class="room">
+          <h3>Pick your reformer</h3>
+          <div id="plan"></div>
+          <p id="pick" aria-live="polite"></p>
+          <button class="btn" id="hold" type="submit">Hold my reformer</button>
+          <div id="confirm" role="status" hidden></div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="band" id="visit">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Visit</p>
+        <h2>Find us off Bermondsey Street.</h2>
+      </div>
+      <div class="visit">
+        <div>
+          <h3>Studio</h3>
+          <p>Olea Pilates<br>Unit 2, Tanner Yard<br>London SE1</p>
+          <p style="color:var(--muted)">Six minutes from London Bridge station.</p>
+        </div>
+        <div>
+          <h3>Hours</h3>
+          <dl><dt>Mon–Thu</dt><dd>06:45–21:00</dd><dt>Fri</dt><dd>06:45–19:00</dd><dt>Sat–Sun</dt><dd>08:30–13:00</dd></dl>
+        </div>
+        <div>
+          <h3>Bring</h3>
+          <p>Grip socks (or buy a pair here) and water. Showers, towels and lockers are in the studio.</p>
+          <p style="color:var(--muted)">Call <span style="user-select:all;color:var(--ink)">020 7946 0321</span></p>
+        </div>
+      </div>
+      <div class="big" aria-hidden="true">Olea</div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap"><span>© <span id="year">2026</span> Olea Pilates</span><span>Concept site. Olea is a fictional studio.</span></div>
+</footer>
+<!--APP-->
