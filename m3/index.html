@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>M3 Competition Walk-around</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Walk around a blue M3 Competition xDrive in the showroom, tap the details, sit inside, check the numbers and book a test drive.">
+<meta name="theme-color" content="#0b0d10">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=Host+Grotesk:wght@400;500;600&display=swap">
+<style>
+/* Layout: a night showroom. A scroll-scrubbed walk-around of the car fills the screen with tap-to-open detail pins, then the cabin, the numbers, a finance slider and a test-drive booking, each band on a 12-column grid. */
+:root {
+  --ground: #0b0d10;     /* showroom after hours */
+  --panel: #14171c;
+  --ink: #eef1f5;
+  --muted: #9aa3ae;
+  --line: rgba(238, 241, 245, .12);
+  --blue: #1c9be6;       /* the paint */
+  --m1: #5ab4ff; --m2: #2a3fa8; --m3: #e2231a;   /* the three stripes */
+  --disp: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --text: "Host Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --gut: max(clamp(16px, 2.4vw, 40px), env(safe-area-inset-left, 0px));
+  --gutR: max(clamp(16px, 2.4vw, 40px), env(safe-area-inset-right, 0px));
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--ground); -webkit-text-size-adjust: 100%; }
+body { background: var(--ground); color: var(--ink); font: 400 17px/1.55 var(--text); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--m1); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--disp); font-weight: 900; text-transform: uppercase; letter-spacing: -.01em; line-height: .86; text-wrap: balance; }
+.meta { font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.stripes { display: inline-flex; gap: 3px; transform: skewX(-20deg); }
+.stripes i { width: 6px; height: 14px; background: var(--m1); } .stripes i:nth-child(2) { background: var(--m2); } .stripes i:nth-child(3) { background: var(--m3); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 22px; background: var(--ink); color: var(--ground); font-weight: 600; font-size: 15px; text-decoration: none; position: relative; overflow: hidden; }
+.btn::before { content: ""; position: absolute; inset: 0; background: var(--blue); transform: translateX(-101%); transition: transform .5s var(--ease); }
+.btn span { position: relative; }
+.btn:hover::before, .btn:focus-visible::before { transform: none; }
+.btn:hover, .btn:focus-visible { color: #fff; }
+.btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px rgba(238, 241, 245, .35); }
+
+/* header */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 40; background: var(--ground); }
+.top { position: fixed; z-index: 30; top: env(safe-area-inset-top, 0px); left: 0; right: 0; display: flex; align-items: center; gap: 28px; padding: 16px var(--gutR) 16px var(--gut); transition: background .4s; }
+.past .top { background: rgba(11, 13, 16, .94); box-shadow: 0 1px 0 var(--line); }
+.dealer { margin-right: auto; display: flex; align-items: center; gap: 12px; text-decoration: none; font: 700 20px/1 var(--disp); letter-spacing: .04em; text-transform: uppercase; }
+.top nav { display: flex; gap: 22px; font-size: 14px; }
+.top nav a { text-decoration: none; color: var(--muted); position: relative; padding: 4px 0; transition: color .3s; }
+.top nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--blue); transform: scaleX(0); transform-origin: left; transition: transform .45s var(--ease); }
+.top nav a:hover { color: var(--ink); } .top nav a:hover::after { transform: none; }
+@media (max-width: 900px) { .top nav { display: none; } .top .lg { display: none; } .top .btn span { text-transform: capitalize; } .top .btn { min-height: 40px; padding: 0 14px; font-size: 14px; } }
+
+/* walk-around */
+#walk { position: relative; height: 520vh; }
+.stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+#cv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.stage::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(11, 13, 16, .78), rgba(11, 13, 16, 0) 38%, rgba(11, 13, 16, 0) 80%, rgba(11, 13, 16, .7)); }
+.hero { position: absolute; z-index: 3; left: var(--gut); right: var(--gutR); top: calc(84px + env(safe-area-inset-top, 0px)); display: grid; gap: 14px; transition: opacity .5s, transform .6s var(--ease); }
+.hero h1 { font-size: clamp(56px, 8.4vw, 150px); }
+.hero h1 small { display: block; font-size: .32em; letter-spacing: .02em; color: #d5dbe2; margin-top: .2em; }
+.hero h1, .hero .price, .hero .meta { text-shadow: 0 2px 24px rgba(0, 0, 0, .55); }
+.hero .row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+.price { font: 700 clamp(30px, 3.4vw, 46px)/1 var(--disp); letter-spacing: .01em; }
+.hero.away { opacity: 0; transform: translateY(24px); pointer-events: none; }
+.pins { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.pin { position: absolute; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; background: rgba(238, 241, 245, .94); color: var(--ground); font: 600 20px/34px var(--text); text-align: center; pointer-events: auto; box-shadow: 0 6px 18px rgba(0, 0, 0, .35); transform: scale(0); transition: transform .45s cubic-bezier(.3, 1.6, .5, 1); }
+.pin::before { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 1.5px solid rgba(238, 241, 245, .8); animation: ping 2.2s infinite; }
+@keyframes ping { 0% { transform: scale(.7); opacity: 1; } 100% { transform: scale(1.7); opacity: 0; } }
+.pin.on { transform: scale(1); }
+.pin:hover { transform: scale(1.15); }
+.pin span { position: absolute; left: 44px; top: 50%; transform: translateY(-50%); white-space: nowrap; padding: 6px 10px; background: rgba(11, 13, 16, .85); color: var(--ink); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; pointer-events: none; }
+.pin.left span { left: auto; right: 44px; }
+.track { position: absolute; z-index: 3; left: var(--gut); right: var(--gutR); bottom: calc(26px + env(safe-area-inset-bottom, 0px)); display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; }
+.track .bar { height: 2px; background: var(--line); position: relative; }
+.track .fill { position: absolute; inset: 0; transform-origin: left; transform: scaleX(0); background: linear-gradient(90deg, var(--m1), var(--m2) 60%, var(--m3)); }
+.deg { font: 700 18px/1 var(--disp); font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+
+/* details strip */
+.band { position: relative; padding-block: clamp(80px, 12vw, 180px); }
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(14px, 2vw, 28px); padding-left: var(--gut); padding-right: var(--gutR); max-width: 1680px; margin: 0 auto; }
+.grid > * { min-width: 0; }
+.head { grid-column: 1 / span 12; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: inherit; align-items: end; margin-bottom: clamp(36px, 5vw, 72px); }
+.head .meta { grid-column: 1 / span 3; }
+.head h2 { grid-column: 4 / span 9; font-size: clamp(48px, 7.5vw, 128px); }
+@media (max-width: 860px) { .head .meta, .head h2 { grid-column: 1 / -1; } .head h2 { margin-top: 12px; } }
+.strip { grid-column: 1 / -1; display: flex; gap: clamp(12px, 1.6vw, 24px); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 14px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+.strip figure { flex: 0 0 clamp(260px, 30vw, 460px); scroll-snap-align: start; cursor: zoom-in; }
+.strip .ph { overflow: hidden; aspect-ratio: 4 / 3; background: var(--panel); }
+.strip img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .9s var(--ease); }
+.strip figure:hover img { transform: scale(1.06); }
+.strip figcaption { display: grid; gap: 4px; margin-top: 14px; }
+.strip figcaption b { font: 700 24px/1 var(--disp); text-transform: uppercase; letter-spacing: .02em; }
+.strip figcaption span { color: var(--muted); font-size: 15px; }
+
+/* inside */
+#inside { background: var(--panel); }
+.cabin { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: inherit; align-items: start; }
+.cabin .view { grid-column: 1 / span 8; position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #000; }
+.cabin .view img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.04); transition: opacity .7s var(--ease), transform 1.2s var(--ease); }
+.cabin .view img.on { opacity: 1; transform: none; }
+.cabin ol { grid-column: 10 / span 3; list-style: none; display: grid; gap: 4px; }
+.cabin li button { width: 100%; text-align: left; display: grid; gap: 4px; padding: 16px 0 16px 18px; border-left: 2px solid var(--line); transition: border-color .3s, background .3s; }
+.cabin li button b { font: 700 24px/1 var(--disp); text-transform: uppercase; }
+.cabin li button span { color: var(--muted); font-size: 15px; }
+.cabin li button[aria-pressed="true"] { border-color: var(--blue); background: rgba(28, 155, 230, .07); }
+.cabin li button:hover { border-color: var(--ink); }
+@media (max-width: 860px) { .cabin .view, .cabin ol { grid-column: 1 / -1; } .cabin ol { margin-top: 20px; grid-template-columns: 1fr 1fr; } .cabin li button { padding: 12px 0 12px 12px; } }
+
+/* numbers */
+.nums { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+.nums div { padding: 26px 20px 0 0; display: grid; gap: 8px; }
+.nums div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+.nums b { font: 900 clamp(56px, 7vw, 120px)/.85 var(--disp); font-variant-numeric: tabular-nums; }
+.nums b small { font-size: .32em; font-weight: 700; margin-left: 4px; color: var(--muted); }
+.nums span { color: var(--muted); font-size: 15px; max-width: 24ch; }
+.fine { grid-column: 1 / -1; margin-top: 28px; color: var(--muted); font-size: 13px; }
+@media (max-width: 860px) { .nums { grid-template-columns: 1fr 1fr; } .nums div:nth-child(3) { padding-left: 0; border-left: 0; } .nums div { padding-bottom: 26px; } }
+
+/* finance */
+#finance { background: var(--panel); }
+.calc { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: inherit; }
+.ctrls { grid-column: 1 / span 6; display: grid; gap: 34px; }
+.ctrl { display: grid; gap: 12px; }
+.ctrl .lab { display: flex; justify-content: space-between; align-items: baseline; }
+.ctrl .lab b { font: 700 28px/1 var(--disp); font-variant-numeric: tabular-nums; }
+input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 28px; background: transparent; cursor: pointer; }
+input[type=range]::-webkit-slider-runnable-track { height: 2px; background: linear-gradient(90deg, var(--blue) var(--p, 50%), var(--line) var(--p, 50%)); }
+input[type=range]::-moz-range-track { height: 2px; background: var(--line); }
+input[type=range]::-moz-range-progress { height: 2px; background: var(--blue); }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; margin-top: -10px; border-radius: 50%; background: var(--ink); border: 0; transition: transform .2s; }
+input[type=range]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); border: 0; }
+input[type=range]:active::-webkit-slider-thumb { transform: scale(1.2); }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chips button { min-height: 44px; padding: 0 18px; box-shadow: inset 0 0 0 1px var(--line); font-weight: 500; transition: box-shadow .3s, background .3s, color .3s; }
+.chips button:hover { box-shadow: inset 0 0 0 1px var(--ink); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--ground); box-shadow: none; }
+.result { grid-column: 8 / span 5; align-self: start; display: grid; gap: 18px; padding: 30px; background: var(--ground); }
+.result .mo { font: 900 clamp(64px, 7vw, 112px)/.85 var(--disp); font-variant-numeric: tabular-nums; }
+.result .mo small { font-size: .3em; color: var(--muted); font-weight: 700; margin-left: 6px; }
+.result dl { display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; font-size: 15px; font-variant-numeric: tabular-nums; }
+.result dt { color: var(--muted); } .result dd { text-align: right; }
+@media (max-width: 860px) { .ctrls, .result { grid-column: 1 / -1; } .result { margin-top: 36px; } }
+
+/* test drive */
+.drive { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: inherit; align-items: start; }
+.drive figure { grid-column: 1 / span 6; overflow: hidden; aspect-ratio: 4 / 3; }
+.drive figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.drive form { grid-column: 8 / span 5; display: grid; gap: 26px; }
+.drive label { display: grid; gap: 8px; font-size: 14px; color: var(--muted); }
+.drive input[type=text] { min-height: 48px; padding: 0 14px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); font: inherit; }
+.drive input[type=text]:focus { border-color: var(--blue); outline: none; }
+#ok { padding: 18px; border-left: 3px solid var(--blue); background: var(--panel); }
+@media (max-width: 860px) { .drive figure, .drive form { grid-column: 1 / -1; } .drive form { margin-top: 32px; } }
+
+footer { border-top: 1px solid var(--line); padding: 28px var(--gutR) calc(28px + env(safe-area-inset-bottom, 0px)) var(--gut); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; color: var(--muted); font-size: 13px; }
+
+/* lightbox */
+#lb { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 70px var(--gutR) 40px var(--gut); background: rgba(5, 6, 8, .92); opacity: 0; visibility: hidden; transition: opacity .4s, visibility 0s .4s; }
+#lb.on { opacity: 1; visibility: visible; transition: opacity .4s; }
+#lb figure { max-width: min(1100px, 100%); display: grid; gap: 14px; transform: scale(.96); transition: transform .5s var(--ease); }
+#lb.on figure { transform: none; }
+#lb img { width: 100%; max-height: 72vh; object-fit: contain; }
+#lb figcaption b { font: 700 30px/1 var(--disp); text-transform: uppercase; display: block; }
+#lb figcaption span { color: var(--muted); }
+#lbx { position: absolute; top: calc(18px + env(safe-area-inset-top, 0px)); right: var(--gutR); min-height: 44px; padding: 0 16px; box-shadow: inset 0 0 0 1px rgba(238, 241, 245, .35); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="dealer" href="#walk"><span class="stripes" aria-hidden="true"><i></i><i></i><i></i></span>Westway Performance</a>
+  <nav aria-label="Sections"><a href="#walk">Walk-around</a><a href="#details">Details</a><a href="#inside">Inside</a><a href="#numbers">Numbers</a><a href="#finance">Finance</a></nav>
+  <a class="btn" href="#drive"><span><span class="lg">Book a </span>test drive</span></a>
+</header>
+
+<main>
+  <section id="walk" aria-label="Walk around the car">
+    <div class="stage">
+      <canvas id="cv" role="img" aria-label="The blue M3 Competition in the showroom, turning from the front three-quarter view to the rear as you scroll"></canvas>
+      <div class="pins" id="pins"></div>
+      <div class="hero" id="hero">
+        <p class="meta">In stock now. Ready to drive away.</p>
+        <h1>M3 Competition<small>xDrive saloon in blue, carbon pack</small></h1>
+        <div class="row"><span class="price">£96,000</span><a class="btn" href="#finance"><span>See monthly price</span></a><a class="btn ghost" href="#details"><span>Tap the details</span></a></div>
+      </div>
+      <div class="track" aria-hidden="true"><span class="meta">Scroll to walk around</span><div class="bar"><div class="fill" id="fill"></div></div><span class="deg" id="deg">000°</span></div>
+    </div>
+  </section>
+
+  <section class="band" id="details" aria-labelledby="dt-h">
+    <div class="grid">
+      <div class="head"><p class="meta">Details</p><h2 id="dt-h">The bits you look at twice.</h2></div>
+      <div class="strip" id="strip"></div>
+    </div>
+  </section>
+
+  <section class="band" id="inside" aria-labelledby="in-h">
+    <div class="grid">
+      <div class="head"><p class="meta">Inside</p><h2 id="in-h">Sit in it.</h2></div>
+      <div class="cabin">
+        <div class="view" id="view"></div>
+        <ol id="cabinList"></ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="numbers" aria-labelledby="nm-h">
+    <div class="grid">
+      <div class="head"><p class="meta">Numbers</p><h2 id="nm-h">Three litres, six cylinders, all four wheels.</h2></div>
+      <div class="nums">
+        <div><b data-to="530">0<small>PS</small></b><span>Twin-turbo 3.0 litre straight six</span></div>
+        <div><b data-to="650">0<small>Nm</small></b><span>Torque, through an 8-speed M Steptronic</span></div>
+        <div><b data-to="3.5" data-dec="1">0<small>s</small></b><span>0 to 62 mph with M xDrive</span></div>
+        <div><b data-to="155">0<small>mph</small></b><span>Limited. 180 with the M Driver's Pack</span></div>
+      </div>
+      <p class="fine">Manufacturer figures for the current M3 Competition xDrive saloon. Confirm this car's exact spec and options with the dealer.</p>
+    </div>
+  </section>
+
+  <section class="band" id="finance" aria-labelledby="fn-h">
+    <div class="grid">
+      <div class="head"><p class="meta">Finance</p><h2 id="fn-h">Work out your monthly.</h2></div>
+      <div class="calc">
+        <div class="ctrls">
+          <div class="ctrl"><div class="lab"><span class="meta">Deposit</span><b id="depV">£19,200</b></div><input id="dep" type="range" min="10" max="50" step="1" value="20" aria-label="Deposit percentage"></div>
+          <div class="ctrl"><span class="meta">Term</span><div class="chips" id="terms" role="group" aria-label="Term"><button aria-pressed="false" data-m="24">24 months</button><button aria-pressed="false" data-m="36">36 months</button><button aria-pressed="true" data-m="48">48 months</button><button aria-pressed="false" data-m="60">60 months</button></div></div>
+          <div class="ctrl"><div class="lab"><span class="meta">Example APR</span><b id="aprV">8.9%</b></div><input id="apr" type="range" min="4.9" max="12.9" step="0.5" value="8.9" aria-label="APR"></div>
+        </div>
+        <div class="result" aria-live="polite">
+          <span class="meta">Hire purchase, per month</span>
+          <div class="mo" id="mo">£0<small>/mo</small></div>
+          <dl><dt>Cash price</dt><dd>£96,000</dd><dt>Deposit</dt><dd id="r-dep"></dd><dt>Amount of credit</dt><dd id="r-cred"></dd><dt>Total payable</dt><dd id="r-tot"></dd></dl>
+          <p class="fine" style="margin:0">Example only, not a finance offer. Real quotes depend on status and lender.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="drive" aria-labelledby="dr-h">
+    <div class="grid">
+      <div class="head"><p class="meta">Test drive</p><h2 id="dr-h">Your M3 is ready.</h2></div>
+      <div class="drive">
+        <figure><img src="img/boot.jpg" alt="The M3 from behind with the boot open in the showroom" loading="lazy" width="1206" height="904"></figure>
+        <form id="tdForm">
+          <div class="ctrl"><span class="meta">Day</span><div class="chips" id="days" role="group" aria-label="Day"></div></div>
+          <div class="ctrl"><span class="meta">Time</span><div class="chips" id="times" role="group" aria-label="Time"><button type="button" aria-pressed="false">10:00</button><button type="button" aria-pressed="true">12:30</button><button type="button" aria-pressed="false">15:00</button><button type="button" aria-pressed="false">17:30</button></div></div>
+          <label for="nm">Your name<input id="nm" type="text" autocomplete="name" placeholder="First and last name"></label>
+          <button class="btn" type="submit"><span>Request test drive</span></button>
+          <div id="ok" role="status" hidden></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+<footer><span>Westway Performance is a fictional dealer. Unofficial concept site.</span><span>BMW, M and M3 are trademarks of BMW AG. Not affiliated with BMW.</span></footer>
+
+<div id="lb" role="dialog" aria-modal="true" aria-label="Detail photo"><button id="lbx" type="button">Close</button><figure><img id="lbi" alt=""><figcaption><b id="lbt"></b><span id="lbd"></span></figcaption></figure></div>
+
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FRAMES = 97;
+  const VW = 1840, VH = 1124; // frame size the pins are placed in
+
+  const DETAILS = {
+    headlight: ['Laser light', 'Adaptive LED headlights with the blue M accents and the twin daytime blades.'],
+    wheel: ['Forged wheels', 'Bi-colour M forged wheels on Michelin Pilot Sport tyres, drilled discs behind.'],
+    mirror: ['Carbon mirrors', 'M carbon mirror caps in gloss weave, part of the carbon exterior pack.'],
+    vent: ['Side gill', 'The M3 Competition badge set into the black front wing vent.'],
+    roof: ['Carbon roof', 'Exposed carbon fibre roof, lighter up top for a lower centre of gravity.'],
+    diffuser: ['Quad exhaust', 'Carbon diffuser with the M quad tailpipes in black chrome.'],
+  };
+  // pins: frame range where they show, position in the 1920x1080 frame, label side
+  const PINS = [
+    { k: 'headlight', f: [0, 2], x: 600, y: 640, side: 'left' },
+    { k: 'wheel', f: [0, 2], x: 1000, y: 830, side: 'right' },
+    { k: 'mirror', f: [0, 2], x: 1385, y: 345, side: 'right' },
+    { k: 'vent', f: [0, 2], x: 1222, y: 540, side: 'right' },
+    { k: 'diffuser', f: [FRAMES - 3, FRAMES - 1], x: 1250, y: 830, side: 'right' },
+    { k: 'roof', f: [FRAMES - 3, FRAMES - 1], x: 905, y: 215, side: 'right' },
+  ];
+
+  // ---- frames ----
+  const cv = $('#cv'), ctx = cv.getContext('2d', { alpha: false });
+  const imgs = [], done = new Uint8Array(FRAMES);
+  const order = []; for (const st of [8, 4, 2, 1]) for (let i = 0; i < FRAMES; i += st) if (!order.includes(i)) order.push(i);
+  let nx = 0, act = 0, last = -1;
+  const pump = () => { while (act < 6 && nx < order.length) { const i = order[nx++]; act++; const im = new Image(); im.decoding = 'async';
+    im.onload = () => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()).then(() => { done[i] = 1; act--; last = -1; pump(); });
+    im.onerror = () => { act--; pump(); }; im.src = `frames/${String(i).padStart(3, '0')}.webp`; imgs[i] = im; } };
+  pump();
+  let fit = { s: 1, ox: 0, oy: 0 };
+  function size() {
+    const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2);
+    cv.width = Math.round(r.width * d); cv.height = Math.round(r.height * d);
+    const s = Math.max(r.width / VW, r.height / VH);
+    // on tall screens keep the car centred a little right of the hero text
+    fit = { s, ox: (r.width - VW * s) / 2, oy: (r.height - VH * s) / 2 };
+    last = -1;
+  }
+  function nearest(i) { if (done[i]) return i; for (let d = 1; d < FRAMES; d++) { if (i - d >= 0 && done[i - d]) return i - d; if (i + d < FRAMES && done[i + d]) return i + d; } return -1; }
+  function draw(f) {
+    const i = nearest(f); if (i < 0 || i === last) return; last = i;
+    const d = cv.width / cv.getBoundingClientRect().width;
+    ctx.drawImage(imgs[i], fit.ox * d, fit.oy * d, VW * fit.s * d, VH * fit.s * d);
+  }
+
+  // ---- pins ----
+  const pinsEl = $('#pins');
+  const pinEls = PINS.map((p) => {
+    const b = document.createElement('button'); b.className = 'pin' + (p.side === 'left' ? ' left' : ''); b.type = 'button';
+    b.innerHTML = `+<span>${DETAILS[p.k][0]}</span>`; b.setAttribute('aria-label', `Open detail: ${DETAILS[p.k][0]}`);
+    b.addEventListener('click', () => openLb(p.k)); pinsEl.appendChild(b); return b;
+  });
+  function placePins(f) {
+    PINS.forEach((p, n) => { const el = pinEls[n], on = f >= p.f[0] && f <= p.f[1];
+      el.style.left = (fit.ox + p.x * fit.s) + 'px'; el.style.top = (fit.oy + p.y * fit.s) + 'px';
+      const inView = fit.ox + p.x * fit.s > 20 && fit.ox + p.x * fit.s < innerWidth - 20;
+      el.classList.toggle('on', on && inView); el.tabIndex = on && inView ? 0 : -1; });
+  }
+
+  // ---- scroll ----
+  const walk = $('#walk'), hero = $('#hero'), fill = $('#fill'), deg = $('#deg');
+  let target = 0, p = 0;
+  function progress() { const r = walk.getBoundingClientRect(); return Math.min(1, Math.max(0, -r.top / (walk.offsetHeight - innerHeight))); }
+  function frame() {
+    target = progress(); p += (target - p) * (reduce ? 1 : .12); if (Math.abs(target - p) < .0005) p = target;
+    const f = Math.round(p * (FRAMES - 1));
+    draw(f); placePins(f);
+    hero.classList.toggle('away', p > .04);
+    fill.style.transform = `scaleX(${p.toFixed(4)})`;
+    deg.textContent = String(Math.round(p * 120)).padStart(3, '0') + '°';
+    document.documentElement.classList.toggle('past', scrollY > walk.offsetTop + walk.offsetHeight - innerHeight - 40);
+    requestAnimationFrame(frame);
+  }
+  addEventListener('resize', size); size(); requestAnimationFrame(frame);
+
+  // ---- details strip ----
+  const strip = $('#strip');
+  ['headlight', 'wheel', 'mirror', 'vent', 'roof', 'diffuser'].forEach((k) => {
+    const f = document.createElement('figure'); f.tabIndex = 0; f.setAttribute('role', 'button'); f.setAttribute('aria-label', `Open ${DETAILS[k][0]}`);
+    f.innerHTML = `<div class="ph"><img src="img/${k}.jpg" alt="${DETAILS[k][1]}" loading="lazy" width="1206" height="904"></div><figcaption><b>${DETAILS[k][0]}</b><span>${DETAILS[k][1]}</span></figcaption>`;
+    f.addEventListener('click', () => openLb(k)); f.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(k); } });
+    strip.appendChild(f);
+  });
+  const lb = $('#lb'); let lastFocus = null;
+  function openLb(k) { lastFocus = document.activeElement; $('#lbi').src = `img/${k}.jpg`; $('#lbi').alt = DETAILS[k][1]; $('#lbt').textContent = DETAILS[k][0]; $('#lbd').textContent = DETAILS[k][1]; lb.classList.add('on'); $('#lbx').focus(); }
+  function closeLb() { lb.classList.remove('on'); if (lastFocus) lastFocus.focus(); }
+  $('#lbx').addEventListener('click', closeLb); lb.addEventListener('click', (e) => { if (e.target === lb) closeLb(); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && lb.classList.contains('on')) closeLb(); });
+
+  // ---- inside ----
+  const CABIN = [
+    ['cabin', 'The seats', 'M Carbon bucket seats in white and black Merino leather.'],
+    ['wheelin', 'The wheel', 'M steering wheel with the red M1 and M2 buttons and the red centre marker.'],
+    ['screen', 'The screen', 'Curved display with navigation, M modes and the blue ambient strip.'],
+    ['headrest', 'The headrest', 'Illuminated M3 badge set into the seat back.'],
+    ['rear_seats', 'The back', 'Room for three, in the same white leather.'],
+  ];
+  const view = $('#view'), list = $('#cabinList');
+  CABIN.forEach(([k, t, d], i) => {
+    const im = document.createElement('img'); im.src = `img/${k}.jpg`; im.alt = d; im.loading = 'lazy'; if (i === 0) im.className = 'on'; view.appendChild(im);
+    const li = document.createElement('li'); li.innerHTML = `<button type="button" aria-pressed="${i === 0}"><b>${t}</b><span>${d}</span></button>`;
+    li.firstChild.addEventListener('click', () => { [...view.children].forEach((x, j) => x.classList.toggle('on', j === i)); [...list.querySelectorAll('button')].forEach((x, j) => x.setAttribute('aria-pressed', j === i)); });
+    list.appendChild(li);
+  });
+
+  // ---- numbers count up when seen ----
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (!e.isIntersecting) return; io.unobserve(e.target);
+    const b = e.target, to = +b.dataset.to, dec = +(b.dataset.dec || 0), unit = b.querySelector('small').outerHTML, t0 = performance.now(), dur = reduce ? 1 : 1400;
+    const step = (t) => { const k = Math.min(1, (t - t0) / dur), v = to * (1 - Math.pow(1 - k, 3)); b.innerHTML = v.toFixed(dec) + unit; if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }), { threshold: .6 });
+  document.querySelectorAll('.nums b').forEach((b) => { b.innerHTML = (+b.dataset.to).toFixed(+(b.dataset.dec || 0)) + b.querySelector('small').outerHTML; io.observe(b); });
+
+  // ---- finance ----
+  const PRICE = 96000, dep = $('#dep'), apr = $('#apr'); let months = 48;
+  const gbp = (n) => '£' + Math.round(n).toLocaleString('en-GB');
+  function calc() {
+    const d = PRICE * dep.value / 100, credit = PRICE - d, r = apr.value / 100 / 12;
+    const m = r ? credit * r / (1 - Math.pow(1 + r, -months)) : credit / months;
+    $('#depV').textContent = `${gbp(d)} (${dep.value}%)`; $('#aprV').textContent = `${(+apr.value).toFixed(1)}%`;
+    $('#mo').innerHTML = gbp(m) + '<small>/mo</small>'; $('#r-dep').textContent = gbp(d); $('#r-cred').textContent = gbp(credit); $('#r-tot').textContent = gbp(d + m * months);
+    [dep, apr].forEach((s) => s.style.setProperty('--p', ((s.value - s.min) / (s.max - s.min) * 100) + '%'));
+  }
+  dep.addEventListener('input', calc); apr.addEventListener('input', calc);
+  $('#terms').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; months = +b.dataset.m; [...$('#terms').children].forEach((x) => x.setAttribute('aria-pressed', x === b)); calc(); });
+  calc();
+
+  // ---- test drive ----
+  const days = $('#days'), now = new Date();
+  for (let i = 1, n = 0; n < 5; i++) { const d = new Date(now); d.setDate(now.getDate() + i); if (d.getDay() === 0) continue;
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-pressed', n === 0); b.textContent = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric' }); days.appendChild(b); n++; }
+  [days, $('#times')].forEach((g) => g.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; [...g.children].forEach((x) => x.setAttribute('aria-pressed', x === b)); }));
+  $('#tdForm').addEventListener('submit', (e) => { e.preventDefault();
+    const day = days.querySelector('[aria-pressed="true"]').textContent, time = $('#times [aria-pressed="true"]').textContent, nm = $('#nm').value.trim();
+    const ok = $('#ok'); ok.hidden = false; ok.textContent = `${nm ? nm.split(' ')[0] + ', your' : 'Your'} test drive is pencilled in for ${day} at ${time}. This is a demo, so nothing has been sent.`; });
+
+  // anchor links scroll smoothly
+  document.querySelectorAll('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => { const t = $(a.getAttribute('href')); if (!t) return; e.preventDefault(); t.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); }));
+})();
+</script>
+</body>
+</html>
