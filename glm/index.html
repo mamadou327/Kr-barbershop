@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GIRLSLOVEMONEY Fitting Room</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Try the GIRLSLOVEMONEY range on the model: swipe the tops and the pants, pick your size and add the look to your bag.">
+<meta name="theme-color" content="#b2aeaf">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter+Tight:wght@500;700&display=swap">
+<style>
+/* Layout: a studio fitting room. The model stands centre stage; two rings of real pieces orbit her at chest and leg height; notched white tickets hold the product info (left) and the size and bag (right). Phones get the model full-bleed with a bottom ticket. */
+:root {
+  --bg: #b2aeaf;        /* the studio backdrop, sampled from the photos */
+  --bg2: #bebcbf;
+  --card: #ffffff;
+  --ink: #111111;
+  --mute: #5f5d60;
+  --chip: #eceef1;
+  --line: rgba(17, 17, 17, .16);
+  --red: #c8102e;       /* the piping on the tracksuits */
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --disp: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --ease: cubic-bezier(.65, 0, .25, 1);
+  --pop: cubic-bezier(.3, 1.6, .5, 1);
+  color-scheme: light;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { background: radial-gradient(120% 90% at 50% 40%, var(--bg2), var(--bg) 70%); color: var(--ink); font: 400 13px/1.45 var(--mono); -webkit-font-smoothing: antialiased; overflow: hidden; -webkit-user-select: none; user-select: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.notch { clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)); }
+
+/* header */
+header { position: fixed; z-index: 30; left: 0; right: 0; top: 0; display: flex; align-items: flex-start; gap: 16px; padding: calc(16px + env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) 0 max(24px, env(safe-area-inset-left, 0px)); pointer-events: none; }
+header > * { pointer-events: auto; }
+.brand { display: grid; gap: 6px; margin-right: auto; }
+.logo { font: 700 25px/1 var(--disp); letter-spacing: -.035em; }
+.logo span { color: var(--red); }
+.crumb { font-size: 11px; letter-spacing: .03em; color: var(--mute); }
+.pill { display: inline-flex; align-items: center; gap: 8px; height: 35px; padding: 0 16px; background: var(--card); font-size: 12px; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; transition: background .2s, color .2s; }
+.pill:hover { background: #f4f4f5; }
+.seg { display: flex; gap: 4px; position: absolute; left: 50%; transform: translateX(-50%); top: calc(16px + env(safe-area-inset-top, 0px)); }
+.seg .pill[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.acct { display: flex; gap: 6px; }
+#bag b { display: inline-block; min-width: 1ch; }
+#bag.bump b { animation: bump .5s var(--pop); }
+@keyframes bump { 40% { transform: translateY(-6px) scale(1.4); } }
+
+/* stage */
+#stage { position: fixed; inset: 0; touch-action: pan-y; cursor: grab; }
+#stage.drag { cursor: grabbing; }
+.model { position: absolute; left: 50%; bottom: 0; height: min(96vh, 1080px); aspect-ratio: 1360 / 2048; transform: translateX(-50%); z-index: 2;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent), linear-gradient(transparent, #000 6%); -webkit-mask-composite: source-in;
+  mask: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent) intersect, linear-gradient(transparent, #000 6%); }
+.model img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .55s var(--ease), filter .55s var(--ease); }
+.model img.out { opacity: 0; filter: blur(6px); }
+.ring { position: absolute; left: 50%; width: 0; height: 0; z-index: 3; }
+.ring.top { top: 38%; }
+.ring.bot { top: 70%; }
+.item { position: absolute; left: 0; top: 0; width: var(--sz); height: var(--sz); margin: calc(var(--sz) / -2) 0 0 calc(var(--sz) / -2); will-change: transform, opacity; }
+.item img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 18px 22px rgba(0, 0, 0, .22)); pointer-events: none; }
+.item:hover img { filter: drop-shadow(0 22px 26px rgba(0, 0, 0, .3)) brightness(1.04); }
+.ring.top { --sz: clamp(120px, 15vw, 220px); }
+.ring.bot { --sz: clamp(120px, 14vw, 210px); }
+.ring .label { position: absolute; top: calc(var(--sz) * -.66); left: var(--lx, 0px); transform: translateX(-50%); z-index: 6; white-space: nowrap; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--mute); display: flex; align-items: center; gap: 10px; }
+.arrow { width: 32px; height: 32px; display: grid; place-items: center; background: rgba(255, 255, 255, .85); font-size: 14px; transition: transform .3s var(--pop), background .2s; }
+.arrow:hover { background: #fff; transform: scale(1.12); }
+.hint { position: absolute; left: 50%; bottom: calc(26px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 4; display: flex; align-items: center; gap: 10px; padding: 9px 14px; background: rgba(17, 17, 17, .86); color: #fff; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; transition: opacity .5s, transform .5s var(--ease); }
+.hint i { width: 22px; height: 2px; background: #fff; position: relative; animation: swipe 1.6s var(--ease) infinite; }
+@keyframes swipe { 0% { transform: translateX(-8px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateX(8px); opacity: 0; } }
+.hint.gone { opacity: 0; transform: translate(-50%, 10px); pointer-events: none; }
+
+/* tickets */
+.ticket { position: fixed; z-index: 10; background: var(--card); }
+#info { left: max(20px, env(safe-area-inset-left, 0px)); top: 26%; width: 300px; padding: 28px 22px 22px 28px;
+  clip-path: polygon(0 0, 120px 0, 130px 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 200px) calc(100% - 8px), calc(100% - 210px) 100%, 10px 100%, 10px 110px, 0 102px); }
+#buy { right: max(20px, env(safe-area-inset-right, 0px)); top: 46%; width: 300px; padding: 26px 22px 22px;
+  clip-path: polygon(0 8px, 190px 8px, 200px 0, 100% 0, 100% calc(100% - 8px), 220px calc(100% - 8px), 210px 100%, 10px 100%, 10px calc(100% - 40px), 0 calc(100% - 48px)); }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.name { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; }
+.kind { font-size: 10.5px; color: var(--mute); letter-spacing: .06em; text-transform: uppercase; }
+.line { display: grid; gap: 2px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.line .name { transition: opacity .3s; }
+.tag { font-size: 11px; background: var(--chip); padding: 2px 5px; }
+.acc { margin-top: 16px; }
+.acc button.h { width: 100%; display: flex; justify-content: space-between; padding: 8px 0; text-transform: uppercase; letter-spacing: .03em; }
+.acc .b { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s var(--ease); }
+.acc .b > div { overflow: hidden; }
+.acc .b p { font: 400 14px/1.45 Georgia, "Times New Roman", serif; padding: 2px 0 12px; color: #222; }
+.acc .open + .b { grid-template-rows: 1fr; }
+.lbl { font-size: 13px; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 10px; }
+.sizes { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.sizes button { position: relative; z-index: 1; height: 36px; background: var(--chip); transition: color .3s; }
+.sizes button[aria-pressed="true"] { color: #fff; background: transparent; }
+#hl { position: absolute; top: 0; height: 36px; background: var(--ink); transition: left .45s var(--ease), width .45s var(--ease); }
+.note { margin-top: 10px; font-size: 10.5px; color: var(--mute); text-transform: uppercase; letter-spacing: .03em; }
+.pick { display: flex; gap: 6px; margin-top: 18px; }
+.pick button { flex: 1; height: 34px; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--chip); font-size: 11.5px; text-transform: uppercase; letter-spacing: .03em; }
+.pick button[aria-pressed="true"]::before { content: ""; width: 7px; height: 7px; background: var(--red); }
+.pick button[aria-pressed="false"] { color: var(--mute); text-decoration: line-through; }
+.total { margin-top: 16px; display: flex; justify-content: space-between; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; }
+.total b { font: 700 18px/1 var(--disp); letter-spacing: -.01em; }
+.actions { display: flex; gap: 6px; margin-top: 14px; }
+.actions button { height: 40px; background: var(--ink); color: #fff; text-transform: uppercase; letter-spacing: .03em; overflow: hidden; }
+#save { width: 64px; }
+#save[aria-pressed="true"] { background: #3a3d44; }
+#add { flex: 1; position: relative; }
+#add span { display: block; transition: transform .45s var(--ease); }
+#add span + span { position: absolute; inset: 0; display: grid; place-items: center; transform: translateY(100%); }
+#add.done span:first-child { transform: translateY(-100%); }
+#add.done span + span { transform: none; }
+#add:hover { background: var(--red); }
+#add:disabled { opacity: .4; cursor: not-allowed; }
+.flyer { position: fixed; z-index: 60; width: 60px; height: 80px; background: #fff; pointer-events: none; }
+.flyer img { width: 100%; height: 100%; object-fit: contain; }
+.toast { position: fixed; z-index: 50; left: 50%; top: calc(70px + env(safe-area-inset-top, 0px)); transform: translate(-50%, -10px); opacity: 0; padding: 10px 14px; background: var(--ink); color: #fff; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; transition: opacity .35s, transform .35s var(--ease); pointer-events: none; }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+.foot { position: fixed; z-index: 5; right: max(24px, env(safe-area-inset-right, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); font-size: 10.5px; color: var(--mute); letter-spacing: .04em; text-transform: uppercase; }
+
+/* phones: model full height, rings hug the sides, one ticket at the bottom */
+@media (max-width: 980px) {
+  .seg { position: static; transform: none; }
+  header { flex-wrap: wrap; }
+  .crumb, .foot, #info { display: none; }
+  .acct .pill:not(#bag) { display: none; }
+  .model { height: 78vh; bottom: auto; top: calc(78px + env(safe-area-inset-top, 0px)); }
+  .ring.top { top: calc(78px + env(safe-area-inset-top, 0px) + 78vh * .30); --sz: 104px; }
+  .ring.bot { top: calc(78px + env(safe-area-inset-top, 0px) + 78vh * .62); --sz: 100px; }
+  .ring .label { display: none; }
+  #buy { left: 12px; right: 12px; top: auto; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); width: auto; padding: 16px 16px 16px;
+    clip-path: polygon(0 8px, 40% 8px, calc(40% + 10px) 0, 100% 0, 100% 100%, 0 100%); }
+  #buy .lbl, #buy .note, #buy .pick, #save { display: none; }
+  .mini { display: flex !important; }
+  .total { margin-top: 10px; }
+  .hint { bottom: auto; top: calc(130px + env(safe-area-inset-top, 0px)); }
+}
+.mini { display: none; justify-content: space-between; gap: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 10px; }
+.mini span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">GIRLSLOVEMONEY<span>.</span></div><div class="crumb">HOME &gt; SHOP &gt; FITTING ROOM</div></div>
+  <div class="seg" role="group" aria-label="Fitting room">
+    <button class="pill notch" id="g-w" aria-pressed="true">Women</button>
+    <button class="pill notch" id="g-m" aria-pressed="false">Men</button>
+  </div>
+  <div class="acct"><button class="pill notch" type="button">Drops</button><button class="pill notch" id="bag" type="button" aria-live="polite">Bag/<b id="count">0</b></button></div>
+</header>
+
+<main id="stage" aria-label="Fitting room: swipe the top half to change the top and the bottom half to change the pants">
+  <div class="model" id="model"><img id="imgA" alt="" draggable="false"><img id="imgB" class="out" alt="" draggable="false"></div>
+  <div class="ring top" id="ringTop"><div class="label"><button class="arrow notch" data-ring="top" data-d="-1" aria-label="Previous top">&larr;</button><span id="topIdx">TOP 1/5</span><button class="arrow notch" data-ring="top" data-d="1" aria-label="Next top">&rarr;</button></div></div>
+  <div class="ring bot" id="ringBot"><div class="label"><button class="arrow notch" data-ring="bot" data-d="-1" aria-label="Previous pants">&larr;</button><span id="botIdx">PANTS 1/2</span><button class="arrow notch" data-ring="bot" data-d="1" aria-label="Next pants">&rarr;</button></div></div>
+  <div class="hint" id="hint"><i></i>Swipe the top or the pants</div>
+</main>
+
+<section class="ticket" id="info" aria-label="The look">
+  <div class="line"><span class="kind">Top</span><div class="row"><span class="name" id="tName"></span><span class="tag" id="tPrice"></span></div></div>
+  <div class="line"><span class="kind">Bottoms</span><div class="row"><span class="name" id="bName"></span><span class="tag" id="bPrice"></span></div></div>
+  <div class="acc" id="acc">
+    <button class="h open" aria-expanded="true">Description<span>[&minus;]</span></button><div class="b"><div><p id="desc"></p></div></div>
+    <button class="h" aria-expanded="false">Fit &amp; size guide<span>[+]</span></button><div class="b"><div><p>Boxy, dropped-shoulder fit. XS chest 104 cm, S 110 cm, M 116 cm, L 122 cm. Pants are wide-leg with an elastic waist. Our model is 172 cm and wears S.</p></div></div>
+    <button class="h" aria-expanded="false">Shipping &amp; returns<span>[+]</span></button><div class="b"><div><p>Made in small runs in London. Worldwide shipping. Free UK returns within 14 days.</p></div></div>
+  </div>
+</section>
+
+<section class="ticket" id="buy" aria-label="Size and bag">
+  <div class="mini"><span id="mTop"></span><span id="mBot"></span></div>
+  <div class="lbl">Size</div>
+  <div class="sizes" id="sizes"><span id="hl"></span><button aria-pressed="false">XS</button><button aria-pressed="true">S</button><button aria-pressed="false">M</button><button aria-pressed="false">L</button></div>
+  <div class="note">Model is 172 cm and wears S. Pick yours.</div>
+  <div class="pick"><button id="pickTop" aria-pressed="true">Top</button><button id="pickBot" aria-pressed="true">Pants</button></div>
+  <div class="total"><span>Total</span><b id="total">£0</b></div>
+  <div class="actions"><button id="save" aria-pressed="false">Save</button><button id="add"><span>Add look to bag</span><span aria-hidden="true">Added</span></button></div>
+</section>
+<div class="toast" id="toast" role="status"></div>
+<p class="foot">Concept demo. Images generated from GIRLSLOVEMONEY pieces.</p>
+
+<script>
+(() => {
+  const TOPS = [
+    { id: 'jacket', name: 'Run It Up track jacket', price: 85, desc: 'Black tricot track jacket with red piping, stand-up collar and LONDON embroidered across the zip. Three gold stars on the chest.' },
+    { id: 'tee', name: 'Pop-Star tee', price: 45, desc: 'Heavyweight boxy tee in washed white, distressed at the hem and sleeves, with the GIRLSLOVEMONEY stencil on the front and the LDN pentagram on the back.' },
+    { id: 'racer2', name: 'Racer 2.0 hoodie', price: 110, desc: 'Washed black zip hoodie with raw edges, studded racing patches and a big number 18 on the back.' },
+    { id: 'racer', name: 'Racer hoodie', price: 95, desc: 'Washed grey zip hoodie covered in studded racing patches, with GLMRACERWORLDWIDE running down the zip.' },
+    { id: 'blue', name: 'London track jacket, blue', price: 85, desc: 'Royal blue brushed track jacket with red piping and LONDON embroidered in black with a red outline.' },
+  ];
+  const BOTS = [
+    { id: 'pants', name: 'Run It Up track pants', price: 70, desc: 'Wide-leg black track pants with red side piping, LONDON down the leg and three gold stars on the thigh.' },
+    { id: 'bluepants', name: 'London track pants, blue', price: 70, desc: 'Royal blue wide-leg track pants to match the jacket, red piping and LONDON down the leg.' },
+  ];
+  const S = { top: 0, bot: 0, size: 'S', wantTop: true, wantBot: true, swapped: false };
+  const $ = (s) => document.querySelector(s);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- model crossfade ----
+  const A = $('#imgA'), B = $('#imgB');
+  let front = A, back = B, token = 0;
+  const lookSrc = () => `img/w-${TOPS[S.top].id}-${BOTS[S.bot].id}.jpg`;
+  const alt = () => `Model wearing the ${TOPS[S.top].name} and the ${BOTS[S.bot].name}`;
+  function showLook() {
+    const t = ++token, src = lookSrc();
+    back.onload = () => { if (t !== token) return; back.alt = alt(); back.classList.remove('out'); front.classList.add('out'); [front, back] = [back, front]; };
+    back.src = src;
+    // preload the neighbours so the next swipe is instant
+    [[1, 0], [-1, 0], [0, 1]].forEach(([dt, db]) => { const i = new Image(); i.src = `img/w-${TOPS[(S.top + dt + TOPS.length) % TOPS.length].id}-${BOTS[(S.bot + db) % BOTS.length].id}.jpg`; });
+  }
+  A.src = lookSrc(); A.alt = alt();
+
+  // ---- rings ----
+  function buildRing(el, list, kind) {
+    return list.map((p, i) => {
+      const b = document.createElement('button');
+      b.className = 'item'; b.type = 'button';
+      b.setAttribute('aria-label', `Put on the ${p.name}`);
+      b.innerHTML = `<img src="img/p-${p.id}.webp" alt="" draggable="false">`;
+      b.addEventListener('click', (e) => { e.stopPropagation(); if (moved) return; select(kind, i); });
+      el.appendChild(b);
+      return { el: b, cur: { x: 0, s: .4, o: 0, r: 0 }, seed: i * 1.7 };
+    });
+  }
+  const ringTop = buildRing($('#ringTop'), TOPS, 'top');
+  const ringBot = buildRing($('#ringBot'), BOTS, 'bot');
+  const modelEl = $('#model');
+  function slotsFor(ring, sel, sz) {
+    const narrow = innerWidth < 980, N = ring.length, half = modelEl.getBoundingClientRect().width * (narrow ? 0.36 : 0.22);
+    const s1 = half + sz * (narrow ? .18 : .62), s2 = s1 + sz * (narrow ? .55 : .72);
+    ring.s1 = s1;
+    return ring.map((it, i) => {
+      let k = ((i - sel) % N + N) % N; if (k > N / 2) k -= N;
+      if (N === 2 && k === 1) k = 1;
+      const a = Math.abs(k), sg = Math.sign(k);
+      if (a === 0) return { x: 0, s: .35, o: 0, r: 0, z: 1 };
+      if (a === 1) return { x: sg * s1, s: 1, o: 1, r: -sg * 16, z: 4 };
+      if (a === 2) return { x: sg * s2, s: .7, o: narrow ? 0 : .6, r: -sg * 28, z: 3 };
+      return { x: sg * (s2 + sz * .6), s: .5, o: 0, r: -sg * 34, z: 2 };
+    });
+  }
+  let tgtTop = [], tgtBot = [];
+  function layout() {
+    const szT = parseFloat(getComputedStyle($('#ringTop')).getPropertyValue('--sz')) || 160;
+    const szB = parseFloat(getComputedStyle($('#ringBot')).getPropertyValue('--sz')) || 160;
+    tgtTop = slotsFor(ringTop, S.top, szT); tgtBot = slotsFor(ringBot, S.bot, szB);
+    $('#ringTop').style.setProperty('--lx', ringTop.s1 + 'px'); $('#ringBot').style.setProperty('--lx', ringBot.s1 + 'px');
+    [[ringTop, tgtTop], [ringBot, tgtBot]].forEach(([r, t]) => r.forEach((it, i) => { it.el.style.zIndex = t[i].z; it.el.tabIndex = t[i].o > .5 ? 0 : -1; it.el.setAttribute('aria-hidden', t[i].o > .5 ? 'false' : 'true'); }));
+  }
+  // one loop: items glide along the orbit, bob and turn a little at rest
+  function tick(t) {
+    [[ringTop, tgtTop], [ringBot, tgtBot]].forEach(([r, tg]) => r.forEach((it, i) => {
+      const g = tg[i]; if (!g) return; const c = it.cur, k = reduce ? 1 : .11;
+      c.x += (g.x - c.x) * k; c.s += (g.s - c.s) * k; c.o += (g.o - c.o) * k; c.r += (g.r - c.r) * k;
+      const bob = reduce ? 0 : Math.sin(t / 900 + it.seed) * 6, spin = reduce ? 0 : Math.sin(t / 1400 + it.seed) * 9;
+      // arc: items moving towards the model sink back, like a carousel turning
+      const depth = Math.min(1, Math.abs(c.x) / 260);
+      it.el.style.transform = `translate3d(${c.x.toFixed(1)}px, ${(bob - (1 - depth) * 10).toFixed(1)}px, 0) perspective(700px) rotateY(${(c.r + spin).toFixed(1)}deg) scale(${c.s.toFixed(3)})`;
+      it.el.style.opacity = c.o.toFixed(3);
+    }));
+    requestAnimationFrame(tick);
+  }
+
+  // ---- selection ----
+  function select(kind, i) {
+    const list = kind === 'top' ? TOPS : BOTS, key = kind === 'top' ? 'top' : 'bot';
+    const n = ((i % list.length) + list.length) % list.length;
+    if (S[key] === n) return;
+    S[key] = n; layout(); showLook(); render();
+    if (!S.swapped) { S.swapped = true; $('#hint').classList.add('gone'); }
+  }
+  function render() {
+    const t = TOPS[S.top], b = BOTS[S.bot];
+    $('#tName').textContent = t.name; $('#tPrice').textContent = `£${t.price}`;
+    $('#bName').textContent = b.name; $('#bPrice').textContent = `£${b.price}`;
+    $('#desc').textContent = `${t.desc} ${b.desc}`;
+    $('#topIdx').textContent = `TOP ${S.top + 1}/${TOPS.length}`; $('#botIdx').textContent = `PANTS ${S.bot + 1}/${BOTS.length}`;
+    $('#mTop').textContent = `${t.name}  £${t.price}`; $('#mBot').textContent = `${b.name}  £${b.price}`;
+    const tot = (S.wantTop ? t.price : 0) + (S.wantBot ? b.price : 0);
+    $('#total').textContent = `£${tot}`; $('#add').disabled = tot === 0;
+    $('#add span').textContent = S.wantTop && S.wantBot ? 'Add look to bag' : S.wantTop ? 'Add top to bag' : 'Add pants to bag';
+  }
+  document.querySelectorAll('.arrow').forEach((a) => a.addEventListener('click', (e) => { e.stopPropagation(); const k = a.dataset.ring; select(k, S[k] + +a.dataset.d); }));
+
+  // ---- swipe: top half changes the top, bottom half the pants ----
+  const stage = $('#stage');
+  let down = null, moved = false;
+  stage.addEventListener('pointerdown', (e) => { if (e.target.closest('.arrow')) return; down = { x: e.clientX, y: e.clientY }; moved = false; stage.classList.add('drag'); });
+  addEventListener('pointermove', (e) => { if (down && Math.abs(e.clientX - down.x) > 12) moved = true; });
+  addEventListener('pointerup', (e) => {
+    stage.classList.remove('drag');
+    if (!down) return;
+    const dx = e.clientX - down.x, dy = e.clientY - down.y;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+      const r = modelEl.getBoundingClientRect(), waist = r.top + r.height * 0.5;
+      const kind = down.y < waist ? 'top' : 'bot';
+      select(kind, S[kind] + (dx < 0 ? 1 : -1));
+    }
+    down = null; setTimeout(() => (moved = false), 0);
+  });
+  addEventListener('keydown', (e) => {
+    if (e.target.closest('input, textarea')) return;
+    if (e.key === 'ArrowRight') select('top', S.top + 1); else if (e.key === 'ArrowLeft') select('top', S.top - 1);
+    else if (e.key === 'ArrowDown') select('bot', S.bot + 1); else if (e.key === 'ArrowUp') select('bot', S.bot - 1);
+  });
+
+  // ---- tickets ----
+  const acc = [...document.querySelectorAll('.acc .h')];
+  acc.forEach((h) => h.addEventListener('click', () => acc.forEach((o) => { const on = o === h && !o.classList.contains('open'); o.classList.toggle('open', on); o.setAttribute('aria-expanded', on); o.lastElementChild.textContent = on ? '[−]' : '[+]'; })));
+  const sizeBtns = [...document.querySelectorAll('#sizes button')], hl = $('#hl');
+  function placeHl() { const b = sizeBtns.find((x) => x.getAttribute('aria-pressed') === 'true'); hl.style.left = b.offsetLeft + 'px'; hl.style.width = b.offsetWidth + 'px'; }
+  sizeBtns.forEach((b) => b.addEventListener('click', () => { sizeBtns.forEach((x) => x.setAttribute('aria-pressed', x === b)); S.size = b.textContent; placeHl(); }));
+  ['Top', 'Bot'].forEach((k) => $('#pick' + k).addEventListener('click', (e) => { const key = 'want' + k; S[key] = !S[key]; e.currentTarget.setAttribute('aria-pressed', S[key]); render(); }));
+  $('#save').addEventListener('click', (e) => { const on = e.currentTarget.getAttribute('aria-pressed') !== 'true'; e.currentTarget.setAttribute('aria-pressed', on); e.currentTarget.textContent = on ? 'Saved' : 'Save'; });
+  let count = 0;
+  $('#add').addEventListener('click', (e) => {
+    const btn = e.currentTarget, bag = $('#bag');
+    const pieces = [S.wantTop && TOPS[S.top], S.wantBot && BOTS[S.bot]].filter(Boolean);
+    pieces.forEach((p, n) => {
+      const f = document.createElement('div'); f.className = 'flyer notch'; f.innerHTML = `<img src="img/p-${p.id}.webp" alt="">`;
+      const a = btn.getBoundingClientRect(), z = bag.getBoundingClientRect();
+      f.style.left = (a.left + a.width / 2 - 30) + 'px'; f.style.top = (a.top - 40) + 'px'; document.body.appendChild(f);
+      const dx = z.left + z.width / 2 - (a.left + a.width / 2), dy = z.top + z.height / 2 - (a.top - 40) - 40;
+      f.animate([{ transform: 'none' }, { transform: `translate(${dx * .5}px, ${dy * .5 - 120}px) scale(.8) rotate(-8deg)` }, { transform: `translate(${dx}px, ${dy}px) scale(.18) rotate(-14deg)` }], { duration: reduce ? 1 : 900, delay: n * 120, easing: 'cubic-bezier(.5,0,.3,1)', fill: 'forwards' });
+      setTimeout(() => { f.remove(); count++; $('#count').textContent = count; bag.classList.remove('bump'); void bag.offsetWidth; bag.classList.add('bump'); }, (reduce ? 1 : 900) + n * 120);
+    });
+    btn.classList.add('done'); setTimeout(() => btn.classList.remove('done'), 1800);
+    toast(`${pieces.length === 2 ? 'Look' : pieces[0].name} added in ${S.size}`);
+  });
+  function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 2200); }
+  $('#g-m').addEventListener('click', () => toast("The men's fitting room opens with the next drop"));
+  document.querySelectorAll('.acct .pill:not(#bag)').forEach((b) => b.addEventListener('click', () => toast('Concept demo: this would open the drops page')));
+  $('#bag').addEventListener('click', () => toast(count ? `${count} piece${count > 1 ? 's' : ''} in your bag` : 'Your bag is empty'));
+
+  addEventListener('resize', () => { layout(); placeHl(); });
+  render(); layout(); placeHl(); requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
