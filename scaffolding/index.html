@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Standard &amp; Co. — Scaffolding, London</title>
+  <meta name="description" content="Scaffolding for London's buildings, old and new. Access for restorations, refurbishments and new builds.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..800&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="img/house.jpg">
+  <link rel="preload" as="image" href="img/house-scaffold.jpg">
+  <style>
+    :root {
+      --bg: #1c1d1f;
+      --cream: #ece6df;
+      --gold: #c8974a;
+      --muted: #b9b3ac;
+      --header-h: 96px;
+      --gutter: clamp(16px, 4vw, 80px);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: "Archivo", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ---------- Loader ---------- */
+    .loader {
+      position: fixed; inset: 0; z-index: 100;
+      background: var(--bg);
+      display: grid; place-items: center;
+      transition: opacity .6s ease, visibility .6s;
+    }
+    .loader.is-done { opacity: 0; visibility: hidden; }
+    .loader-inner { display: flex; flex-direction: column; align-items: center; gap: 40px; }
+    .loader-logo { width: clamp(120px, 28vmin, 220px); height: auto; display: block; }
+    .loader-bar { width: clamp(120px, 28vmin, 220px); height: 2px; background: rgba(236,230,223,.12); overflow: hidden; }
+    .loader-bar span { display: block; height: 100%; width: 40%; background: var(--gold); animation: slide 1.4s ease-in-out infinite; }
+    @keyframes slide { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+
+    /* ---------- Header ---------- */
+    .site-header {
+      position: relative; z-index: 10;
+      height: var(--header-h);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 var(--gutter);
+      background: var(--bg);
+    }
+    .brand { display: flex; align-items: center; gap: 20px; }
+    .brand svg { width: 44px; height: auto; display: block; }
+    .brand-name {
+      font-weight: 800; font-stretch: 78%;
+      font-size: 28px; letter-spacing: .01em; text-transform: uppercase;
+    }
+    .brand-name .amp { color: var(--gold); }
+    .nav { display: flex; align-items: center; gap: clamp(20px, 3vw, 50px); }
+    .nav a { font-weight: 500; font-size: 17px; transition: color .2s; }
+    .nav a:hover { color: var(--gold); }
+    .nav .btn {
+      background: var(--gold); color: var(--bg);
+      padding: 14px 30px; font-weight: 600;
+      transition: background .2s;
+    }
+    .nav .btn:hover { background: #d9a85a; color: var(--bg); }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative;
+      height: calc(100svh - var(--header-h));
+      min-height: 560px;
+      overflow: hidden;
+      container-type: size;
+      background: #8a8f95;
+    }
+    /* The scene keeps the photos' square shape and covers the hero,
+       so the build-up mask lines up with the scaffold lifts in the image. */
+    .scene {
+      position: absolute;
+      left: 50%; top: 0;
+      width: max(100cqw, 100cqh);
+      aspect-ratio: 1;
+      transform: translate3d(-50%, var(--ty, -10%), 0);
+      will-change: transform;
+    }
+    .scene img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      display: block;
+    }
+    .scene .after {
+      --p: 0%;            /* how far up the scaffold has been built, from the bottom of the image */
+      --soft: 1.6%;       /* soft edge on the rising line */
+      -webkit-mask-image: linear-gradient(to top, #000 calc(var(--p) - var(--soft)), transparent calc(var(--p) + var(--soft)));
+              mask-image: linear-gradient(to top, #000 calc(var(--p) - var(--soft)), transparent calc(var(--p) + var(--soft)));
+    }
+
+    .panel {
+      position: absolute; z-index: 2;
+      left: var(--gutter); bottom: 7%;
+      width: min(780px, calc(100% - 2 * var(--gutter)));
+      background: var(--bg);
+      padding: clamp(28px, 4.5vw, 56px);
+      opacity: 0; transform: translateY(24px);
+      transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1);
+    }
+    .panel.is-in { opacity: 1; transform: none; }
+    .rule { width: 100px; height: 8px; background: var(--gold); margin-bottom: 36px; }
+    h1 {
+      font-weight: 800; font-stretch: 75%;
+      font-size: clamp(40px, 5.6vw, 86px);
+      line-height: .98; letter-spacing: -.005em;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+    .lede { color: var(--muted); font-size: clamp(16px, 1.35vw, 22px); line-height: 1.6; }
+
+    @media (max-width: 820px) {
+      :root { --header-h: 72px; }
+      .brand svg { width: 34px; }
+      .brand-name { font-size: 22px; }
+      .nav a:not(.btn) { display: none; }
+      .nav .btn { padding: 11px 18px; font-size: 15px; }
+      .rule { margin-bottom: 24px; }
+      h1 { margin-bottom: 22px; }
+    }
+    @media (max-width: 420px) {
+      .brand { gap: 12px; }
+      .brand-name { font-size: 19px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .loader-bar span { animation: none; width: 100%; opacity: .6; }
+      .panel { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading screen -->
+  <div class="loader" id="loader" role="status" aria-label="Loading">
+    <div class="loader-inner">
+      <svg class="loader-logo" viewBox="317 283 566 634" aria-hidden="true">
+        <g fill="#ece6df">
+          <rect x="385" y="283" width="62" height="634"/><rect x="753" y="283" width="62" height="634"/>
+          <rect x="317" y="362" width="566" height="51"/><rect x="317" y="577" width="566" height="51"/><rect x="317" y="792" width="566" height="51"/>
+        </g>
+        <polygon fill="#c8974a" points="426,775 468,809 774,430 732,396"/>
+      </svg>
+      <div class="loader-bar"><span></span></div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="Standard &amp; Co. home">
+      <svg viewBox="317 283 566 634" aria-hidden="true">
+        <g fill="#ece6df">
+          <rect x="385" y="283" width="62" height="634"/><rect x="753" y="283" width="62" height="634"/>
+          <rect x="317" y="362" width="566" height="51"/><rect x="317" y="577" width="566" height="51"/><rect x="317" y="792" width="566" height="51"/>
+        </g>
+        <polygon fill="#c8974a" points="426,775 468,809 774,430 732,396"/>
+      </svg>
+      <span class="brand-name">Standard <span class="amp">&amp;</span> Co.</span>
+    </a>
+    <nav class="nav">
+      <a href="#services">Services</a>
+      <a href="#projects">Projects</a>
+      <a href="#about">About</a>
+      <a class="btn" href="#quote">Get a quote</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="scene" aria-hidden="true">
+        <img class="before" src="img/house.jpg" alt="">
+        <img class="after" id="scaffold" src="img/house-scaffold.jpg" alt="">
+      </div>
+      <div class="panel" id="panel">
+        <div class="rule"></div>
+        <h1>Scaffolding for London's buildings, old and new.</h1>
+        <p class="lede">Access for restorations, refurbishments and new builds.<br>
+          [ADD A REAL DETAIL, e.g. years trading or areas covered]</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var loader = document.getElementById('loader');
+      var scaffold = document.getElementById('scaffold');
+      var panel = document.getElementById('panel');
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Height of each scaffold lift in the photo, measured from the bottom of the image (%).
+      // The scaffold goes up one lift at a time, pausing briefly at each level.
+      var LIFTS = [13, 25, 36, 47.5, 57.5, 69, 80, 88, 100];
+      var STEP_MS = 420, PAUSE_MS = 110;
+
+      var hero = document.querySelector('.hero');
+      var scene = document.querySelector('.scene');
+      var p = 0;          // build progress, % of image height from the bottom
+      var camY = null;    // current camera offset (px)
+
+      // Camera: starts at street level and tilts up with the scaffold,
+      // ending framed on the roofline (image y = 10% at the top of the hero).
+      var ROOF = 0.10, GROUND = 0.91, EDGE_AT = 0.42;
+      function camTarget() {
+        var H = hero.clientHeight, W = scene.offsetWidth;
+        var yTop = -ROOF * W;                 // roof framed
+        var yBottom = H - GROUND * W;         // ground framed
+        var lo = Math.max(H - W, Math.min(yTop, yBottom));
+        var hi = Math.min(0, Math.max(yTop, yBottom));
+        var follow = H * EDGE_AT - (1 - Math.min(p, 100) / 100) * W; // keep the rising edge in view
+        return Math.max(lo, Math.min(hi, follow));
+      }
+      function placeCam(snap) {
+        var t = camTarget();
+        camY = (snap || camY === null) ? t : camY + (t - camY) * 0.08;
+        scene.style.setProperty('--ty', camY + 'px');
+      }
+      window.addEventListener('resize', function () { placeCam(true); });
+
+      function setP(v) { p = v; scaffold.style.setProperty('--p', v + '%'); }
+      function ease(t) { return 1 - Math.pow(1 - t, 3); }
+
+      function build() {
+        var from = 0, i = 0, start = null, holdUntil = 0;
+        function frame(now) {
+          placeCam();
+          if (now < holdUntil) return requestAnimationFrame(frame);
+          if (start === null) start = now;
+          var t = Math.min(1, (now - start) / STEP_MS);
+          setP(from + (LIFTS[i] - from) * ease(t));
+          if (t === 1) {
+            from = LIFTS[i]; i++; start = null; holdUntil = now + PAUSE_MS;
+            if (i === LIFTS.length) { setP(104); settle(); return; }
+          }
+          requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      }
+
+      // let the camera ease into its final position after the last lift
+      function settle() {
+        placeCam();
+        if (Math.abs(camTarget() - camY) > 0.5) requestAnimationFrame(settle); else placeCam(true);
+      }
+
+      function imgReady(img) {
+        return img.complete ? Promise.resolve() : new Promise(function (r) { img.onload = img.onerror = r; });
+      }
+
+      var minShow = new Promise(function (r) { setTimeout(r, 1200); });
+      Promise.all([imgReady(document.querySelector('.scene .before')), imgReady(scaffold), minShow]).then(function () {
+        if (reduce) { setP(104); placeCam(true); loader.classList.add('is-done'); panel.classList.add('is-in'); return; }
+        setP(0); placeCam(true);
+        loader.classList.add('is-done');
+        setTimeout(build, 450);
+        setTimeout(function () { panel.classList.add('is-in'); }, 900);
+      });
+    })();
+  </script>
+</body>
+</html>
