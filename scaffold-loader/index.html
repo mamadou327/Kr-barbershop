@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Loading…</title>
+  <style>
+    :root {
+      --bg: #1c1d1f;
+      --cream: #ece6df;
+      --gold: #c8974a;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+    .logo {
+      width: clamp(120px, 28vmin, 220px);
+      height: auto;
+      display: block;
+    }
+    /* Placeholder progress line — will be replaced by the final animation */
+    .bar {
+      width: clamp(120px, 28vmin, 220px);
+      height: 2px;
+      background: rgba(236, 230, 223, 0.12);
+      overflow: hidden;
+    }
+    .bar span {
+      display: block;
+      height: 100%;
+      width: 40%;
+      background: var(--gold);
+      animation: slide 1.4s ease-in-out infinite;
+    }
+    @keyframes slide {
+      from { transform: translateX(-100%); }
+      to   { transform: translateX(250%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .bar span { animation: none; width: 100%; opacity: .6; }
+    }
+  </style>
+</head>
+<body>
+  <main class="loader" role="status" aria-label="Loading">
+    <!-- Logo traced from the brand mark (1200×1200 source, cropped to the mark) -->
+    <svg class="logo" viewBox="317 283 566 634" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g id="frame" fill="var(--cream)">
+        <!-- uprights -->
+        <rect id="post-left"  x="385" y="283" width="62" height="634"/>
+        <rect id="post-right" x="753" y="283" width="62" height="634"/>
+        <!-- ledgers -->
+        <rect id="ledger-top" x="317" y="362" width="566" height="51"/>
+        <rect id="ledger-mid" x="317" y="577" width="566" height="51"/>
+        <rect id="ledger-bot" x="317" y="792" width="566" height="51"/>
+      </g>
+      <!-- diagonal brace -->
+      <polygon id="brace" fill="var(--gold)" points="426,775 468,809 774,430 732,396"/>
+    </svg>
+    <div class="bar"><span></span></div>
+  </main>
+</body>
+</html>
