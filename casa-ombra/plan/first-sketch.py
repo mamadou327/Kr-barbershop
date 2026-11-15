@@ -75,7 +75,8 @@ txt(19.5, 17.6, 'REFLECTING POOL', 15, 700, '#999'); sub(19.5, 18.3, 'below', 12
 rect(7.7, 19.35, 22.5, 2.45, 'none', G, 1, '3 4'); rect(7.7, 21.8, 22.5, 1.2, '#f6f6f6', G, 1); rect(7.7, 23.0, 34.8, 3.0, 'none', G, 1, '3 4')
 rect(27.9, 14.6, 2.3, 7.2, '#f6f6f6', G, 1)
 txt(26, -2.2, 'REAR LAWN', 15, 700, '#999'); rect(37.6, -4.0, 4.3, 3.6, '#f6f6f6', G, 1.2)
-tree(9, -2.6, 1.0); tree(19, -3.0, 1.0); tree(33, -2.8, 1.0); tree(39.6, 23.0, 1.1); tree(40.3, 16.5, 1.2); tree(39.8, 10.5, 1.2)
+tree(9, -2.6, 1.0); tree(19, -3.0, 1.0); tree(33, -2.8, 1.0)
+rect(16.75, 3.6, 13.45, 3.0, '#f6f6f6', G, 1); sub(23.5, 5.3, 'rear terrace below', 12, '#999'); tree(39.6, 23.0, 1.1); tree(40.3, 16.5, 1.2); tree(39.8, 10.5, 1.2)
 # roofs of the low blocks
 o.append('<defs><pattern id="gr" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="0.9" fill="#c4c4c4"/><circle cx="5.5" cy="5.5" r="0.9" fill="#c4c4c4"/></pattern>'
          f'<marker id="ah" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="{INK}"/></marker></defs>')

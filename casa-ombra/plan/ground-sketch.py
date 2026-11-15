@@ -95,6 +95,7 @@ sub(36.2, 24.3, 'STEPPING-STONE LAWN'); tree(39.6, 23.0, 1.1); tree(40.3, 16.5, 
 txt(26, -2.2, 'REAR LAWN', 17, 700, '#444'); rect(37.6, -4.0, 4.3, 3.6, '#f6f6f6', G, 1.2); sub(39.75, -2.4, 'SUNKEN'); sub(39.75, -1.7, 'LOUNGE')
 for sy in (-3.0, -1.2, 0.6, 2.4, 4.2): rect(-2.2, sy, 1.1, 0.8, '#fff', G, 1, rx=6)
 tree(9, -2.6, 1.0); tree(19, -3.0, 1.0); tree(33, -2.8, 1.0)
+rect(16.75, 3.6, 13.45, 3.4, '#f6f6f6', G, 1.2); txt(23.5, 4.85, 'REAR TERRACE', 15, 700, '#444'); sub(23.5, 5.55, 'outdoor dining · loungers', 12)
 # first-floor box above
 rect(8.4, 6.6, 27.4, 8.6, 'none', '#c0392b', 2, '14 9')
 txt(22.1, 16.0 - 0.35, '', 13)
