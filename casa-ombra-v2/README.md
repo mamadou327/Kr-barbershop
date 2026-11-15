@@ -4,14 +4,16 @@ Same style as v1 (warm board-marked concrete, travertine, timber lattice, black 
 olive trees, M3 CS + Mansory Urus outside, SVJ + SF90 in a glass garage), but a simple
 house that is easy to keep consistent across every image.
 
-## The house (single storey, L-shaped)
-- West arm (street side): glass garage facing the forecourt, entrance hall with a glass
-  wall onto the cars, kitchen, dining; WC / utility / pantry along the solid street wall.
-- Corner: living room, glass to the rear garden and to the pool courtyard.
-- North arm (private): corridor along the back, then cinema, bedroom 2, bedroom 3 and the
-  primary suite, all facing the pool behind a timber lattice.
-- Courtyard inside the L: covered terraces under the roof overhang, a 24 x 4.5 m black
-  pool with an olive tree at each end, lawn with olive trees. Road along the west.
+## The house (single storey, L-shaped, from Mo's sketch)
+- Main arm along the back (north), west to east: glass garage facing the forecourt,
+  entrance hall with a glass wall onto the cars, kitchen, dining, living (glass to the
+  pool and the rear garden). WC / pantry / utility in a strip behind the kitchen.
+- Corner: cinema and gym, and a skylit gallery leading to the bedroom wing.
+- East arm (south from the corner): bedroom 2, bedroom 3, primary suite, all facing west
+  onto the pool through glass and a timber lattice; corridor along the outside.
+- Pool in the corner between the arms; forecourt with the M3 CS and Urus in front of the
+  garage, separated from the pool garden by a low travertine wall with olive trees.
+  Road along the south.
 
 ## Steps
 1. Brief: done (this file)
