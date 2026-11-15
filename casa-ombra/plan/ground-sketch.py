@@ -127,12 +127,11 @@ door_v(30.2, 7.5, 0.9, 't', 'e'); door_v(30.2, 11.45, 0.9, 'b', 'e')    # pantry
 door_v(33.6, 7.8, 0.85, 't', 'e')               # plant
 door_h(33.2, 12.4, 0.8, 'l', 'n'); door_h(35.3, 12.4, 0.8, 'l', 'n')    # sauna, steam
 door_v(30.2, 13.3, 1.0, 't', 'e')               # spa -> terrace
-# front door: glass pivot in the west glass face
-gap(13.5, 8.0, 13.5, 9.6)
-o.append(f'<line x1="{X(13.5 - 0.55):.1f}" y1="{Y(8.25):.1f}" x2="{X(13.5 + 0.9):.1f}" y2="{Y(9.45):.1f}" stroke="{INK}" stroke-width="5"/>')
-o.append(f'<line x1="{X(11.55)}" y1="{Y(8.8)}" x2="{X(12.75)}" y2="{Y(8.8)}" stroke="{INK}" stroke-width="2.2" marker-end="url(#ah)"/>')
-o.append(f'<text x="{X(12.4):.1f}" y="{Y(7.75):.1f}" font-size="13" font-weight="700" letter-spacing=".06em" text-anchor="middle">FRONT</text>')
-o.append(f'<text x="{X(12.4):.1f}" y="{Y(8.2):.1f}" font-size="13" font-weight="700" letter-spacing=".06em" text-anchor="middle">DOOR</text>')
+# front door: glass pivot in the south glass, at the top of the lit steps
+gap(14.0, 12.7, 15.7, 12.7)
+o.append(f'<line x1="{X(14.25):.1f}" y1="{Y(13.25):.1f}" x2="{X(15.45):.1f}" y2="{Y(12.15):.1f}" stroke="{INK}" stroke-width="5"/>')
+o.append(f'<line x1="{X(12.0)}" y1="{Y(13.75)}" x2="{X(14.4)}" y2="{Y(13.75)}" stroke="{INK}" stroke-width="2.2" marker-end="url(#ah)"/>')
+o.append(f'<text x="{X(14.85):.1f}" y="{Y(14.35):.1f}" font-size="13" font-weight="700" letter-spacing=".06em" text-anchor="middle">FRONT DOOR</text>')
 # stair
 rect(15.9, 7.3, 6.0, 1.15, '#fff', INK, 1.5)
 for i in range(1, 20): line(15.9 + 6.0 * i / 20, 7.3, 15.9 + 6.0 * i / 20, 8.45, 1)
