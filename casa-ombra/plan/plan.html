@@ -1,0 +1,126 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;background:#efe9df;font-family:Helvetica,Arial,sans-serif;color:#2a2622}
+.wrap{width:2400px;padding:60px 70px;box-sizing:border-box}
+h1{font-weight:300;letter-spacing:.35em;font-size:40px;margin:0 0 6px}
+.sub{letter-spacing:.2em;font-size:15px;color:#7a7066;margin-bottom:40px}
+.row{display:flex;gap:70px;align-items:flex-start}
+.panel h2{font-weight:400;letter-spacing:.3em;font-size:18px;margin:0 0 14px}
+svg text{font-family:Helvetica,Arial,sans-serif}
+.lab{font-size:15px;letter-spacing:.12em;fill:#2a2622}
+.sm{font-size:12px;letter-spacing:.08em;fill:#7a7066}
+.legend{margin-top:36px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px 40px;font-size:16px}
+.legend b{display:inline-block;width:26px;height:26px;border-radius:50%;background:#b0532c;color:#fff;text-align:center;line-height:26px;font-size:14px;margin-right:10px}
+</style></head><body><div class="wrap">
+<h1>CASA OMBRA</h1>
+<div class="sub">GENERAL ARRANGEMENT · 1:200 · FORECOURT TO THE SOUTH · NUMBERED MARKERS = CAMERA POSITIONS FOR EACH INTERIOR SHOT</div>
+<div class="row" id="row"></div>
+<div class="legend" id="legend"></div>
+</div>
+<script>
+const S=22; // px per metre
+const W='#2a2622';
+function svg(w,h,body){return `<svg width="${w*S+40}" height="${h*S+40}" viewBox="-20 -20 ${w*S+40} ${h*S+40}">${body}</svg>`}
+const r=(x,y,w,h,o={})=>`<rect x="${x*S}" y="${y*S}" width="${w*S}" height="${h*S}" fill="${o.f||'none'}" stroke="${o.s||W}" stroke-width="${o.sw??1.2}" ${o.d?`stroke-dasharray="${o.d}"`:''}/>`;
+const wall=(x1,y1,x2,y2,t=5)=>`<line x1="${x1*S}" y1="${y1*S}" x2="${x2*S}" y2="${y2*S}" stroke="${W}" stroke-width="${t}" stroke-linecap="square"/>`;
+const glass=(x1,y1,x2,y2)=>`<line x1="${x1*S}" y1="${y1*S}" x2="${x2*S}" y2="${y2*S}" stroke="#5f8aa0" stroke-width="3"/><line x1="${x1*S}" y1="${y1*S}" x2="${x2*S}" y2="${y2*S}" stroke="#efe9df" stroke-width="1"/>`;
+const t=(x,y,s,c='lab')=>`<text x="${x*S}" y="${y*S}" class="${c}" text-anchor="middle">${s}</text>`;
+const stair=(x,y,w,n,len)=>{let o=r(x,y,w,len,{f:'#e4dccf'});for(let i=1;i<n;i++)o+=`<line x1="${x*S}" y1="${(y+len*i/n)*S}" x2="${(x+w)*S}" y2="${(y+len*i/n)*S}" stroke="${W}" stroke-width=".8"/>`;return o};
+const tree=(x,y,rad=1.3)=>`<circle cx="${x*S}" cy="${y*S}" r="${rad*S}" fill="#c9cfae" stroke="#7d8656"/><circle cx="${x*S}" cy="${y*S}" r="3" fill="#7d8656"/>`;
+const car=(x,y,c,l)=>`<rect x="${x*S}" y="${y*S}" width="${2*S}" height="${4.6*S}" rx="8" fill="${c}" opacity=".85"/>${t(x+1,y+5.3,l,'sm')}`;
+const cam=(n,x,y,ang)=>{const a=ang*Math.PI/180,L=3.2*S,sp=.42;const p=(d)=>`${x*S+L*Math.cos(a+d)},${y*S+L*Math.sin(a+d)}`;
+ return `<polygon points="${x*S},${y*S} ${p(-sp)} ${p(sp)}" fill="#b0532c" opacity=".18"/><circle cx="${x*S}" cy="${y*S}" r="13" fill="#b0532c"/><text x="${x*S}" y="${y*S+5}" fill="#fff" font-size="14" text-anchor="middle">${n}</text>`};
+const north=(x,y)=>`<g transform="translate(${x*S},${y*S})"><polygon points="0,-26 9,6 0,0 -9,6" fill="${W}"/><text y="26" text-anchor="middle" class="sm">N</text></g>`;
+
+/* ---------- GROUND FLOOR  (x 0..42, y 0..24; y=24 is the forecourt side) ---------- */
+let g='';
+// site & forecourt
+g+=r(-0.5,19.5,22,4.3,{f:'#e6ddcf',s:'#b9ad9c',sw:.8})+t(15.5,22.4,'TRAVERTINE FORECOURT','sm');
+g+=car(4.2,19.9,'#8c8c88','')+car(7.2,19.6,'#1d1d1d','')+t(6.7,24.9,'M3 CS · MANSORY URUS','sm');
+// reflecting pool in front of living pavilion
+g+=r(19.5,17,20,3.2,{f:'#bccdd3',s:'#7e9aa4'})+t(29.5,19.2,'REFLECTING POOL','sm');
+g+=r(30.5,17.4,3.4,2.4,{f:'#d8cfbf'})+tree(32.2,18.6,1.4);
+g+=r(36,17.4,2.6,2.4,{f:'#d8cfbf'})+tree(37.3,18.6,1.2);
+// garden steps east
+g+=stair(40,13,2.2,6,6.5)+t(41.1,21,'STEPS','sm');
+// GARAGE x0..10 y4..17
+g+=wall(0,4,10,4)+wall(0,4,0,17);glass(0,17,10,17);g+=glass(0,17,10,17);
+g+=r(0,4,10,13,{f:'#f3eee6',s:'none'})+wall(0,4,10,4)+wall(0,4,0,17)+glass(0,17,10,17);
+g+=car(2,8,'#8fc23a','SVJ')+car(6,7.3,'#c4251b','SF90');
+g+=t(5,5.8,'GLASS GARAGE')+t(5,6.6,'10 × 13 m','sm');
+// glass wall garage <-> hall
+g+=glass(10,4,10,17);
+// ENTRANCE HALL x10..17 y4..17
+g+=r(10,4,7,13,{f:'#f6f1ea',s:'none'})+wall(10,4,17,4)+wall(10,17,12.3,17)+wall(14.7,17,17,17);
+g+=`<path d="M${12.3*S} ${17*S} A ${2.4*S} ${2.4*S} 0 0 0 ${14.7*S} ${14.6*S}" fill="none" stroke="${W}" stroke-width=".8" stroke-dasharray="4 3"/><line x1="${12.3*S}" y1="${17*S}" x2="${14.7*S}" y2="${14.6*S}" stroke="#6b4a2b" stroke-width="4"/>`;
+g+=t(13.5,18.4,'PIVOT DOOR','sm');
+g+=r(10.8,5,4.4,4,{f:'#ddd5c6',d:'5 4'})+tree(13,7,1.5)+t(13,10.1,'OLIVE · SKYLIGHT','sm');
+g+=stair(15.3,5.5,1.6,14,9.5)+t(16.1,15.9,'UP','sm');
+g+=t(12.6,12.6,'ENTRANCE')+t(12.6,13.4,'STAIR HALL','lab')+t(12.6,14.2,'double height','sm');
+// LIVING PAVILION x17..34 y4..17 (glass to south + east)
+g+=r(17,4,17,13,{f:'#fbf8f3',s:'none'})+wall(17,4,34,4)+glass(17,17,34,17)+wall(17,4,17,17,2.5);
+g+=r(20,11,6,2.4,{f:'#e7dfd2'})+r(19.2,11,0.8,2.4,{f:'#e7dfd2'})+r(23.5,14,2.5,1,{f:'#e7dfd2'})+t(23,8.6,'LIVING')+t(23,9.4,'glass to pool · 3.6 m ceiling','sm');
+g+=r(17.6,6,0.5,4,{f:'#8a7f72'})+t(19.6,7,'fire','sm');
+// dining + kitchen
+g+=r(27.5,10.5,4.2,1.4,{f:'#d9cfbf'})+t(29.6,9.6,'DINING');
+g+=r(28,5.2,5.4,1,{f:'#cfc5b5'})+r(28.5,7,4.4,1.3,{f:'#b8ad9b'})+t(30.7,5.0,'KITCHEN · island','sm');
+// east wing x34..40 y4..17: terrace & plunge
+g+=r(34,4,6,13,{f:'#efe7da',s:'#b9ad9c',d:'4 4'})+glass(34,4,34,17);
+g+=r(35,5,4,6,{f:'#9fc3cc',s:'#6f949e'})+t(37,8.4,'PLUNGE','sm')+t(37,9.2,'POOL','sm');
+g+=t(37,13.5,'COVERED','sm')+t(37,14.3,'TERRACE','sm');
+// rear garden band
+g+=r(0,0,40,4,{f:'#e3e2cf',s:'#b9ad9c',sw:.8})+t(20,2.4,'OLIVE GARDEN','sm')+tree(4,2,1.2)+tree(9,1.8,1.1)+tree(26,2,1.3)+tree(33,1.9,1.1);
+// box above (dashed)
+g+=r(12,3.4,28,9.2,{s:'#b0532c',sw:1,d:'8 6'})+t(28,3.0,'FIRST-FLOOR BOX ABOVE · CANTILEVER →','sm');
+// cameras
+g+=cam(1,12.8,15.6,-80);   // stair hall: from door looking north
+g+=cam(2,32.5,15.6,-150);  // living: from SE corner looking NW
+g+=cam(3,26.5,13.4,-35);   // kitchen: from living looking NE to kitchen
+g+=cam(9,17.5,12.5,-170);  // garage through glass from hall
+g+=north(1.6,1.5);
+
+/* ---------- FIRST FLOOR (box x12..40 y3.4..12.6) ---------- */
+let f='';
+const ox=12,oy=3.4; // reuse coords
+f+=r(12,3.4,28,9.2,{f:'#fbf8f3',s:'none'});
+f+=wall(12,3.4,40,3.4)+wall(12,3.4,12,12.6)+wall(40,3.4,40,12.6);
+// lattice gallery along south face
+f+=`<line x1="${12*S}" y1="${12.6*S}" x2="${40*S}" y2="${12.6*S}" stroke="#8a6a46" stroke-width="7" stroke-dasharray="3 3"/>`;
+f+=r(12,10.6,28,2,{f:'#f1eadf',s:'none'})+t(26,11.85,'TIMBER LATTICE GALLERY · lit corridor','sm');
+f+=wall(12,10.6,15,10.6,2.5)+wall(17.2,10.6,40,10.6,2.5);
+// stair arrival
+f+=stair(15.3,5.5,1.6,8,5)+t(16.1,10.2,'DN','sm');
+f+=r(10.8,5,4.4,4,{f:'#ddd5c6',d:'5 4'})+tree(13,7,1.5);f+=t(13,10.1,'void to hall','sm');
+// bedrooms
+f+=wall(17.2,3.4,17.2,10.6,2.5)+wall(23.5,3.4,23.5,10.6,2.5)+wall(29.5,3.4,29.5,10.6,2.5);
+f+=r(17.4,3.6,2.4,3,{f:'#ece6dc'})+t(20.3,7.6,'BEDROOM 2')+t(20.3,8.4,'ensuite','sm');
+f+=r(23.7,3.6,2.4,3,{f:'#ece6dc'})+t(26.5,7.6,'BEDROOM 3')+t(26.5,8.4,'ensuite','sm');
+// primary suite x29.5..40 (cantilever x34..40)
+f+=r(35,5.4,3.2,3.6,{f:'#e7dfd2'})+t(34.5,10,'PRIMARY SUITE');
+f+=r(29.8,3.7,4.5,2.6,{f:'#dfe8ea',s:'#7e9aa4'})+t(32,5.3,'BATH','sm');
+f+=r(30.2,7.6,1.6,2.3,{f:'#cfd9dc',s:'#7e9aa4'})+t(31,9,'tub','sm');
+f+=glass(40,3.4,40,12.6);
+f+=`<line x1="${34*S}" y1="${2.2*S}" x2="${34*S}" y2="${13.8*S}" stroke="#b0532c" stroke-dasharray="6 5"/>`+t(37,2.6,'CANTILEVER 6 m','sm');
+f+=cam(4,32.2,8.6,10);  // primary suite: looking east to glass end
+f+=cam(5,30.4,4.6,40);  // bath
+f+=cam(6,20,11.6,0);    // lattice gallery
+// put box at same origin so offset matches
+const firstSvg=`<g transform="translate(${-11*S},0)">${f}</g>`;
+
+/* ---------- LOWER GROUND (under living) ---------- */
+let l='';
+l+=r(10,4,24,13,{f:'#fbf8f3',s:'none'})+wall(10,4,34,4)+wall(10,17,34,17)+wall(10,4,10,17)+wall(34,4,34,17);
+l+=stair(15.3,9,1.6,10,6);
+l+=wall(17,4,17,17,2.5)+wall(26,4,26,17,2.5);
+l+=r(18.2,11.5,6.6,1.2,{f:'#3a3531'})+r(18.2,13.5,6.6,1.2,{f:'#3a3531'})+r(18.5,5,6,0.3,{f:'#2a2622'})+t(21.5,8.6,'CINEMA')+t(21.5,9.4,'8 seats','sm');
+l+=r(26.6,4.6,6.8,1,{f:'#7a5a3e'})+t(30,8.6,'WINE GALLERY')+t(30,9.4,'& lounge','sm');
+l+=r(10.6,4.6,4.2,3.8,{f:'#e7dfd2'})+t(12.7,11.6,'GYM','sm');
+l+=cam(7,21.5,16,-90);
+l+=cam(8,30,15.6,-95);
+const lowSvg=`<g transform="translate(${-9.5*S},0)">${l}</g>`;
+
+document.getElementById('row').innerHTML=
+ `<div class="panel"><h2>GROUND FLOOR</h2>${svg(42.5,25.5,g)}</div>`+
+ `<div class="panel"><h2>FIRST FLOOR</h2>${svg(29.5,14.5,firstSvg)}<h2 style="margin-top:40px">LOWER GROUND</h2>${svg(25,17.5,lowSvg)}</div>`;
+const L=[['1','Entrance stair hall'],['2','Living, looking to pool'],['3','Kitchen & dining'],['4','Primary suite, cantilever glass'],['5','Primary bath'],['6','Lattice gallery'],['7','Cinema'],['8','Wine gallery'],['9','Garage seen from the hall']];
+document.getElementById('legend').innerHTML=L.map(([n,s])=>`<div><b>${n}</b>${s}</div>`).join('');
+</script></body></html>
