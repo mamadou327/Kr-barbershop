@@ -12,7 +12,7 @@ svg text{font-family:Helvetica,Arial,sans-serif}
 .legend b{display:inline-block;width:26px;height:26px;border-radius:50%;background:#b0532c;color:#fff;text-align:center;line-height:26px;font-size:14px;margin-right:10px}
 </style></head><body><div class="wrap">
 <h1>CASA OMBRA</h1>
-<div class="sub">GENERAL ARRANGEMENT · 1:200 · FORECOURT TO THE WEST · NUMBERED MARKERS = CAMERA POSITIONS FOR EACH INTERIOR SHOT</div>
+<div class="sub">GENERAL ARRANGEMENT · 1:200 · DRAWN FROM MASTER 4 + AERIAL ANGLES · NUMBERED MARKERS = CAMERA POSITIONS FOR EACH INTERIOR SHOT</div>
 <div class="row" id="row"></div>
 <div class="legend" id="legend"></div>
 </div>
@@ -32,78 +32,86 @@ const cam=(n,x,y,ang)=>{const a=ang*Math.PI/180,L=3.2*S,sp=.42;const p=(d)=>`${x
 const north=(x,y)=>`<g transform="translate(${x*S},${y*S})"><polygon points="0,-26 9,6 0,0 -9,6" fill="${W}"/><text y="26" text-anchor="middle" class="sm">N</text></g>`;
 
 
-/* Coordinates in metres, north up. Forecourt to the WEST. Box long axis runs east.
-   Master-4 camera stands south-west of the forecourt looking north-east at the corner. */
-const OX=12, OY=10; const X=v=>v+OX, Y=v=>v+OY;
+
+/* Read from master 4 + aerial angles. North up. The long lattice face of the box looks SOUTH over the
+   reflecting pool to the landscaped strip and the road. Garage wing at the WEST end, projecting south
+   towards the forecourt. Low spa wing at the EAST end. Lit steps rise from the forecourt onto the
+   covered terrace between garage and pool; the front door is at the top of those steps. */
+const OX=8, OY=12; const X=v=>v+OX, Y=v=>v+OY;
 const R=(x,y,w,h,o)=>r(X(x),Y(y),w,h,o), Wl=(a,b,c,d,t)=>wall(X(a),Y(b),X(c),Y(d),t), G=(a,b,c,d)=>glass(X(a),Y(b),X(c),Y(d)),
       T=(x,y,s,c)=>t(X(x),Y(y),s,c), TR=(x,y,rad)=>tree(X(x),Y(y),rad), C=(n,x,y,a)=>cam(n,X(x),Y(y),a),
       ST=(x,y,w,n,l)=>stair(X(x),Y(y),w,n,l);
-const carH=(x,y,c,l)=>`<rect x="${X(x)*S}" y="${Y(y)*S}" width="${4.6*S}" height="${2*S}" rx="8" fill="${c}" opacity=".85"/>`;
+const carV=(x,y,c)=>`<rect x="${X(x)*S}" y="${Y(y)*S}" width="${2*S}" height="${4.6*S}" rx="8" fill="${c}" opacity=".9"/>`;
 let g='';
-// forecourt (west)
-g+=R(-11,-7,19,31,{f:'#e6ddcf',s:'#b9ad9c',sw:.8})+T(-6,-3,'TRAVERTINE','sm')+T(-6,-2.2,'FORECOURT','sm');
-g+=carH(1.5,2.5,'#8c8c88')+T(3.8,1.9,'M3 CS','sm')+carH(1.5,9.2,'#1d1d1d')+T(3.8,12.4,'MANSORY URUS','sm');
-// garage wing (low travertine volume running north from the box end)
-g+=R(8,-8,11,14,{f:'#f3eee6',s:'none'})+Wl(8,-8,19,-8)+Wl(19,-8,19,6)+G(8,-8,8,3)+Wl(8,3,8,6);
-g+=`<rect x="${X(10)*S}" y="${Y(-6)*S}" width="${4.6*S}" height="${2*S}" rx="8" fill="#8fc23a" opacity=".85"/>`+T(12.3,-6.4,'SVJ','sm');
-g+=`<rect x="${X(11)*S}" y="${Y(-1.5)*S}" width="${4.6*S}" height="${2*S}" rx="8" fill="#c4251b" opacity=".85"/>`+T(13.3,-1.9,'SF90','sm');
-g+=T(15,2.8,'GLASS GARAGE')+T(15,3.6,'glass face to forecourt','sm');
-// ground floor under the box
-g+=R(8,6,26,10,{f:'#fbf8f3',s:'none'})+Wl(8,6,34,6)+G(8,6,19,6)+Wl(8,6,8,16)+G(14,16,34,16)+Wl(8,16,11,16);
-// entrance hall x8..14
-g+=Wl(14,6,14,11,2.5)+R(9,7,3.4,3.4,{f:'#ddd5c6',d:'5 4'})+TR(10.7,8.7,1.4)+T(10.7,11.2,'OLIVE · SKYLIGHT','sm');
-g+=ST(12.3,7,1.6,12,8.4)+T(11,13.2,'ENTRANCE')+T(11,14,'STAIR HALL','lab');
-g+=`<line x1="${X(11.2)*S}" y1="${Y(16)*S}" x2="${X(13.4)*S}" y2="${Y(16)*S}" stroke="#6b4a2b" stroke-width="6"/>`+T(12.3,17.2,'PIVOT DOOR','sm');
-g+=T(13.2,5.4,'glass wall to garage','sm');
+// north garden
+g+=R(-6,-11,58,10,{f:'#e3e2cf',s:'#b9ad9c',sw:.8})+T(26,-6,'OLIVE GARDEN · REAR','sm')+TR(4,-6,1.4)+TR(16,-8,1.2)+TR(38,-7,1.3)+TR(47,-5,1.2);
+// road along south
+g+=R(-6,27,58,3.5,{f:'#cfcac2',s:'none'})+T(26,29.2,'ROAD','sm');
+g+=Wl(-6,26.6,-1,26.6,3)+Wl(17,26.6,52,26.6,3);
+// forecourt (south-west, open to road)
+g+=R(-4,14,21,12.6,{f:'#e6ddcf',s:'#b9ad9c',sw:.8})+T(1.5,24.6,'TRAVERTINE FORECOURT','sm');
+g+=carV(6.2,17.2,'#8c8c88')+T(7.2,23,'M3 CS','sm')+carV(10,16.4,'#1d1d1d')+T(11,22.2,'URUS','sm');
+g+=TR(-2,21,1.6)+TR(1,24,1.4);
+// GARAGE WING x0..13 y-1..14  (glass face south to forecourt)
+g+=R(0,-1,13,15,{f:'#f3eee6',s:'none'})+Wl(0,-1,13,-1)+Wl(0,-1,0,14)+Wl(0,14,1,14)+G(1,14,11,14)+Wl(11,14,13,14)+Wl(13,9,13,14);
+g+=carV(3,6,'#8fc23a')+T(4,12.2,'SVJ','sm')+carV(7.5,5,'#c4251b')+T(8.5,11.2,'SF90','sm');
+g+=T(6.5,1.6,'GLASS GARAGE')+T(6.5,2.4,'glass face to forecourt','sm');
+// glass wall garage -> hall
+g+=G(13,-1,13,9);
+// GROUND FLOOR under box: enclosure x13..42 y-1..9, terrace y9..11 under overhang
+g+=R(13,-1,29,10,{f:'#fbf8f3',s:'none'})+Wl(13,-1,42,-1)+G(13,9,42,9)+Wl(42,-1,42,9);
+g+=R(13,9,29,2,{f:'#efe2c4',s:'none'})+T(30,10.4,'COVERED TERRACE UNDER THE BOX','sm');
+// entrance hall x13..19
+g+=Wl(19,-1,19,5,2.5)+R(14,0,3.4,3.4,{f:'#ddd5c6',d:'5 4'})+TR(15.7,1.7,1.4)+T(15.7,4.4,'OLIVE · SKYLIGHT','sm');
+g+=ST(17.4,1,1.5,10,7)+T(16,6.4,'ENTRANCE HALL')+T(16,7.2,'double height','sm');
+g+=`<line x1="${X(13.6)*S}" y1="${Y(9)*S}" x2="${X(16.4)*S}" y2="${Y(9)*S}" stroke="#6b4a2b" stroke-width="7"/>`;
+// lit steps from forecourt up to terrace
+g+=ST(13.2,11,3.2,5,4)+T(14.8,16,'LIT STEPS UP','sm')+T(15,12.8,'','sm');
 // living / dining / kitchen
-g+=R(15.5,12,6,2.2,{f:'#e7dfd2'})+R(19,9.5,2.4,1,{f:'#e7dfd2'})+T(19.5,8.2,'LIVING')+T(19.5,9,'glass to pool','sm');
-g+=R(24.5,11.5,4.2,1.4,{f:'#d9cfbf'})+T(26.6,10.8,'DINING');
-g+=R(28.8,6.6,4.6,1,{f:'#cfc5b5'})+R(29.3,9,3.8,1.3,{f:'#b8ad9b'})+T(31.2,12.4,'KITCHEN','sm');
-// east: cantilever over terrace + plunge
-g+=R(34,6,8,10,{f:'#efe7da',s:'#b9ad9c',d:'4 4'})+G(34,6,34,16);
-g+=R(36,7,4.5,5,{f:'#9fc3cc',s:'#6f949e'})+T(38.2,9.8,'PLUNGE','sm')+T(38,14.6,'TERRACE','sm');
-// lit platform at corner, reflecting pool along south face
-g+=R(8,16,6,3.5,{f:'#efe2c4',s:'#c9a25a'})+T(11,18.7,'LIT PLATFORM','sm');
-g+=R(14,16,23,5,{f:'#bccdd3',s:'#7e9aa4'})+T(20,19,'REFLECTING POOL','sm');
-g+=R(25.5,16.8,3.6,3,{f:'#d8cfbf'})+TR(27.3,18.3,1.5)+TR(33.5,17.6,1.3);
-// terraced garden + steps south-east
-g+=R(14,21,32,5,{f:'#e3e2cf',s:'#b9ad9c',sw:.8})+ST(36,21,6,5,4.5)+T(39,26.8,'STEPS','sm')+T(26,24,'TERRACED GARDEN','sm');
-// garden north
-g+=R(19,-8,27,14,{f:'#e3e2cf',s:'#b9ad9c',sw:.8})+T(32,-1,'OLIVE GARDEN','sm')+TR(24,-4,1.3)+TR(30,-5,1.2)+TR(38,-3,1.4);
-// first-floor box outline
-g+=R(6.5,5.5,35.5,11,{s:'#b0532c',sw:1,d:'8 6'})+T(30,5,'FIRST-FLOOR BOX ABOVE · LATTICE ON WEST END + SOUTH FACE','sm');
-// master 4 camera
-g+=`<g>${cam('M',X(-10),Y(23),-38)}</g>`+T(-6.5,25.6,'MASTER 4 VIEW','sm');
-// interior cameras
-g+=C(1,12.3,15.2,-115);  // hall: just inside door looking north-west, garage glass ahead-left
-g+=C(2,32,15,-165);      // living looking west along the glass
-g+=C(3,22,13.5,-20);     // kitchen
-g+=C(9,13,7.2,-110);     // garage through glass from hall
-g+=north(X(-9.5)-0,Y(-7));
+g+=R(21,4.5,6,2.2,{f:'#e7dfd2'})+R(24,1.5,2.4,1,{f:'#e7dfd2'})+R(20,1,.5,3,{f:'#8a7f72'})+T(25,0.6,'LIVING');
+g+=R(30,4,4.6,1.4,{f:'#d9cfbf'})+T(32.3,3.3,'DINING');
+g+=R(36.5,0,4.8,1,{f:'#cfc5b5'})+R(37,3.6,3.6,1.3,{f:'#b8ad9b'})+T(38.8,7.2,'KITCHEN');
+// reflecting pool (south of terrace, wraps to forecourt edge)
+g+=R(16.4,11,27.6,6,{f:'#2f3236',s:'#c9a25a'})+T(23,16.2,'BLACK REFLECTING POOL','sm').replace('class="sm"','class="sm" style="fill:#d9d2c6"');
+g+=R(21,12.4,3.6,3,{f:'#4a4a48',s:'#c9a25a'})+TR(22.8,13.9,1.6)+R(32,11.8,3.4,2.8,{f:'#4a4a48',s:'#c9a25a'})+TR(33.7,13.2,1.5);
+// landscaped strip + steps down to road
+g+=R(17,17,35,9.6,{f:'#e3e2cf',s:'#b9ad9c',sw:.8})+ST(30,17.2,3,6,7)+T(31.5,25.6,'GARDEN STEPS','sm')+TR(26,20,1.6)+TR(41,21,1.6)+TR(47,19,1.4)+T(22,23,'LANDSCAPED TERRACES','sm');
+// east spa wing x42..50 y-2..8
+g+=R(42,-2,8,10,{f:'#f3eee6',s:'none'})+Wl(42,-2,50,-2)+Wl(50,-2,50,8)+Wl(42,8,44.5,8)+Wl(46.5,8,50,8);
+g+=R(43.2,-1,5,4,{f:'#9fc3cc',s:'#6f949e'})+T(46,4.6,'SPA WING')+T(46,5.4,'plunge pool · sauna','sm');
+// first-floor box outline: x10..46 y-2..11 (overhangs west over garage junction and terrace)
+g+=R(10,-2,36,13,{s:'#b0532c',sw:1,d:'8 6'})+T(28,-2.6,'FIRST-FLOOR BOX ABOVE (LATTICE ON SOUTH FACE + WEST END)','sm');
+// cameras
+g+=cam('M',X(-5),Y(26),-40)+T(-4,27.8,'MASTER 4','sm');
+g+=C(1,15,8.2,-100);    // hall from front door: olive + stair ahead, garage glass left
+g+=C(9,17,3.5,180);     // garage through the glass wall
+g+=C(2,28,8.2,-160);    // living looking west
+g+=C(3,33,7.6,-20);     // kitchen
+g+=north(X(-4.5),Y(-9));
 
 let f='';
-f+=R(6.5,5.5,35.5,11,{f:'#fbf8f3',s:'none'})+Wl(6.5,5.5,42,5.5)+Wl(42,5.5,42,16.5);
-f+=`<line x1="${X(6.5)*S}" y1="${Y(16.5)*S}" x2="${X(42)*S}" y2="${Y(16.5)*S}" stroke="#8a6a46" stroke-width="7" stroke-dasharray="3 3"/>`;
-f+=`<line x1="${X(6.5)*S}" y1="${Y(5.5)*S}" x2="${X(6.5)*S}" y2="${Y(16.5)*S}" stroke="#8a6a46" stroke-width="7" stroke-dasharray="3 3"/>`;
-f+=R(6.5,14.5,35.5,2,{f:'#f1eadf',s:'none'})+T(24,15.8,'LATTICE GALLERY','sm');
-f+=R(9,7,3.4,3.4,{f:'#ddd5c6',d:'5 4'})+TR(10.7,8.7,1.4)+ST(12.3,9,1.6,6,5)+T(10.5,12.5,'void','sm');
-f+=Wl(14.5,5.5,14.5,14.5,2.5)+Wl(21.5,5.5,21.5,14.5,2.5)+Wl(28.5,5.5,28.5,14.5,2.5)+Wl(14.5,14.5,42,14.5,2.5);
-f+=T(18,10,'BEDROOM 2')+T(25,10,'BEDROOM 3')+T(36,11.5,'PRIMARY SUITE');
-f+=R(29,6,4.5,2.8,{f:'#dfe8ea',s:'#7e9aa4'})+T(31.2,7.7,'BATH','sm')+R(37,7,3.4,3.8,{f:'#e7dfd2'});
-f+=`<line x1="${X(34)*S}" y1="${Y(4.5)*S}" x2="${X(34)*S}" y2="${Y(17.5)*S}" stroke="#b0532c" stroke-dasharray="6 5"/>`+T(38,4.9,'CANTILEVER','sm');
-f+=C(4,33,12,-15)+C(5,30,9.5,-60)+C(6,40,15.4,180);
-const firstSvg=`<g transform="translate(${-(OX+5.5)*S},${-(OY+4)*S})">${f}</g>`;
+f+=R(10,-2,36,13,{f:'#fbf8f3',s:'none'})+Wl(10,-2,46,-2)+Wl(46,-2,46,11);
+f+=`<line x1="${X(10)*S}" y1="${Y(11)*S}" x2="${X(46)*S}" y2="${Y(11)*S}" stroke="#8a6a46" stroke-width="7" stroke-dasharray="3 3"/>`;
+f+=`<line x1="${X(10)*S}" y1="${Y(-2)*S}" x2="${X(10)*S}" y2="${Y(11)*S}" stroke="#8a6a46" stroke-width="7" stroke-dasharray="3 3"/>`;
+f+=R(10,9,36,2,{f:'#f1eadf',s:'none'})+T(30,10.4,'LATTICE GALLERY','sm');
+f+=Wl(21,-2,21,9,2.5)+Wl(28,-2,28,9,2.5)+Wl(35,-2,35,9,2.5)+Wl(21,9,46,9,2.5);
+f+=R(14,0,3.4,3.4,{f:'#ddd5c6',d:'5 4'})+TR(15.7,1.7,1.4)+ST(17.4,3,1.5,6,5)+T(15.6,5.4,'void','sm');
+f+=R(10.6,-1.4,4.5,2.6,{f:'#dfe8ea',s:'#7e9aa4'})+T(13,0.2,'BATH','sm');
+f+=R(11,4,3.4,3.6,{f:'#e7dfd2'})+T(15.5,8.2,'PRIMARY SUITE','lab');
+f+=T(24.5,4,'BEDROOM 2')+T(31.5,4,'BEDROOM 3')+T(40.5,4,'BEDROOM 4');
+f+=C(4,19,6.2,180)+C(5,15.5,0.6,170)+C(6,44,10,180);
+const firstSvg=`<g transform="translate(${-(OX+9.5)*S},${-(OY-2.5)*S})">${f}</g>`;
 
 let l='';
-l+=R(8,6,26,10,{f:'#fbf8f3',s:'none'})+Wl(8,6,34,6)+Wl(8,16,34,16)+Wl(8,6,8,16)+Wl(34,6,34,16);
-l+=ST(12.3,7,1.6,8,5)+Wl(14.5,6,14.5,16,2.5)+Wl(24,6,24,16,2.5);
-l+=R(16,11,6.6,1.2,{f:'#3a3531'})+R(16,13.2,6.6,1.2,{f:'#3a3531'})+R(16.2,6.6,6.2,.3,{f:'#2a2622'})+T(19.3,9.4,'CINEMA');
-l+=R(24.6,6.6,9,1,{f:'#7a5a3e'})+T(29,10,'WINE GALLERY')+T(10.5,14,'GYM','sm');
-l+=C(7,19.3,15.3,-90)+C(8,29,15.2,-90);
-const lowSvg=`<g transform="translate(${-(OX+7)*S},${-(OY+5)*S})">${l}</g>`;
+l+=R(13,-1,29,10,{f:'#fbf8f3',s:'none'})+Wl(13,-1,42,-1)+Wl(13,9,42,9)+Wl(13,-1,13,9)+Wl(42,-1,42,9);
+l+=ST(17.4,1,1.5,8,5)+Wl(20,-1,20,9,2.5)+Wl(31,-1,31,9,2.5);
+l+=R(22,4,7,1.1,{f:'#3a3531'})+R(22,6,7,1.1,{f:'#3a3531'})+R(22,-.4,7,.3,{f:'#2a2622'})+T(25.5,2.4,'CINEMA');
+l+=R(32,-.4,9,1,{f:'#7a5a3e'})+T(36.5,3,'WINE GALLERY')+T(15.5,7.4,'GYM','sm');
+l+=C(7,25.5,8.2,-90)+C(8,36.5,8.2,-90);
+const lowSvg=`<g transform="translate(${-(OX+12.5)*S},${-(OY-1.5)*S})">${l}</g>`;
 document.getElementById('row').innerHTML=
- `<div class="panel"><h2>GROUND FLOOR</h2>${svg(58,38,g)}</div>`+
- `<div class="panel"><h2>FIRST FLOOR</h2>${svg(37,13,firstSvg)}<h2 style="margin-top:40px">LOWER GROUND</h2>${svg(28,12,lowSvg)}</div>`;
+ `<div class="panel"><h2>GROUND FLOOR</h2>${svg(59,43,g)}</div>`+
+ `<div class="panel"><h2>FIRST FLOOR</h2>${svg(37,14,firstSvg)}<h2 style="margin-top:40px">LOWER GROUND</h2>${svg(30,11,lowSvg)}</div>`;
 const L=[['1','Entrance stair hall'],['2','Living, looking to pool'],['3','Kitchen & dining'],['4','Primary suite, cantilever glass'],['5','Primary bath'],['6','Lattice gallery'],['7','Cinema'],['8','Wine gallery'],['9','Garage seen from the hall'],['M','Master 4 exterior view']];
 document.getElementById('legend').innerHTML=L.map(([n,s])=>`<div><b>${n}</b>${s}</div>`).join('');
 </script></body></html>
