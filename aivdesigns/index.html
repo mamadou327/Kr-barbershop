@@ -53,6 +53,7 @@
 }
 @media (min-width:900px){:root{--gut:max(32px,env(safe-area-inset-left,0px));--gut-r:max(32px,env(safe-area-inset-right,0px))}}
 *,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:64px}
 body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.5 var(--body);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 img,video,svg{display:block;max-width:100%}
@@ -447,6 +448,7 @@ fieldset{border:0;padding:0;margin:0;display:grid;gap:8px}
 .opts input:focus-visible+span{outline:2px solid var(--on);outline-offset:3px}
 .submit{display:flex;align-items:center;flex-wrap:wrap;gap:12px 16px;margin-top:4px}
 .note{font-size:14px;color:var(--fog)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .done{border:1px solid var(--rule-d);border-radius:12px;padding:20px;background:#12151A}
 .done h3{font:650 22px/1.1 var(--display);letter-spacing:-.02em}
 .done p{color:var(--fog);margin:6px 0 14px}
@@ -696,7 +698,8 @@ footer .wrap{display:grid;grid-template-columns:auto 1fr auto;gap:16px 32px;alig
         <div class="f"><label for="f-type">Type of business</label>
           <select id="f-type" name="type"><option value="">Choose one</option><option>Kitchens &amp; bathrooms</option><option>Barber or salon</option><option>Gym or studio</option><option>Estate agent or developer</option><option>Builder or trade</option><option>Restaurant or café</option><option>Something else</option></select></div>
         <div class="f full"><label for="f-msg">What should the site do for you?</label><textarea id="f-msg" name="message" placeholder="For example: more kitchen design visits, or a way to book a chair online."></textarea></div>
-        <div class="submit"><button class="btn btn-on" type="submit">Enquire now</button><span class="note" id="f-note">We only use your details to reply.</span></div>
+        <div class="hp" aria-hidden="true"><label>Leave this empty<input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <div class="submit"><button class="btn btn-on" type="submit" id="f-send">Enquire now</button><span class="note" id="f-note">We only use your details to reply.</span></div>
         <div class="done" id="done" hidden tabindex="-1"></div>
       </form>
     </div>
@@ -1211,8 +1214,19 @@ footer .wrap{display:grid;grid-template-columns:auto 1fr auto;gap:16px 32px;alig
   function fallbackCopy(text){ const t=document.createElement('textarea'); t.value=text; t.setAttribute('readonly',''); t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select(); try{document.execCommand('copy')}catch(e){} t.remove(); }
   document.addEventListener('click',e=>{ const b=e.target.closest('[data-copy]'); if(b) copy(b.dataset.copy,b); });
 
-  const form=$('form'), done=$('done');
-  form.addEventListener('submit',e=>{
+  const form=$('form'), done=$('done'), send=$('f-send'), t0=Date.now();
+  // on aivdesigns.co.uk the enquiry goes straight to the studio inbox; anywhere else, or if sending fails, it opens in the visitor's email app
+  const live=/(^|\.)aivdesigns\.co\.uk$/.test(location.hostname);
+  function showMailto(f,body,failed){
+    const mail='mailto:hello@aivdesigns.co.uk?subject='+encodeURIComponent('Free concept for '+f.get('business'))+'&body='+encodeURIComponent(body);
+    done.innerHTML='<h3></h3><p></p><pre></pre><div class="row"><a class="btn btn-on" href="#">Send by email</a><button class="btn btn-line" type="button">Copy enquiry</button></div>';
+    done.querySelector('h3').textContent=failed?'It didn’t send this time.':'Your enquiry is ready.';
+    done.querySelector('p').textContent=failed?'Send it from your email app instead, or copy it and email it to hello@aivdesigns.co.uk.':'Send it from your email app, or copy it and send it however you like.';
+    done.querySelector('pre').textContent=body; done.querySelector('a').href=mail;
+    done.querySelector('button').addEventListener('click',ev=>copy(body,ev.currentTarget));
+    done.hidden=false; done.focus();
+  }
+  form.addEventListener('submit',async e=>{
     e.preventDefault();
     let bad=null;
     ['f-name','f-biz','f-contact'].forEach(id=>{ const el=$(id); const ok=el.value.trim().length>0; el.setAttribute('aria-invalid',ok?'false':'true'); if(!ok&&!bad) bad=el; });
@@ -1220,11 +1234,19 @@ footer .wrap{display:grid;grid-template-columns:auto 1fr auto;gap:16px 32px;alig
     $('f-note').textContent='We only use your details to reply.';
     const f=new FormData(form);
     const body='Name: '+f.get('name')+'\nBusiness: '+f.get('business')+'\nContact: '+f.get('contact')+'\nType: '+(f.get('type')||'Not given')+(f.get('message')?'\n\n'+f.get('message'):'');
-    const mail='mailto:hello@aivdesigns.co.uk?subject='+encodeURIComponent('Free concept for '+f.get('business'))+'&body='+encodeURIComponent(body);
-    done.innerHTML='<h3>Your enquiry is ready.</h3><p>Send it from your email app, or copy it and send it however you like.</p><pre></pre><div class="row"><a class="btn btn-on" href="#">Send by email</a><button class="btn btn-line" type="button">Copy enquiry</button></div>';
-    done.querySelector('pre').textContent=body; done.querySelector('a').href=mail;
-    done.querySelector('button').addEventListener('click',ev=>copy(body,ev.currentTarget));
-    done.hidden=false; done.focus();
+    if(!live){ showMailto(f,body,false); return; }
+    send.disabled=true; send.textContent='Sending…';
+    try{
+      const r=await fetch('/api/enquiry',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:f.get('name'),business:f.get('business'),contact:f.get('contact'),type:f.get('type'),message:f.get('message'),website:f.get('website'),took:Date.now()-t0})});
+      const j=await r.json().catch(()=>({}));
+      if(!r.ok||!j.ok) throw new Error('send');
+      form.querySelectorAll('.f,.submit').forEach(el=>el.hidden=true);
+      done.innerHTML='<h3></h3><p></p>';
+      done.querySelector('h3').textContent='Thanks, '+String(f.get('name')).trim().split(' ')[0]+'. Your enquiry is with us.';
+      done.querySelector('p').textContent='We’ll be in touch at '+String(f.get('contact')).trim()+' about your free concept.';
+      done.hidden=false; done.focus();
+    }catch(err){ showMailto(f,body,true); }
+    finally{ send.disabled=false; send.textContent='Enquire now'; }
   });
 })();
 </script>
