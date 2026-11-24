@@ -93,10 +93,39 @@ button{font-family:inherit}
 .replay{position:absolute;right:2vw;top:calc(var(--heroH) * .11);z-index:5;background:var(--ink);color:#fff;border:0;border-radius:8px;font:500 12px/1 var(--f);padding:9px 12px;opacity:0;cursor:pointer}
 .on .replay{opacity:.85;transition:opacity .6s 1s}.replay:hover{opacity:1}
 
+/* Selected work: named projects, filterable, straight after the logo band */
+.work{margin-top:calc(var(--heroH) + var(--band-h));padding:clamp(48px,5vw,80px) 2vw clamp(56px,6vw,96px);opacity:0;transition:opacity .8s .5s}
+.on .work{opacity:1}
+.work-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:clamp(20px,2.2vw,32px)}
+.work-head h2{font-family:var(--serif);font-weight:350;font-size:clamp(2.25rem,4.4vw,4rem);line-height:1;letter-spacing:-.02em}
+.work-head h2 em{font-style:italic;font-weight:300}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filters button{border:1px solid #d6d0c8;background:transparent;color:var(--ink);border-radius:999px;padding:9px 16px;font-size:12px;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
+.filters button:hover{border-color:var(--ink)}
+.filters button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.grid{display:flex;flex-wrap:wrap;gap:16px}
+.card{flex:1 1 calc(42% - 8px);min-width:0;transition:opacity .4s var(--ease-out),transform .6s var(--ease-out)}
+.card.big{flex-basis:calc(58% - 8px)}
+.card[hidden]{display:none}
+.card .ph{display:block;overflow:hidden;border-radius:12px;height:clamp(260px,31vw,500px);background:#e6e1d9}
+.card .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s var(--ease-out)}
+.card a:hover .ph img{transform:scale(1.04)}
+.card .meta{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 2px 0}
+.card h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.4rem,1.9vw,1.9rem);line-height:1.1;letter-spacing:-.01em}
+.card p{font-size:15px;color:var(--ink-2);margin-top:4px;max-width:46ch}
+.card .tag{flex:none;font-size:11px;color:var(--ink-2)}
+.card.rise{opacity:0;transform:translateY(24px)}
+.work-foot{margin-top:clamp(28px,3vw,44px);display:flex;justify-content:flex-end}
+.work-foot a{display:inline-flex;align-items:center;gap:10px;font-size:13px;border-bottom:1.5px solid var(--orange);padding-bottom:4px}
+.work-foot a svg{transition:transform .3s var(--ease-out)}.work-foot a:hover svg{transform:translateX(3px)}
+
 @media (max-width:760px){
   .nav{display:none}
   .hero-ui::before{display:none}
-  .copy{position:absolute;left:16px;right:16px;bottom:auto;top:calc(var(--heroH) + var(--band-h) + 28px);max-width:none;color:var(--ink)}
+  .copy{position:relative;left:auto;right:auto;bottom:auto;top:auto;margin:calc(var(--heroH) + var(--band-h) + 28px) 16px 0;max-width:none;color:var(--ink)}
+  .work{margin-top:0;padding:40px 16px 56px}
+  .card,.card.big{flex-basis:100%}
+  .card .ph{height:62vw}
   .copy p{color:var(--ink-2)}
   .menu{display:grid!important}
   .frame{width:80vw;height:100vw;top:52%}
@@ -141,6 +170,31 @@ button{font-family:inherit}
 <section class="band" aria-label="Architects Registration Board, Chartered Institute of Architectural Technologists, RIBA Chartered Practice">
   <div class="track" aria-hidden="true"></div>
 </section>
+
+<!-- Project names are placeholders for their "Residence 1-21": confirm each with Kate -->
+<section class="work" id="projects" aria-labelledby="work-title">
+  <div class="work-head">
+    <h2 id="work-title">Selected <em>work</em></h2>
+    <div class="filters caps" role="group" aria-label="Filter projects">
+      <button type="button" aria-pressed="true" data-f="all">All</button><button type="button" aria-pressed="false" data-f="homes">Homes</button><button type="button" aria-pressed="false" data-f="developers">Developers</button><button type="button" aria-pressed="false" data-f="healthcare">Healthcare</button>
+    </div>
+  </div>
+  <div class="grid">
+    <article class="card big" data-cat="homes"><a href="#projects">
+      <span class="ph"><img src="img/work-marble.webp" alt="Brick and white new build family home" loading="lazy"></span>
+      <div class="meta"><div><h3>The Marble Stair House</h3><p>A new build family home, finished inside with a sculpted marble staircase.</p></div><span class="tag caps">Homes</span></div></a></article>
+    <article class="card" data-cat="developers"><a href="#projects">
+      <span class="ph"><img src="img/work-lodge.webp" alt="Converted barns around a farm courtyard" loading="lazy"></span>
+      <div class="meta"><div><h3>Lodge Farm</h3><p>Barn conversions and new homes around a rural farm courtyard.</p></div><span class="tag caps">Developers</span></div></a></article>
+    <article class="card" data-cat="healthcare"><a href="#projects">
+      <span class="ph"><img src="img/work-health.webp" alt="Landscaped courtyard of a healthcare building" loading="lazy"></span>
+      <div class="meta"><div><h3>The Haematology Unit</h3><p>Calm treatment spaces around a landscaped courtyard.</p></div><span class="tag caps">Healthcare</span></div></a></article>
+    <article class="card big" data-cat="developers"><a href="#projects">
+      <span class="ph"><img src="img/civic.webp" alt="Concrete and glass civic building" loading="lazy" style="object-position:50% 40%"></span>
+      <div class="meta"><div><h3>The Civic Centre</h3><p>A concrete and glass building with an open, glazed ground floor.</p></div><span class="tag caps">Commercial</span></div></a></article>
+  </div>
+  <div class="work-foot"><a class="caps" href="#projects">All projects <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></a></div>
+</section>
 <button class="replay" type="button">Replay</button>
 
 <script>
@@ -171,6 +225,17 @@ button{font-family:inherit}
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   let left = 2;
   for (const src of ['img/house-sketch.webp', 'img/civic.webp']) { const im = new Image(); im.onload = im.onerror = () => { if (--left === 0) play(); }; im.src = src; }
+  // project filters, and a gentle rise as each card comes into view
+  const fbtns = [...document.querySelectorAll('.filters button')], cards = [...document.querySelectorAll('.card')];
+  fbtns.forEach(b => b.addEventListener('click', () => {
+    fbtns.forEach(x => x.setAttribute('aria-pressed', x === b));
+    cards.forEach(c => { c.hidden = !(b.dataset.f === 'all' || c.dataset.cat === b.dataset.f); });
+  }));
+  if (!reduce && 'IntersectionObserver' in window) {
+    cards.forEach(c => c.classList.add('rise'));
+    const io = new IntersectionObserver(es => es.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.remove('rise'), i * 90); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+    cards.forEach(c => io.observe(c));
+  }
   document.querySelector('.replay').addEventListener('click', play);
   const btn = document.querySelector('.menu'), panel = document.getElementById('panel');
   btn.addEventListener('click', () => { const o = panel.classList.toggle('open'); btn.setAttribute('aria-expanded', o); });
