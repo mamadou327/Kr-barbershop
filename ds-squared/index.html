@@ -7,53 +7,36 @@
 <meta name="description" content="Unofficial concept by AIV Designs for DS Squared, RIBA Chartered architects.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="img/civic.webp">
 <style>
+/* Type: Archivo, a grotesk with a width axis. Semi-condensed capitals for the menu and button read like the lettering on architectural drawings. */
 :root{
-  --stone:#F4F1EC; --band:#ECE7E0; --ink:#1F1C1A; --ink-2:#6A635C; --orange:#EC542D; --white:#fff;
+  --page:#F5F5F5; --band:#E3E3E3; --ink:#1F1C1A; --ink-2:#6A635C; --orange:#EC542D;
   --ease-out:cubic-bezier(.16,1,.3,1); --ease-io:cubic-bezier(.77,0,.18,1);
-  --head:76px; --pad:28px; --strip:104px;
+  --ar:1.7647;                 /* the home picture's own shape: shown whole, never cropped */
+  --heroH:calc(100vw / var(--ar));
+  --band-h:max(calc(100vw * .07),64px);
+  --f:"Archivo",system-ui,sans-serif;
   color-scheme:light;
 }
 *{box-sizing:border-box;margin:0}
-html,body{height:100%}
-body{background:var(--stone);color:var(--ink);font:400 16px/1.5 "Hanken Grotesk",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden}
+body{background:var(--page);color:var(--ink);font:400 16px/1.5 var(--f);font-stretch:100%;-webkit-font-smoothing:antialiased;overflow:hidden}
+.on body{overflow:auto}
 ::selection{background:var(--orange);color:#fff}
 a{color:inherit;text-decoration:none}
-:focus-visible{outline:2px solid var(--orange);outline-offset:3px;border-radius:2px}
+:focus-visible{outline:2px solid var(--orange);outline-offset:3px;border-radius:4px}
 button{font-family:inherit}
-
-/* Header: logo left, one menu right (links on computers, a button on phones) */
-.top{position:fixed;inset:0 0 auto 0;height:var(--head);z-index:5;display:flex;align-items:center;gap:32px;padding:0 var(--pad);color:var(--ink);opacity:0;transform:translateY(-8px)}
-.go .top{opacity:1;transform:none;transition:opacity .8s var(--ease-out),transform .8s var(--ease-out),color .6s}
-.on .top{color:var(--white)}
-.logo{display:block;width:48px;height:48px;flex:none}
-.logo img{width:100%;height:100%;display:block}
-.nav{display:flex;gap:28px;margin-left:auto;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
-.nav a{position:relative;padding:6px 0}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease-out)}
-.nav a:hover::after{transform:scaleX(1)}
-.menu{display:none;margin-left:auto;width:44px;height:44px;border:0;background:var(--orange);cursor:pointer;place-items:center}
-.menu span,.menu span::before,.menu span::after{display:block;width:18px;height:1.6px;background:#fff;position:relative;transition:transform .3s var(--ease-out),background .2s}
-.menu span::before,.menu span::after{content:"";position:absolute;left:0}
-.menu span::before{top:-6px}.menu span::after{top:6px}
-.menu[aria-expanded=true] span{background:transparent}
-.menu[aria-expanded=true] span::before{transform:translateY(6px) rotate(45deg)}
-.menu[aria-expanded=true] span::after{transform:translateY(-6px) rotate(-45deg)}
-.go:not(.on) .nav,.go:not(.on) .menu{opacity:0;pointer-events:none}
-.nav,.menu{transition:opacity .6s var(--ease-out) .25s}
-.panel{position:fixed;inset:var(--head) 0 auto 0;z-index:6;background:var(--stone);color:var(--ink);padding:8px var(--pad) 20px;display:none;flex-direction:column;font-size:20px;font-weight:500}
-.panel a{padding:10px 0;border-bottom:1px solid #ddd6cc}
-.panel.open{display:flex}
+.caps{font-stretch:87.5%;font-weight:600;text-transform:uppercase;letter-spacing:.045em}
 
 /* Loading: the name, and one framed picture that wipes through their work */
-.ltitle{position:fixed;left:0;right:0;top:calc(var(--head) + 1vh);text-align:center;font-weight:500;font-size:clamp(2rem,4.2vw,3.25rem);letter-spacing:-.04em;line-height:1;z-index:3;opacity:0;transform:translateY(10px);transition:opacity .8s var(--ease-out),transform .9s var(--ease-out)}
+.ltitle{position:fixed;left:0;right:0;top:9vh;text-align:center;font-weight:500;font-stretch:87.5%;font-size:clamp(2rem,4.2vw,3.25rem);letter-spacing:-.02em;line-height:1;z-index:3;opacity:0;transform:translateY(10px);transition:opacity .8s var(--ease-out),transform .9s var(--ease-out)}
 .go .ltitle{opacity:1;transform:none}
 .open .ltitle{opacity:0;transform:translateY(-24px);transition:opacity .5s,transform .7s var(--ease-out)}
-.frame{position:fixed;z-index:2;overflow:hidden;left:50%;top:54%;width:min(46vw,680px);height:calc(min(46vw,680px) / 1.5);transform:translate(-50%,-50%) scale(.97);opacity:0;transition:opacity .8s var(--ease-out),transform 1s var(--ease-out)}
+.frame{position:fixed;z-index:2;overflow:hidden;left:50%;top:54%;width:min(46vw,680px);height:calc(min(46vw,680px) / 1.5);border-radius:10px;transform:translate(-50%,-50%) scale(.97);opacity:0;transition:opacity .8s var(--ease-out),transform 1s var(--ease-out)}
 .go .frame{opacity:1;transform:translate(-50%,-50%)}
-.open .frame{left:0;top:0;width:100vw;height:calc(100svh - var(--strip));transform:none;transition:left 1.2s var(--ease-io),top 1.2s var(--ease-io),width 1.2s var(--ease-io),height 1.2s var(--ease-io)}
+.open .frame{left:0;top:0;width:100vw;height:var(--heroH);border-radius:0;transform:none;transition:left 1.2s var(--ease-io),top 1.2s var(--ease-io),width 1.2s var(--ease-io),height 1.2s var(--ease-io),border-radius 1.2s var(--ease-io)}
+.on .frame{position:absolute;transition:none}
 .sl{position:absolute;inset:0;clip-path:inset(0 0 0 0)}
 .sl img{width:100%;height:100%;object-fit:cover;display:block}
 .sl[data-d=left]{clip-path:inset(0 0 0 100%)}
@@ -63,45 +46,46 @@ button{font-family:inherit}
 .sl.in{clip-path:inset(0 0 0 0);transition:clip-path .75s var(--ease-io)}
 .sl.in img{animation:settle .9s var(--ease-out)}
 @keyframes settle{from{transform:scale(1.06)}to{transform:none}}
-.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,16,.42) 0,rgba(20,18,16,0) 22%,rgba(20,18,16,0) 48%,rgba(20,18,16,.58) 100%);opacity:0}
-.on .shade{opacity:1;transition:opacity 1s var(--ease-out)}
 
-/* Home: name bottom-left, booking bottom-right, over the picture */
-.copy{position:fixed;left:var(--pad);right:var(--pad);bottom:calc(var(--strip) + var(--pad));z-index:4;color:#fff;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;pointer-events:none}
-.on .copy>*{pointer-events:auto}
-.copy h1{font-weight:500;font-size:clamp(3.5rem,8.5vw,6rem);line-height:.92;letter-spacing:-.04em}
-.copy p{font-size:clamp(1rem,1.3vw,1.125rem);max-width:36ch;margin-top:12px;color:rgba(255,255,255,.92)}
-.cta{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:#fff;font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:16px 22px;transition:background .25s,transform .25s var(--ease-out);white-space:nowrap}
-.cta:hover{background:#d9461f}.cta:active{transform:scale(.98)}
-.cta svg{transition:transform .3s var(--ease-out)}.cta:hover svg{transform:translateX(3px)}
-.reveal{opacity:0;transform:translateY(18px);filter:blur(6px)}
-.on .reveal{opacity:1;transform:none;filter:none;transition:opacity .9s var(--ease-out),transform 1.1s var(--ease-out),filter .9s var(--ease-out);transition-delay:calc(var(--r,0)*110ms)}
+/* Home, as in Mo's Figma: logo, menu and booking button sit on the picture and scale with it. Corners rounded, not sharp. */
+.hero-ui{position:absolute;left:0;top:0;width:100vw;height:var(--heroH);z-index:4;pointer-events:none}
+.hero-ui>*{pointer-events:auto;position:absolute;opacity:0;transition:opacity .8s var(--ease-out),transform .9s var(--ease-out)}
+.on .hero-ui>*{opacity:1;transform:none}
+.logo{left:1%;top:1.5%;width:6.8vw;min-width:44px;transform:translateY(-8px)}
+.logo img{width:100%;display:block;border-radius:14%}
+.nav{right:7.4vw;top:4.4%;display:flex;gap:1.15vw;font-size:clamp(9px,1.02vw,15px);color:var(--ink);transform:translateY(-8px);transition-delay:.1s}
+.nav a{position:relative;padding:4px 0}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease-out)}
+.nav a:hover::after{transform:scaleX(1)}
+.menu{right:1.4vw;top:2.4%;width:4.2vw;height:4.2vw;min-width:38px;min-height:38px;border:0;border-radius:22%;background:var(--orange);cursor:pointer;display:grid;place-items:center;transform:translateY(-8px);transition-delay:.15s}
+.menu span,.menu span::before,.menu span::after{display:block;width:max(16px,2vw);height:1.6px;border-radius:2px;background:#fff;position:relative;transition:transform .3s var(--ease-out),background .2s}
+.menu span::before,.menu span::after{content:"";position:absolute;left:0;width:100%}
+.menu span::before{top:max(-6px,-.6vw)}.menu span::after{top:min(6px,.6vw)}
+.menu[aria-expanded=true] span{background:transparent}
+.menu[aria-expanded=true] span::before{transform:translateY(min(6px,.6vw)) rotate(45deg)}
+.menu[aria-expanded=true] span::after{transform:translateY(max(-6px,-.6vw)) rotate(-45deg)}
+.cta{right:4.6%;bottom:5.5%;display:flex;align-items:center;justify-content:center;width:16.2vw;height:4.6vw;min-width:150px;min-height:40px;border-radius:min(12px,.8vw);background:var(--orange);color:var(--ink);font-size:clamp(10px,1vw,15px);transform:translateY(10px);transition:opacity .8s var(--ease-out) .25s,transform .9s var(--ease-out) .25s,background .25s;box-shadow:0 6px 18px rgba(20,18,16,.18)}
+.cta:hover{background:#f26a45}.cta:active{transform:scale(.98)}
+.panel{position:fixed;top:0;right:0;width:min(360px,86vw);height:100vh;z-index:6;background:var(--page);padding:88px 28px 28px;display:flex;flex-direction:column;font-size:24px;font-weight:500;font-stretch:87.5%;transform:translateX(100%);transition:transform .5s var(--ease-io);box-shadow:-12px 0 32px rgba(0,0,0,.08)}
+.panel a{padding:12px 0;border-bottom:1px solid #dcdcdc}
+.panel.open{transform:none}
 
-/* Accreditations: a band under the picture, logos gliding right to left on a loop */
-.strip{position:fixed;left:0;right:0;bottom:0;height:var(--strip);background:var(--band);z-index:3;display:flex;align-items:center;overflow:hidden;transform:translateY(100%)}
-.on .strip{transform:none;transition:transform 1s var(--ease-out) .2s}
-.strip .label{flex:none;padding:0 28px 0 var(--pad);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);background:var(--band);position:relative;z-index:1;align-self:stretch;display:flex;align-items:center;box-shadow:12px 0 16px -6px var(--band)}
-.track{display:flex;align-items:center;gap:96px;padding-right:96px;width:max-content;animation:glide 26s linear infinite}
-.strip:hover .track{animation-play-state:paused}
-.track img{height:40px;width:auto;display:block;opacity:.85}
-.track img.tall{height:70px}
+/* Accreditations band directly under the picture: logos gliding right to left on a loop */
+.band{position:absolute;left:0;right:0;top:var(--heroH);height:var(--band-h);background:var(--band);overflow:hidden;display:flex;align-items:center;opacity:0}
+.on .band{opacity:1;transition:opacity .8s var(--ease-out) .3s}
+.track{display:flex;align-items:center;gap:13vw;padding-right:13vw;width:max-content;animation:glide 30s linear infinite}
+.track img{height:calc(var(--band-h) * .84);width:auto;display:block;border-radius:4px}
+.track img.arb{height:calc(var(--band-h) * .56);border-radius:0}
 @keyframes glide{to{transform:translateX(-50%)}}
-.note{position:fixed;right:var(--pad);bottom:calc(var(--strip) + 8px);z-index:4;font-size:11px;color:rgba(255,255,255,.7);opacity:0}
-.on .note{opacity:1;transition:opacity .8s 1s}
-.replay{position:fixed;right:var(--pad);top:calc(var(--head) + 4px);z-index:4;background:none;border:0;color:#fff;font:500 12px/1 "Hanken Grotesk",system-ui,sans-serif;opacity:0;cursor:pointer;padding:6px 0}
-.on .replay{opacity:.75;transition:opacity .6s .8s}.replay:hover{opacity:1}
+.foot{position:absolute;left:0;right:0;top:calc(var(--heroH) + var(--band-h));padding:20px 1.4vw 32px;font-size:12px;color:var(--ink-2);opacity:0}
+.on .foot{opacity:1;transition:opacity .8s .6s}
+.replay{position:fixed;right:16px;bottom:16px;z-index:5;background:var(--ink);color:#fff;border:0;border-radius:8px;font:500 12px/1 var(--f);padding:9px 12px;opacity:0;cursor:pointer}
+.on .replay{opacity:.85;transition:opacity .6s 1s}.replay:hover{opacity:1}
 
-@media (max-width:860px){
-  :root{--pad:16px;--head:64px;--strip:76px}
-  .logo{width:40px;height:40px}
+@media (max-width:760px){
   .nav{display:none}
-  .menu{display:grid}
   .frame{width:80vw;height:100vw;top:52%}
-  .copy{flex-direction:column;align-items:flex-start}
-  .track{gap:56px;padding-right:56px}
-  .track img{height:28px}.track img.tall{height:52px}
-  .strip .label{display:none}
-  .note{top:calc(var(--head) + 30px);bottom:auto}
+  .track{gap:18vw;padding-right:18vw}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms!important;transition-delay:0s!important}
@@ -110,59 +94,49 @@ button{font-family:inherit}
 </style>
 </head>
 <body>
-<header class="top">
-  <a class="logo" href="#" aria-label="DS Squared home"><img src="img/logo.png" alt=""></a>
-  <nav class="nav" aria-label="Main">
-    <a href="#projects">Projects</a><a href="#about">About us</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a>
-  </nav>
-  <button class="menu" aria-expanded="false" aria-controls="panel" aria-label="Menu"><span></span></button>
-</header>
-<nav class="panel" id="panel" aria-label="Main">
-  <a href="#projects">Projects</a><a href="#about">About us</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a><a href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
-</nav>
-
 <!-- Loading: the name and one framed picture that wipes through their work, ending on the home picture -->
 <div class="ltitle" aria-hidden="true">DS Squared</div>
-<div class="frame" role="img" aria-label="DS Squared projects, ending on a concrete and glass building they designed">
+<div class="frame" role="img" aria-label="A concrete and glass building designed by DS Squared">
   <div class="sl"><img src="img/house-sketch.webp" alt=""></div>
   <div class="sl" data-d="left"><img src="img/living.webp" alt=""></div>
   <div class="sl" data-d="up"><img src="img/spiral.webp" alt=""></div>
   <div class="sl" data-d="down"><img src="img/house.webp" alt=""></div>
-  <div class="sl" data-d="right"><img src="img/civic.webp" alt="" style="object-position:50% 62%"></div>
-  <div class="shade"></div>
+  <div class="sl" data-d="right"><img src="img/civic.webp" alt=""></div>
 </div>
 
-<section class="copy">
-  <div>
-    <h1 class="reveal" style="--r:0">DS Squared</h1>
-    <p class="reveal" style="--r:1">RIBA Chartered architects for homes, developers and healthcare, from first sketch to finished building.</p>
-  </div>
-  <a class="cta reveal" style="--r:2" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></a>
-</section>
-<p class="note">Unofficial concept by AIV Designs</p>
-<button class="replay" type="button">Replay</button>
+<header class="hero-ui">
+  <a class="logo" href="#" aria-label="DS Squared home"><img src="img/logo.png" alt=""></a>
+  <nav class="nav caps" aria-label="Main">
+    <a href="#projects">Project</a><a href="#about">About us</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a>
+  </nav>
+  <button class="menu" aria-expanded="false" aria-controls="panel" aria-label="Menu"><span></span></button>
+  <a class="cta caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
+</header>
+<nav class="panel" id="panel" aria-label="Menu">
+  <a href="#projects">Project</a><a href="#about">About us</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a><a href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
+</nav>
 
-<section class="strip" aria-label="Accreditations: RIBA Chartered Practice, Architects Registration Board, Chartered Institute of Architectural Technologists">
-  <div class="label">Accredited by</div>
+<section class="band" aria-label="Architects Registration Board, Chartered Institute of Architectural Technologists, RIBA Chartered Practice">
   <div class="track" aria-hidden="true"></div>
 </section>
+<p class="foot">Unofficial concept by AIV Designs</p>
+<button class="replay" type="button">Replay</button>
 
 <script>
 (() => {
   const root = document.documentElement;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // logo band: repeat the set until it is wider than two screens, then loop it seamlessly
-  const set = '<img src="img/acc-riba.png" alt="" class="tall"><img src="img/acc-arb.png" alt=""><img src="img/acc-ciat.png" alt="" class="tall">';
-  const track = document.querySelector('.track');
-  let half = ''; for (let i = 0; i < 4; i++) half += set;
-  track.innerHTML = half + half;
+  // logo band: one set repeated until it is wider than the screen, twice over, so the loop never shows a gap
+  const set = '<img src="img/acc-arb.png" alt="" class="arb"><img src="img/acc-ciat.png" alt=""><img src="img/acc-riba.png" alt="">';
+  let half = ''; for (let i = 0; i < 3; i++) half += set;
+  document.querySelector('.track').innerHTML = half + half;
 
   let timers = [];
   const at = (ms, fn) => timers.push(setTimeout(fn, ms));
   const slides = [...document.querySelectorAll('.sl[data-d]')];
   function play() {
     timers.forEach(clearTimeout); timers = [];
+    scrollTo(0, 0);
     root.classList.remove('go', 'open', 'on'); slides.forEach(sl => sl.classList.remove('in'));
     void root.offsetWidth;
     if (reduce) { slides.forEach(sl => sl.classList.add('in')); root.classList.add('go', 'open', 'on'); return; }
@@ -170,9 +144,10 @@ button{font-family:inherit}
     let t = 1300;
     slides.forEach(sl => { at(t, () => sl.classList.add('in')); t += 1150; });
     t += 250;
-    at(t, () => root.classList.add('open'));        // the picture opens up to the home page
-    at(t + 1000, () => root.classList.add('on'));   // header, name, booking button, logo band
+    at(t, () => root.classList.add('open'));        // the picture opens out to the full width
+    at(t + 1250, () => root.classList.add('on'));   // logo, menu, booking button, logo band
   }
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   let left = 2;
   for (const src of ['img/house-sketch.webp', 'img/civic.webp']) { const im = new Image(); im.onload = im.onerror = () => { if (--left === 0) play(); }; im.src = src; }
   document.querySelector('.replay').addEventListener('click', play);
