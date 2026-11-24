@@ -32,7 +32,7 @@ a{color:inherit;text-decoration:none}
 .nav a:hover::after,.book-sm:hover::after{transform:scaleX(1)}
 .book-sm{margin-left:auto;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
 .book-sm i{width:7px;height:7px;background:var(--orange);display:block}
-.menu{display:none;margin-left:auto;font:600 14px/1 inherit;background:none;border:0;color:inherit;cursor:pointer;padding:8px 0}
+.menu{display:none;margin-left:auto;font:600 14px/1 "Hanken Grotesk",system-ui,sans-serif;background:none;border:0;color:inherit;cursor:pointer;padding:8px 0}
 .on .top{color:var(--white)}
 .panel{position:fixed;inset:var(--head) 0 auto 0;z-index:6;background:var(--stone);color:var(--ink);padding:8px var(--pad) 20px;display:none;flex-direction:column;font-size:20px;font-weight:500}
 .panel a{padding:8px 0;border-bottom:1px solid #ddd6cc}
@@ -66,6 +66,23 @@ a{color:inherit;text-decoration:none}
 .reveal{opacity:0;transform:translateY(18px);filter:blur(6px);transition:opacity .4s,transform .4s,filter .4s}
 .on .reveal{opacity:1;transform:none;filter:none;transition:opacity .9s var(--ease-out),transform 1.1s var(--ease-out),filter .9s var(--ease-out);transition-delay:calc(var(--r,0)*110ms)}
 
+/* Adjust layout mode (for Mo; remove before showing the client) */
+.adj-btn{position:fixed;right:var(--pad);bottom:var(--pad);z-index:9;background:var(--ink);color:#fff;border:0;font:600 13px/1 "Hanken Grotesk",system-ui,sans-serif;padding:10px 14px;cursor:pointer}
+.edit .adj-btn{display:none}
+.adj{position:fixed;right:var(--pad);bottom:var(--pad);z-index:9;width:280px;background:#fff;color:var(--ink);box-shadow:0 8px 30px rgba(0,0,0,.18);padding:14px 16px;font-size:13px;display:none;flex-direction:column;gap:10px}
+.edit .adj{display:flex}
+.adj b{font-size:14px}
+.adj label{display:grid;grid-template-columns:1fr auto;gap:2px 8px}
+.adj input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--orange)}
+.adj output{font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.adj .row{display:flex;gap:6px;flex-wrap:wrap}
+.adj button{font:600 12px/1 "Hanken Grotesk",system-ui,sans-serif;padding:8px 10px;border:1px solid #d8d1c7;background:var(--stone);cursor:pointer;color:var(--ink)}
+.adj button.pri{background:var(--orange);border-color:var(--orange);color:#fff}
+.adj small{color:var(--ink-2)}
+.edit .t{cursor:grab;outline:1px dashed rgba(31,28,26,.45);outline-offset:2px;touch-action:none}
+.edit .t:active{cursor:grabbing}
+.edit .t .h{position:absolute;right:0;bottom:0;width:22px;height:22px;background:var(--orange);cursor:nwse-resize;touch-action:none}
+.t .h{display:none}.edit .t .h{display:block}
 @media (max-width:760px){
   :root{--pad:16px;--head:56px}
   .nav,.book-sm{display:none}
@@ -109,6 +126,17 @@ a{color:inherit;text-decoration:none}
   </div>
 </section>
 
+<button class="adj-btn" type="button">Adjust layout</button>
+<div class="adj" role="dialog" aria-label="Adjust layout">
+  <b>Adjust layout</b>
+  <small>Drag a picture to move it. Drag its orange corner to resize it. Scroll to reach the lower ones.</small>
+  <label>Picture size <output data-o="size"></output><input type="range" data-k="size" min="0.5" max="1.8" step="0.05"></label>
+  <label>Spacing <output data-o="spread"></output><input type="range" data-k="spread" min="0.5" max="1.5" step="0.05"></label>
+  <label>Middle house size <output data-o="hero"></output><input type="range" data-k="hero" min="15" max="70" step="1"></label>
+  <label>Movement speed <output data-o="speed"></output><input type="range" data-k="speed" min="0" max="2" step="0.05"></label>
+  <div class="row"><button type="button" class="pri" data-a="copy">Copy settings</button><button type="button" data-a="reset">Reset</button><button type="button" data-a="done">Done</button></div>
+  <small data-msg>Saved on this device. Copy settings and paste them to me to make it permanent.</small>
+</div>
 <script>
 (() => {
   const root = document.documentElement, film = document.querySelector('.film'), wall = document.querySelector('.wall');
@@ -127,15 +155,30 @@ a{color:inherit;text-decoration:none}
     ['living',4,12,44,.7], ['spiral',60,8,30,1.1], ['wine',72,30,24,.5], ['bath',6,40,26,1.3], ['barn',56,58,40,-.2],
     ['garden',8,78,38,1.6], ['terrace',58,96,36,1.2], ['games',4,112,40,1.5], ['blossom',52,138,42,1.8], ['arch-house',10,160,44,1.9]
   ];
-  let tiles = [], mobile;
+  let tiles = [], mobile, G, key;
+  const DEF = { d: { size: 1, spread: 1, hero: 30, speed: 1 }, m: { size: 1, spread: 1, hero: 62, speed: 1 } };
+  function load() {
+    key = 'ds-layout-' + (mobile ? 'm' : 'd');
+    let saved = null; try { saved = JSON.parse(localStorage.getItem(key)); } catch (e) {}
+    const base = (mobile ? M : D).map(([f, x, y, w, s]) => ({ f, x, y, w, s }));
+    G = Object.assign({}, DEF[mobile ? 'm' : 'd'], saved && saved.g);
+    if (saved && saved.t && saved.t.length === base.length) saved.t.forEach((o, i) => Object.assign(base[i], o));
+    return base;
+  }
+  function save() { try { localStorage.setItem(key, JSON.stringify({ g: G, t: tiles.map(({ x, y, w }) => ({ x: +x.toFixed(1), y: +y.toFixed(1), w: +w.toFixed(1) })) })); } catch (e) {} }
+  function place(t) {
+    const w = t.w * G.size, cx = 50 + (t.x + t.w / 2 - 50) * G.spread, top = 50 + (t.y - 50) * G.spread;
+    t.el.style.left = (cx - w / 2) + '%'; t.el.style.top = top + '%'; t.el.style.width = w + 'vw';
+  }
   function build() {
     mobile = innerWidth <= 760;
-    const L = mobile ? M : D;
-    wall.innerHTML = L.map(([f, x, y, w, s], i) => {
+    const L = load();
+    wall.innerHTML = L.map(({ f, w }, i) => {
       const far = w < (mobile ? 30 : 10);
-      return `<div class="t${far ? ' far' : ''}" style="--i:${i};--o:${far ? .55 : 1};left:${x}%;top:${y}%;width:${w}vw;aspect-ratio:${AR[f]}" data-s="${s}"><img src="img/${f}.webp" alt=""></div>`;
+      return `<div class="t${far ? ' far' : ''}" style="--i:${i};--o:${far ? .55 : 1};aspect-ratio:${AR[f]}"><img src="img/${f}.webp" alt=""><i class="h"></i></div>`;
     }).join('');
-    tiles = [...wall.children].map(el => ({ el, s: +el.dataset.s }));
+    tiles = [...wall.children].map((el, i) => Object.assign(L[i], { el }));
+    tiles.forEach(place); syncPanel();
   }
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
   const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -144,10 +187,10 @@ a{color:inherit;text-decoration:none}
     const W = innerWidth, H = innerHeight;
     const p = reduce ? 1 : clamp(-film.getBoundingClientRect().top / (film.offsetHeight - H));
     // photos drift at their own speeds: most rise, a few sink
-    for (const t of tiles) t.el.style.transform = `translate3d(0,${(-p * t.s * H).toFixed(1)}px,0)`;
+    for (const t of tiles) t.el.style.transform = `translate3d(0,${(-p * t.s * G.speed * H).toFixed(1)}px,0)`;
     // the main picture rises into the middle, then opens to fill the screen
     const rise = ease(clamp(p / .3)), grow = ease(clamp((p - .3) / .5));
-    const w0 = mobile ? W * .62 : Math.min(W * .3, 520), h0 = mobile ? w0 * 1.2 : w0 / 1.5;
+    const w0 = W * G.hero / 100, h0 = mobile ? w0 * 1.2 : w0 / 1.5;
     const cy0 = H * (1.15 - .65 * rise);
     const rw = w0 + (W - w0) * grow, rh = h0 + (H - h0) * grow, cx = W / 2, cy = cy0 + (H / 2 - cy0) * grow;
     const top = cy - rh / 2, left = cx - rw / 2;
@@ -160,11 +203,44 @@ a{color:inherit;text-decoration:none}
     if (want !== on) { on = want; root.classList.toggle('on', on); }
   }
   let raf = 0; const req = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; frame(); }); };
-  build(); frame();
   addEventListener('scroll', req, { passive: true });
   addEventListener('resize', () => { if ((innerWidth <= 760) !== mobile) build(); req(); });
   const go = () => requestAnimationFrame(() => root.classList.add('ready'));
   img.complete ? go() : (img.onload = img.onerror = go);
+  // Adjust layout mode
+  const adj = document.querySelector('.adj'), msg = adj.querySelector('[data-msg]');
+  const fmt = { size: v => '×' + (+v).toFixed(2), spread: v => '×' + (+v).toFixed(2), hero: v => v + '%', speed: v => '×' + (+v).toFixed(2) };
+  function syncPanel() { adj.querySelectorAll('input').forEach(i => { i.value = G[i.dataset.k]; adj.querySelector(`[data-o=${i.dataset.k}]`).textContent = fmt[i.dataset.k](G[i.dataset.k]); }); }
+  adj.addEventListener('input', e => { const k = e.target.dataset.k; if (!k) return; G[k] = +e.target.value; syncPanel(); tiles.forEach(place); frame(); save(); });
+  document.querySelector('.adj-btn').addEventListener('click', () => root.classList.add('edit'));
+  adj.addEventListener('click', async e => {
+    const a = e.target.dataset.a;
+    if (a === 'done') root.classList.remove('edit');
+    if (a === 'reset') { try { localStorage.removeItem(key); } catch (er) {} build(); frame(); msg.textContent = 'Back to the original layout.'; }
+    if (a === 'copy') {
+      const txt = 'DS layout (' + (mobile ? 'phone' : 'computer') + '): ' + JSON.stringify({ g: G, t: tiles.map(({ f, x, y, w }) => ({ f, x: +x.toFixed(1), y: +y.toFixed(1), w: +w.toFixed(1) })) });
+      try { await navigator.clipboard.writeText(txt); msg.textContent = 'Copied. Paste it to Claude in the chat.'; }
+      catch (er) { prompt('Copy this and paste it to Claude:', txt); }
+    }
+  });
+  let drag = null;
+  wall.addEventListener('pointerdown', e => {
+    if (!root.classList.contains('edit')) return;
+    const el = e.target.closest('.t'); if (!el) return;
+    e.preventDefault(); const t = tiles.find(x => x.el === el);
+    drag = { t, rs: e.target.classList.contains('h'), sx: e.clientX, sy: e.clientY, x: t.x, y: t.y, w: t.w };
+    el.setPointerCapture(e.pointerId);
+  });
+  wall.addEventListener('pointermove', e => {
+    if (!drag) return; const W = innerWidth, H = innerHeight, dx = e.clientX - drag.sx, dy = e.clientY - drag.sy, t = drag.t;
+    if (drag.rs) { t.w = Math.max(3, drag.w + dx / W * 100 / G.size); t.x = drag.x; }
+    else { t.x = drag.x + dx / W * 100 / G.spread; t.y = drag.y + dy / H * 100 / G.spread; }
+    place(t);
+  });
+  const end = () => { if (drag) { drag = null; save(); } };
+  wall.addEventListener('pointerup', end); wall.addEventListener('pointercancel', end);
+
+  build(); frame();
   const btn = document.querySelector('.menu'), panel = document.getElementById('panel');
   btn.addEventListener('click', () => { const o = panel.classList.toggle('open'); btn.setAttribute('aria-expanded', o); btn.textContent = o ? 'Close' : 'Menu'; });
 })();
