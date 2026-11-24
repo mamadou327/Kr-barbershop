@@ -13,7 +13,7 @@
 <style>
 :root{
   --stone:#F4F1EC; --ink:#1F1C1A; --ink-2:#6A635C; --orange:#EC542D; --white:#fff;
-  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-out:cubic-bezier(.16,1,.3,1); --ease-io:cubic-bezier(.77,0,.18,1);
   --head:60px; --pad:24px; --ar:1.7704;
   color-scheme:light;
 }
@@ -40,22 +40,28 @@ a{color:inherit;text-decoration:none}
 .panel a{padding:8px 0;border-bottom:1px solid #ddd6cc}
 .panel.open{display:flex}
 
-/* The scene: covers the screen like a photo would, keeping the sketch and photo locked together */
-.scene{position:fixed;left:50%;top:50%;width:max(100vw,100vh * var(--ar));aspect-ratio:var(--ar);transform:translate(-50%,-50%)}
-.scene>*{position:absolute;inset:0;background-size:100% 100%}
-.sketch{background-image:url(img/house-sketch.webp);opacity:0;transition:opacity .9s var(--ease-out)}
-.go .sketch{opacity:1}
-.sweep{position:fixed;inset:0;clip-path:inset(0 100% 0 0)}
-.sweep .scene{position:absolute}
-.sweep .scene>*{position:absolute;inset:0;background-size:100% 100%}
-.photo{background-image:url(img/house.webp)}
-.build .sweep{clip-path:inset(0 0 0 0);transition:clip-path 2.6s cubic-bezier(.65,0,.35,1)}
-.rule{position:fixed;top:0;bottom:0;left:0;width:2px;background:var(--orange);z-index:3;opacity:0;transform:translateX(-4px);box-shadow:0 0 18px rgba(236,84,45,.35)}
-.build .rule{opacity:1;transform:translateX(100vw);transition:transform 2.6s cubic-bezier(.65,0,.35,1),opacity .3s}
-.done .rule{opacity:0;transition:opacity .5s}
-.shade{background:linear-gradient(180deg,rgba(20,18,16,.35) 0,rgba(20,18,16,0) 20%,rgba(20,18,16,0) 50%,rgba(20,18,16,.6) 100%);opacity:0}
+/* Loading: the name, and one framed picture in the middle that wipes from one project to the next */
+.ltitle{position:fixed;left:0;right:0;top:calc(var(--head) + 2vh);text-align:center;font-weight:500;font-size:clamp(2rem,4.2vw,3.25rem);letter-spacing:-.04em;line-height:1;z-index:3;opacity:0;transform:translateY(10px);transition:opacity .8s var(--ease-out),transform .9s var(--ease-out)}
+.go .ltitle{opacity:1;transform:none}
+.open .ltitle{opacity:0;transform:translateY(-24px);transition:opacity .5s,transform .7s var(--ease-out)}
+.frame{position:fixed;z-index:2;overflow:hidden;left:50%;top:54%;width:min(46vw,680px);height:calc(min(46vw,680px) / 1.5);transform:translate(-50%,-50%) scale(.97);opacity:0;transition:opacity .8s var(--ease-out),transform 1s var(--ease-out)}
+.go .frame{opacity:1;transform:translate(-50%,-50%)}
+.open .frame{left:0;top:0;width:100vw;height:100vh;height:100svh;transform:none;transition:left 1.2s var(--ease-io),top 1.2s var(--ease-io),width 1.2s var(--ease-io),height 1.2s var(--ease-io)}
+.sl{position:absolute;inset:0;clip-path:inset(0 0 0 0)}
+.sl img{width:100%;height:100%;object-fit:cover;display:block}
+.sl[data-d=left]{clip-path:inset(0 0 0 100%)}
+.sl[data-d=up]{clip-path:inset(100% 0 0 0)}
+.sl[data-d=down]{clip-path:inset(0 0 100% 0)}
+.sl[data-d=right]{clip-path:inset(0 100% 0 0)}
+.sl.in{clip-path:inset(0 0 0 0);transition:clip-path .75s var(--ease-io)}
+.sl.in img{animation:settle .9s var(--ease-out)}
+@keyframes settle{from{transform:scale(1.06)}to{transform:none}}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,16,.35) 0,rgba(20,18,16,0) 20%,rgba(20,18,16,0) 50%,rgba(20,18,16,.6) 100%);opacity:0}
 .on .shade{opacity:1;transition:opacity 1s var(--ease-out)}
-
+.top{opacity:0;transform:translateY(-10px)}
+.go .top{opacity:1;transform:none;transition:opacity .8s var(--ease-out),transform .8s var(--ease-out),color .6s}
+.go:not(.on) .nav,.go:not(.on) .book-sm,.go:not(.on) .menu{opacity:0;pointer-events:none}
+.nav,.book-sm,.menu{transition:opacity .6s var(--ease-out) .2s}
 /* Landing copy, bottom-left */
 .copy{position:fixed;left:var(--pad);bottom:var(--pad);right:var(--pad);z-index:4;color:#fff;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;pointer-events:none}
 .on .copy>*{pointer-events:auto}
@@ -74,6 +80,7 @@ a{color:inherit;text-decoration:none}
   :root{--pad:16px;--head:56px}
   .nav,.book-sm{display:none}
   .menu{display:block}
+  .frame{width:80vw;height:100vw;top:52%}
   .copy{flex-direction:column;align-items:flex-start}
   .note{text-align:left}
 }
@@ -95,13 +102,16 @@ a{color:inherit;text-decoration:none}
   <a href="#projects">Projects</a><a href="#about">About</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a><a href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
 </nav>
 
-<!-- From sketch to finished house. Photo and sketch: a DS Squared new build, cleaned and drawn with Higgsfield. -->
-<div class="scene" role="img" aria-label="An architect's sketch of a brick and white family home turns into the finished house">
-  <div class="sketch"></div>
+<!-- Loading: the name and one framed picture that wipes through their work, ending on the house -->
+<div class="ltitle" aria-hidden="true">DS Squared</div>
+<div class="frame" role="img" aria-label="DS Squared projects, ending on a brick and white family home">
+  <div class="sl"><img src="img/house-sketch.webp" alt=""></div>
+  <div class="sl" data-d="left"><img src="img/living.webp" alt=""></div>
+  <div class="sl" data-d="up"><img src="img/spiral.webp" alt=""></div>
+  <div class="sl" data-d="down"><img src="img/barn.webp" alt=""></div>
+  <div class="sl" data-d="right"><img src="img/house.webp" alt="" style="object-position:50% 45%"></div>
+  <div class="shade"></div>
 </div>
-<!-- the finished house, revealed behind an architect's ruler line -->
-<div class="sweep"><div class="scene"><div class="photo"></div><div class="shade"></div></div></div>
-<i class="rule" aria-hidden="true"></i>
 
 <section class="copy">
   <div>
@@ -120,17 +130,19 @@ a{color:inherit;text-decoration:none}
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let timers = [];
   const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const slides = [...document.querySelectorAll('.sl[data-d]')];
   function play() {
     timers.forEach(clearTimeout); timers = [];
-    root.classList.remove('go', 'build', 'done', 'on');
+    root.classList.remove('go', 'open', 'on'); slides.forEach(sl => sl.classList.remove('in'));
     void root.offsetWidth;
-    if (reduce) { root.classList.add('go', 'build', 'done', 'on'); return; }
-    requestAnimationFrame(() => root.classList.add('go'));       // the sketch appears
-    at(1400, () => root.classList.add('build'));                  // the ruler sweeps, sketch becomes the house
-    at(1400 + 2600, () => root.classList.add('done'));            // ruler fades
-    at(1400 + 2900, () => root.classList.add('on'));              // name and button
+    if (reduce) { slides.forEach(sl => sl.classList.add('in')); root.classList.add('go', 'open', 'on'); return; }
+    requestAnimationFrame(() => root.classList.add('go'));           // name and first picture
+    let t = 1300;
+    slides.forEach(sl => { at(t, () => sl.classList.add('in')); t += 1150; });   // each picture wipes in, a new direction each time
+    t += 250;
+    at(t, () => root.classList.add('open'));                         // the house opens up to the full screen
+    at(t + 1000, () => root.classList.add('on'));                    // header, name and button
   }
-  // start once both images are ready
   let left = 2;
   for (const src of ['img/house-sketch.webp', 'img/house.webp']) { const im = new Image(); im.onload = im.onerror = () => { if (--left === 0) play(); }; im.src = src; }
   document.querySelector('.replay').addEventListener('click', play);
