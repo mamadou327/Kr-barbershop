@@ -15,12 +15,13 @@
   --page:#F5F5F5; --band:#E3E3E3; --ink:#1F1C1A; --ink-2:#6A635C; --orange:#EC542D;
   --ease-out:cubic-bezier(.16,1,.3,1); --ease-io:cubic-bezier(.77,0,.18,1);
   --ar:1.7647;                 /* the home picture's own shape: shown whole, never cropped */
-  --heroH:calc(100vw / var(--ar));
+  --heroH:min(calc(100vw / var(--ar)), calc(100svh - var(--band-h)));
   --band-h:max(calc(100vw * .07),64px);
   --f:"Archivo",system-ui,sans-serif;
   color-scheme:light;
 }
 *{box-sizing:border-box;margin:0}
+html{overflow-x:hidden}
 body{background:var(--page);color:var(--ink);font:400 16px/1.5 var(--f);font-stretch:100%;-webkit-font-smoothing:antialiased;overflow:hidden}
 .on body{overflow:auto}
 ::selection{background:var(--orange);color:#fff}
@@ -35,7 +36,7 @@ button{font-family:inherit}
 .open .ltitle{opacity:0;transform:translateY(-24px);transition:opacity .5s,transform .7s var(--ease-out)}
 .frame{position:fixed;z-index:2;overflow:hidden;left:50%;top:54%;width:min(46vw,680px);height:calc(min(46vw,680px) / 1.5);border-radius:10px;transform:translate(-50%,-50%) scale(.97);opacity:0;transition:opacity .8s var(--ease-out),transform 1s var(--ease-out)}
 .go .frame{opacity:1;transform:translate(-50%,-50%)}
-.open .frame{left:0;top:0;width:100vw;height:var(--heroH);border-radius:0;transform:none;transition:left 1.2s var(--ease-io),top 1.2s var(--ease-io),width 1.2s var(--ease-io),height 1.2s var(--ease-io),border-radius 1.2s var(--ease-io)}
+.open .frame{left:0;top:0;width:100%;height:var(--heroH);border-radius:0;transform:none;transition:left 1.2s var(--ease-io),top 1.2s var(--ease-io),width 1.2s var(--ease-io),height 1.2s var(--ease-io),border-radius 1.2s var(--ease-io)}
 .on .frame{position:absolute;transition:none}
 .sl{position:absolute;inset:0;clip-path:inset(0 0 0 0)}
 .sl img{width:100%;height:100%;object-fit:cover;display:block}
@@ -48,7 +49,7 @@ button{font-family:inherit}
 @keyframes settle{from{transform:scale(1.06)}to{transform:none}}
 
 /* Home, as in Mo's Figma: logo, menu and booking button sit on the picture and scale with it. Corners rounded, not sharp. */
-.hero-ui{position:absolute;left:0;top:0;width:100vw;height:var(--heroH);z-index:4;pointer-events:none}
+.hero-ui{position:absolute;left:0;top:0;width:100%;height:var(--heroH);z-index:4;pointer-events:none}
 .hero-ui>*{pointer-events:auto;position:absolute;opacity:0;transition:opacity .8s var(--ease-out),transform .9s var(--ease-out)}
 .on .hero-ui>*{opacity:1;transform:none}
 .logo{left:1%;top:1.5%;width:6.8vw;min-width:44px;transform:translateY(-8px)}
@@ -79,7 +80,7 @@ button{font-family:inherit}
 .track img{height:40px;width:auto;display:block;opacity:.85}
 .track img.tall{height:70px}
 @keyframes glide{to{transform:translateX(-50%)}}
-.replay{position:fixed;right:16px;bottom:16px;z-index:5;background:var(--ink);color:#fff;border:0;border-radius:8px;font:500 12px/1 var(--f);padding:9px 12px;opacity:0;cursor:pointer}
+.replay{position:fixed;left:16px;bottom:calc(var(--band-h) + 12px);z-index:5;background:var(--ink);color:#fff;border:0;border-radius:8px;font:500 12px/1 var(--f);padding:9px 12px;opacity:0;cursor:pointer}
 .on .replay{opacity:.85;transition:opacity .6s 1s}.replay:hover{opacity:1}
 
 @media (max-width:760px){
@@ -104,7 +105,7 @@ button{font-family:inherit}
   <div class="sl" data-d="left"><img src="img/living.webp" alt=""></div>
   <div class="sl" data-d="up"><img src="img/spiral.webp" alt=""></div>
   <div class="sl" data-d="down"><img src="img/house.webp" alt=""></div>
-  <div class="sl" data-d="right"><img src="img/civic.webp" alt=""></div>
+  <div class="sl" data-d="right"><img src="img/civic.webp" alt="" style="object-position:50% 58%"></div>
 </div>
 
 <header class="hero-ui">
