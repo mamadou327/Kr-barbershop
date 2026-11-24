@@ -99,6 +99,9 @@ a{color:inherit;text-decoration:none}
 .edit .t:active{cursor:grabbing}
 .edit .t .h{position:absolute;right:0;bottom:0;width:22px;height:22px;background:var(--orange);cursor:nwse-resize;touch-action:none}
 .t .h{display:none}.edit .t .h{display:block}
+.hh{position:absolute;left:0;top:0;width:22px;height:22px;background:var(--orange);z-index:3;cursor:nwse-resize;display:none;touch-action:none}
+.edit .hh{display:block}
+.edit .hero{cursor:grab;touch-action:none}
 @media (max-width:760px){
   :root{--pad:16px;--head:56px}
   .nav,.book-sm{display:none}
@@ -130,6 +133,7 @@ a{color:inherit;text-decoration:none}
     <div class="label" aria-hidden="true">Selected work<sup>(17)</sup></div>
     <div class="wall" aria-hidden="true"></div>
     <div class="hero"><img src="img/main.webp" alt="A brick and white render family home with dark window frames, designed by DS Squared"><div class="shade"></div></div>
+    <i class="hh" aria-hidden="true"></i>
     <div class="copy">
       <div>
         <h1 class="reveal" style="--r:0">DS Squared</h1>
@@ -146,7 +150,7 @@ a{color:inherit;text-decoration:none}
 <button class="adj-btn" type="button">Adjust layout</button>
 <div class="adj" role="dialog" aria-label="Adjust layout">
   <div class="hd"><b>Adjust layout</b><button type="button" data-a="min" aria-expanded="true">Hide</button></div>
-  <small>Tap a picture to swap it. Drag to move it. Drag its orange corner to resize it. Scroll to reach the lower ones.</small>
+  <small>Tap a picture to swap it. Drag to move it (the house too). Drag its orange corner to resize it. Scroll to reach the lower ones.</small>
   <label>Picture size <output data-o="size"></output><input type="range" data-k="size" min="0.5" max="1.8" step="0.05"></label>
   <label>Spacing <output data-o="spread"></output><input type="range" data-k="spread" min="0.5" max="1.5" step="0.05"></label>
   <label>Middle house size <output data-o="hero"></output><input type="range" data-k="hero" min="15" max="70" step="1"></label>
@@ -157,7 +161,7 @@ a{color:inherit;text-decoration:none}
 <script>
 (() => {
   const root = document.documentElement, film = document.querySelector('.film'), wall = document.querySelector('.wall');
-  const hero = document.querySelector('.hero'), img = hero.querySelector('img'), shade = hero.querySelector('.shade'), label = document.querySelector('.label');
+  const hh = document.querySelector('.hh'), hero = document.querySelector('.hero'), img = hero.querySelector('img'), shade = hero.querySelector('.shade'), label = document.querySelector('.label');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const AR = { living:1.94, spiral:1.33, wine:.67, barn:1.78, bath:.67, 'stone-barns':1.33, garden:1.33, terrace:1.33, games:1.33,
     'twin-barns':1.78, concrete:1.33, umbrella:1.33, cinema:1.33, loft:1.5, hundred:1.33, 'hundred-in':1.33, 'bath-2':1.33, patio:1.33, aside:1.33, 'stair-kitchen':1.33, blossom:1.33, 'arch-house':1.78, 'aside-cafe':1.33 };
@@ -173,7 +177,7 @@ a{color:inherit;text-decoration:none}
     ['garden',8,78,38,1.6], ['terrace',58,96,36,1.2], ['games',4,112,40,1.5], ['blossom',52,138,42,1.8], ['arch-house',10,160,44,1.9]
   ];
   let tiles = [], mobile, G, key;
-  const DEF = { d: { size: 1, spread: 1, hero: 30, speed: 1 }, m: { size: 1, spread: 1, hero: 62, speed: 1 } };
+  const DEF = { d: { size: 1, spread: 1, hero: 30, speed: 1, hx: 50, hy: 82 }, m: { size: 1, spread: 1, hero: 62, speed: 1, hx: 50, hy: 82 } };
   // Layout is kept in the page's shared database so Claude can read it
   let db = null, remote = {}, saveT = 0, lastAt = 0;
   const mode = () => mobile ? 'm' : 'd';
@@ -219,9 +223,11 @@ a{color:inherit;text-decoration:none}
     // the main picture rises into the middle, then opens to fill the screen
     const rise = ease(clamp(p / .3)), grow = ease(clamp((p - .3) / .5));
     const w0 = W * G.hero / 100, h0 = mobile ? w0 * 1.2 : w0 / 1.5;
-    const cy0 = H * (.82 - .32 * rise);
-    const rw = w0 + (W - w0) * grow, rh = h0 + (H - h0) * grow, cx = W / 2, cy = cy0 + (H / 2 - cy0) * grow;
+    const sx = W * G.hx / 100, sy = H * G.hy / 100;
+    const cx0 = sx + (W / 2 - sx) * rise, cy0 = sy + (H / 2 - sy) * rise;
+    const rw = w0 + (W - w0) * grow, rh = h0 + (H - h0) * grow, cx = cx0 + (W / 2 - cx0) * grow, cy = cy0 + (H / 2 - cy0) * grow;
     const top = cy - rh / 2, left = cx - rw / 2;
+    hh.style.transform = `translate(${(left + rw - 22).toFixed(1)}px,${(top + rh - 22).toFixed(1)}px)`;
     hero.style.clipPath = `inset(${top.toFixed(1)}px ${(W - left - rw).toFixed(1)}px ${(H - top - rh).toFixed(1)}px ${left.toFixed(1)}px)`;
     const sc = Math.max(rw / W, rh / H) * (1 + .04 * (1 - grow));
     img.style.transform = `translate3d(${(cx - W / 2).toFixed(1)}px,${(cy - H / 2).toFixed(1)}px,0) scale(${sc.toFixed(4)})`;
@@ -262,6 +268,14 @@ a{color:inherit;text-decoration:none}
     else { t.x = drag.x + dx / W * 100 / G.spread; t.y = drag.y + dy / H * 100 / G.spread; }
     place(t);
   });
+  // the middle house: drag to move its starting spot, orange corner to resize
+  let hd = null;
+  const hdown = rs => e => { if (!root.classList.contains('edit')) return; e.preventDefault(); e.stopPropagation(); hd = { rs, sx: e.clientX, sy: e.clientY, hx: G.hx, hy: G.hy, hero: G.hero }; e.currentTarget.setPointerCapture(e.pointerId); };
+  const hmove = e => { if (!hd) return; const dx = e.clientX - hd.sx, dy = e.clientY - hd.sy;
+    if (hd.rs) G.hero = Math.min(90, Math.max(10, hd.hero + dx / innerWidth * 100 * 2)); else { G.hx = hd.hx + dx / innerWidth * 100; G.hy = hd.hy + dy / innerHeight * 100; }
+    syncPanel(); frame(); };
+  const hup = () => { if (hd) { hd = null; save(); } };
+  for (const [el, rs] of [[hero, false], [hh, true]]) { el.addEventListener('pointerdown', hdown(rs)); el.addEventListener('pointermove', hmove); el.addEventListener('pointerup', hup); el.addEventListener('pointercancel', hup); }
   const end = () => { if (!drag) return; const d = drag; drag = null; if (d.moved) save(); else if (!d.rs) openPick(d.t); };
   const pick = document.querySelector('.pick'), grid = pick.querySelector('.g');
   let picking = null;
