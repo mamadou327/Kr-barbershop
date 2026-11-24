@@ -93,40 +93,56 @@ button{font-family:inherit}
 .replay{position:absolute;right:2vw;top:calc(var(--heroH) * .11);z-index:5;background:var(--ink);color:#fff;border:0;border-radius:8px;font:500 12px/1 var(--f);padding:9px 12px;opacity:0;cursor:pointer}
 .on .replay{opacity:.85;transition:opacity .6s 1s}.replay:hover{opacity:1}
 
-/* Selected work: their four project types, two rows, one big and one small card in each, swapped on the second row */
-.work{margin-top:calc(var(--heroH) + var(--band-h));height:100vh;height:100svh;padding:clamp(20px,2.4vw,36px) 2vw clamp(18px,2vw,28px);display:flex;flex-direction:column;opacity:0;transition:opacity .8s .5s}
-.rows{flex:1;min-height:0;display:grid;grid-template-rows:1fr 1fr;gap:clamp(14px,1.6vw,22px)}
+/* Selected work: one big and one small card per row, each photo at its own shape (never zoomed or cropped), sized so the section fits one screen */
+.work{margin-top:calc(var(--heroH) + var(--band-h));min-height:100vh;min-height:100svh;padding:clamp(20px,2.4vw,36px) 2vw;display:flex;flex-direction:column;justify-content:center;opacity:0;transition:opacity .8s .5s}
 .on .work{opacity:1}
+.work-in{width:min(100%,calc((100svh - 230px) / .74));margin:0 auto}
 .work-head{margin-bottom:clamp(12px,1.4vw,20px)}
-.work-head h2{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3.4vw,3.25rem);line-height:1;letter-spacing:-.02em}
-.work-head h2 em{font-style:italic;font-weight:300}
-.row{display:grid;gap:16px;grid-template-columns:7fr 5fr;min-height:0}
-.row.flip{grid-template-columns:5fr 7fr}
-.card{min-width:0;min-height:0;display:flex;transition:opacity .7s var(--ease-out),transform .8s var(--ease-out)}
-.card>a{display:flex;flex-direction:column;flex:1;min-height:0}
-.card .ph{display:block;flex:1;min-height:0;overflow:hidden;border-radius:12px;background:#e6e1d9}
+.work-head h2,.page h1{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3.4vw,3.25rem);line-height:1;letter-spacing:-.02em}
+.work-head h2 em,.page h1 em{font-style:italic;font-weight:300}
+.rows{display:flex;flex-direction:column;gap:clamp(14px,1.6vw,22px)}
+.row{display:flex;gap:16px;align-items:flex-end}
+.card{flex:7 1 0;min-width:0;transition:opacity .7s var(--ease-out),transform .8s var(--ease-out)}
+.card.sm{flex:5 1 0}
+.card .ph{display:block;overflow:hidden;border-radius:12px;background:#e6e1d9;aspect-ratio:var(--a)}
 .card .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s var(--ease-out)}
-.card a:hover .ph img{transform:scale(1.04)}
+.card a:hover .ph img{transform:scale(1.03)}
 .card .meta{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:8px 2px 0}
 .card h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.4rem,1.9vw,2rem);line-height:1.05;letter-spacing:-.015em}
-.card p{font-size:14px;color:var(--ink-2);margin-top:3px;max-width:52ch}
 .card .more{flex:none;display:inline-flex;align-items:center;gap:8px;font-size:12px;border-bottom:1.5px solid var(--orange);padding-bottom:3px}
 .card .more svg{transition:transform .3s var(--ease-out)}.card a:hover .more svg{transform:translateX(3px)}
 .card.rise{opacity:0;transform:translateY(24px)}
+
+/* Projects pages: the four types, then one project per type with its own photos */
+.page{display:none}
+.sub .page{display:block}
+.sub .frame,.sub .hero-ui,.sub .copy,.sub .band,.sub .work,.sub .replay,.sub .ltitle{display:none!important}
+.sub body{overflow:auto}
+.pbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:28px;padding:12px 2vw;background:rgba(245,245,245,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.pbar .plogo{width:52px;flex:none}.pbar .plogo img{width:100%;display:block;border-radius:14%}
+.pbar nav{display:flex;gap:1.6vw;margin-left:auto;font-size:13px;overflow-x:auto}
+.pbar nav a{padding:4px 0;border-bottom:1.5px solid transparent;white-space:nowrap}
+.pbar nav a:hover,.pbar nav a[aria-current=page]{border-color:var(--orange)}
+.pbar .pcta{flex:none;background:var(--orange);color:var(--ink);border-radius:10px;padding:11px 16px;font-size:12px}
+.pmain{padding:clamp(20px,3vw,44px) 2vw clamp(48px,6vw,96px)}
+.crumb{font-size:12px;color:var(--ink-2);margin-bottom:10px}
+.crumb a{border-bottom:1px solid currentColor}
+.ptitle{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:clamp(16px,2vw,28px)}
+.ptitle p{font-size:15px;color:var(--ink-2)}
+.lead{margin:0 0 16px}
+.lead img{display:block;max-width:100%;max-height:78svh;width:auto;height:auto;border-radius:12px}
+.gallery{columns:3 280px;column-gap:16px}
+.gallery img{display:block;width:100%;height:auto;border-radius:10px;margin-bottom:16px;break-inside:avoid}
 
 @media (max-width:760px){
   .nav{display:none}
   .hero-ui::before{display:none}
   .copy{position:relative;left:auto;right:auto;bottom:auto;top:auto;margin:calc(var(--heroH) + var(--band-h) + 28px) 16px 0;max-width:none;color:var(--ink)}
-  .work{margin-top:0;padding:40px 16px 56px}
-  .work{height:auto;display:block}
-  .rows{display:block}
-  .row,.row.flip{grid-template-columns:1fr}
-  .row+.row{margin-top:16px}
-  .card+.card{margin-top:12px}
-  .card>a{display:block}
-  .card .ph{height:64vw}
-  .card .meta{flex-direction:column;align-items:flex-start;gap:10px}
+  .work{margin-top:0;padding:40px 16px 56px;min-height:0;display:block}
+  .work-in{width:100%}
+  .row{flex-direction:column;align-items:stretch}
+  .pbar{gap:14px;padding:10px 16px}.pbar .plogo{width:40px}.pbar .pcta{display:none}
+  .pmain{padding:20px 16px 56px}
   .copy p{color:var(--ink-2)}
   .menu{display:grid!important}
   .frame{width:80vw;height:100vw;top:52%}
@@ -154,13 +170,13 @@ button{font-family:inherit}
 <header class="hero-ui">
   <a class="logo" href="#" aria-label="DS Squared home"><img src="img/logo.png" alt=""></a>
   <nav class="nav caps" aria-label="Main">
-    <a href="#projects">Project</a><a href="#about">About us</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a>
+    <a href="#projects">Projects</a><a href="#about">About us</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a>
   </nav>
   <button class="menu" aria-expanded="false" aria-controls="panel" aria-label="Menu"><span></span></button>
   <a class="cta caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
 </header>
 <nav class="panel" id="panel" aria-label="Menu">
-  <a href="#projects">Project</a><a href="#about">About us</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a><a href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
+  <a href="#projects">Projects</a><a href="#about">About us</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a><a href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
 </nav>
 
 <section class="copy">
@@ -173,27 +189,55 @@ button{font-family:inherit}
 </section>
 
 <!-- Their four project types, as on dssquared.co.uk, each with a photo Mo chose from their portfolio -->
-<section class="work" id="projects" aria-labelledby="work-title">
+<section class="work" aria-labelledby="work-title"><div class="work-in">
   <div class="work-head"><h2 id="work-title">Selected <em>work</em></h2></div>
   <div class="rows">
   <div class="row">
-    <article class="card"><a href="#projects">
-      <span class="ph"><img src="img/work-residential.webp" alt="Brick and white new build family home" loading="lazy" style="object-position:50% 25%"></span>
+    <article class="card"><a href="#residential">
+      <span class="ph" style="--a:1.333"><img src="img/work-residential.webp" alt="Brick and white new build family home" loading="lazy"></span>
       <div class="meta"><h3>Residential</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
-    <article class="card"><a href="#projects">
-      <span class="ph"><img src="img/work-interiors.webp" alt="Games room with a pool table and a lit bar behind" loading="lazy" style="object-position:50% 50%"></span>
+    <article class="card sm"><a href="#interiors">
+      <span class="ph" style="--a:1.333"><img src="img/work-interiors.webp" alt="Games room with a pool table and a lit bar behind" loading="lazy"></span>
       <div class="meta"><h3>Interiors</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
   </div>
-  <div class="row flip">
-    <article class="card"><a href="#projects">
-      <span class="ph"><img src="img/work-healthcare.webp" alt="Wellness centre: timber pavilions around a landscaped garden" loading="lazy" style="object-position:50% 50%"></span>
-      <div class="meta"><h3>Healthcare</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
-    <article class="card"><a href="#projects">
-      <span class="ph"><img src="img/work-commercial.webp" alt="Peckham Gallery and Studios: a white gallery building beside a brick house" loading="lazy" style="object-position:50% 60%"></span>
+  <div class="row">
+    <article class="card sm"><a href="#commercial">
+      <span class="ph" style="--a:1.333"><img src="img/work-commercial.webp" alt="Peckham Gallery and Studios: a white gallery building beside a brick house" loading="lazy"></span>
       <div class="meta"><h3>Commercial</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+    <article class="card"><a href="#healthcare">
+      <span class="ph" style="--a:1.939"><img src="img/work-healthcare.webp" alt="Wellness centre: timber pavilions around a landscaped garden" loading="lazy"></span>
+      <div class="meta"><h3>Healthcare</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
   </div>
   </div>
-</section>
+</div></section>
+
+<!-- Projects pages (#projects, #residential, #interiors, #healthcare, #commercial). One project per type for the concept; project names to confirm with Kate. -->
+<div class="page" id="page">
+  <header class="pbar">
+    <a class="plogo" href="#home" aria-label="DS Squared home"><img src="img/logo.png" alt=""></a>
+    <nav class="caps" aria-label="Main"><a href="#projects">Projects</a><a href="#about">About us</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a></nav>
+    <a class="pcta caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
+  </header>
+  <main class="pmain" id="pmain"></main>
+  <template id="t-projects"><div class="work-in" style="width:min(100%,calc((100svh - 200px) / .74))"><div class="ptitle"><h1>Our <em>projects</em></h1></div><div class="rows">
+  <div class="row">
+    <article class="card"><a href="#residential">
+      <span class="ph" style="--a:1.333"><img src="img/work-residential.webp" alt="Brick and white new build family home" loading="lazy"></span>
+      <div class="meta"><h3>Residential</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+    <article class="card sm"><a href="#interiors">
+      <span class="ph" style="--a:1.333"><img src="img/work-interiors.webp" alt="Games room with a pool table and a lit bar behind" loading="lazy"></span>
+      <div class="meta"><h3>Interiors</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+  </div>
+  <div class="row">
+    <article class="card sm"><a href="#commercial">
+      <span class="ph" style="--a:1.333"><img src="img/work-commercial.webp" alt="Peckham Gallery and Studios: a white gallery building beside a brick house" loading="lazy"></span>
+      <div class="meta"><h3>Commercial</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+    <article class="card"><a href="#healthcare">
+      <span class="ph" style="--a:1.939"><img src="img/work-healthcare.webp" alt="Wellness centre: timber pavilions around a landscaped garden" loading="lazy"></span>
+      <div class="meta"><h3>Healthcare</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+  </div>
+  </div></div></template>
+</div>
 <button class="replay" type="button">Replay</button>
 
 <script>
@@ -222,8 +266,31 @@ button{font-family:inherit}
     at(t + 1250, () => root.classList.add('on'));   // logo, menu, booking button, logo band
   }
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  let left = 2;
-  for (const src of ['img/house-sketch.webp', 'img/civic.webp']) { const im = new Image(); im.onload = im.onerror = () => { if (--left === 0) play(); }; im.src = src; }
+  function startLoading() { let left = 2; for (const src of ['img/house-sketch.webp', 'img/civic.webp']) { const im = new Image(); im.onload = im.onerror = () => { if (--left === 0) play(); }; im.src = src; } }
+  // Projects pages: a small hash router. #projects shows the four types; each type shows its project and photos.
+  const TYPES = {"residential": {"title": "Residential", "name": "The Marble Stair House", "line": "A new build family home", "imgs": [["img/proj/residential-00.webp", 1.333], ["img/proj/residential-01.webp", 1.333], ["img/proj/residential-02.webp", 1.333], ["img/proj/residential-03.webp", 1.333], ["img/proj/residential-04.webp", 1.333], ["img/proj/residential-05.webp", 0.667], ["img/proj/residential-06.webp", 0.667], ["img/proj/residential-07.webp", 0.667], ["img/proj/residential-08.webp", 0.667], ["img/proj/residential-09.webp", 0.667], ["img/proj/residential-10.webp", 0.667], ["img/proj/residential-11.webp", 0.667], ["img/proj/residential-12.webp", 0.667]]}, "interiors": {"title": "Interiors", "name": "The Games Room", "line": "A basement games room, bar and cinema", "imgs": [["img/proj/interiors-00.webp", 1.333], ["img/proj/interiors-01.webp", 1.333], ["img/proj/interiors-02.webp", 1.333], ["img/proj/interiors-03.webp", 1.333], ["img/proj/interiors-04.webp", 1.333], ["img/proj/interiors-05.webp", 1.333]]}, "healthcare": {"title": "Healthcare", "name": "The Wellness Centre", "line": "Timber pavilions around a landscaped garden", "imgs": [["img/proj/healthcare-00.webp", 1.939], ["img/proj/healthcare-01.webp", 1.939], ["img/proj/healthcare-02.webp", 1.939]]}, "commercial": {"title": "Commercial", "name": "Peckham Gallery and Studios", "line": "Artist studios and gallery space", "imgs": [["img/proj/commercial-00.webp", 1.333], ["img/proj/commercial-01.webp", 1.333], ["img/proj/commercial-02.webp", 1.333], ["img/proj/commercial-03.webp", 1.333], ["img/proj/commercial-04.webp", 1.333], ["img/proj/commercial-05.webp", 1.333], ["img/proj/commercial-06.webp", 1.333], ["img/proj/commercial-07.webp", 1.333], ["img/proj/commercial-08.webp", 1.333], ["img/proj/commercial-09.webp", 1.333], ["img/proj/commercial-10.webp", 0.667], ["img/proj/commercial-11.webp", 0.667]]}};
+  const pmain = document.getElementById('pmain'), tpl = document.getElementById('t-projects');
+  let played = false;
+  function finishHome() { slides.forEach(sl => sl.classList.add('in')); root.classList.add('go', 'open', 'on'); }
+  function route() {
+    const h = location.hash.slice(1);
+    const isPage = h === 'projects' || h in TYPES;
+    root.classList.toggle('sub', isPage);
+    document.querySelectorAll('.pbar nav a').forEach(a => a.toggleAttribute('aria-current', a.getAttribute('href') === '#projects' && isPage));
+    if (!isPage) { if (!played) { played = true; startLoading(); } else finishHome(); return; }
+    if (h === 'projects') { pmain.innerHTML = ''; pmain.appendChild(tpl.content.cloneNode(true)); }
+    else {
+      const t = TYPES[h], esc = x => String(x).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+      const [lead, ...rest] = t.imgs;
+      pmain.innerHTML = `<p class="crumb"><a href="#projects">Projects</a> / ${esc(t.title)}</p>
+        <div class="ptitle"><h1>${esc(t.title)}</h1><p>${esc(t.name)} · ${esc(t.line)}</p></div>
+        <figure class="lead"><img src="${lead[0]}" alt="${esc(t.name)}"></figure>
+        <div class="gallery">${rest.map(([src]) => `<img src="${src}" alt="${esc(t.name)}" loading="lazy">`).join('')}</div>`;
+    }
+    scrollTo(0, 0);
+  }
+  addEventListener('hashchange', route);
+
   // a gentle rise as each card comes into view
   const cards = [...document.querySelectorAll('.card')];
   if (!reduce && 'IntersectionObserver' in window) {
@@ -232,6 +299,7 @@ button{font-family:inherit}
     cards.forEach(c => io.observe(c));
   }
   document.querySelector('.replay').addEventListener('click', play);
+  route();
   const btn = document.querySelector('.menu'), panel = document.getElementById('panel');
   btn.addEventListener('click', () => { const o = panel.classList.toggle('open'); btn.setAttribute('aria-expanded', o); });
 })();
