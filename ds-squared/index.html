@@ -46,7 +46,18 @@ a{color:inherit;text-decoration:none}
 .t{position:absolute;overflow:hidden;background:#e6e1d9;z-index:1;opacity:0;will-change:transform}
 .t img{width:100%;height:100%;object-fit:cover;display:block}
 .t.far{z-index:0}
-.ready .t{opacity:var(--o,1);transition:opacity 1s var(--ease-out);transition-delay:calc(var(--i)*60ms)}
+.t img{transform:translateY(101%)}
+.ready .t{opacity:var(--o,1);transition:opacity .6s var(--ease-out);transition-delay:calc(var(--i)*70ms)}
+.ready .t img{transform:none;transition:transform 1.2s var(--ease-out);transition-delay:calc(var(--i)*70ms)}
+.pick{position:fixed;inset:0;z-index:10;background:rgba(31,28,26,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.pick.open{display:flex}
+.pick>div{background:#fff;max-width:720px;width:100%;max-height:85vh;overflow:auto;padding:16px}
+.pick b{display:block;margin-bottom:10px}
+.pick .g{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.pick button{border:0;padding:0;background:none;cursor:pointer;aspect-ratio:4/3;overflow:hidden;outline-offset:2px}
+.pick button img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s var(--ease-out)}
+.pick button:hover img{transform:scale(1.05)}
+.pick button[aria-current=true]{outline:3px solid var(--orange)}
 
 /* The main picture: full-screen image, clipped and scaled to a tile, opened by scroll */
 .hero{position:absolute;inset:0;z-index:2;opacity:0}
@@ -126,16 +137,17 @@ a{color:inherit;text-decoration:none}
   </div>
 </section>
 
+<div class="pick" role="dialog" aria-label="Choose a picture"><div><b>Choose a picture for this spot</b><div class="g"></div></div></div>
 <button class="adj-btn" type="button">Adjust layout</button>
 <div class="adj" role="dialog" aria-label="Adjust layout">
   <b>Adjust layout</b>
-  <small>Drag a picture to move it. Drag its orange corner to resize it. Scroll to reach the lower ones.</small>
+  <small>Tap a picture to swap it. Drag to move it. Drag its orange corner to resize it. Scroll to reach the lower ones.</small>
   <label>Picture size <output data-o="size"></output><input type="range" data-k="size" min="0.5" max="1.8" step="0.05"></label>
   <label>Spacing <output data-o="spread"></output><input type="range" data-k="spread" min="0.5" max="1.5" step="0.05"></label>
   <label>Middle house size <output data-o="hero"></output><input type="range" data-k="hero" min="15" max="70" step="1"></label>
   <label>Movement speed <output data-o="speed"></output><input type="range" data-k="speed" min="0" max="2" step="0.05"></label>
-  <div class="row"><button type="button" class="pri" data-a="copy">Copy settings</button><button type="button" data-a="reset">Reset</button><button type="button" data-a="done">Done</button></div>
-  <small data-msg>Saved on this device. Copy settings and paste them to me to make it permanent.</small>
+  <div class="row"><button type="button" data-a="reset">Reset</button><button type="button" data-a="done">Done</button></div>
+  <small data-msg>Changes save by themselves, and Claude can see them.</small>
 </div>
 <script>
 (() => {
@@ -143,7 +155,7 @@ a{color:inherit;text-decoration:none}
   const hero = document.querySelector('.hero'), img = hero.querySelector('img'), shade = hero.querySelector('.shade'), label = document.querySelector('.label');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const AR = { living:1.94, spiral:1.33, wine:.67, barn:1.78, bath:.67, 'stone-barns':1.33, garden:1.33, terrace:1.33, games:1.33,
-    'twin-barns':1.78, patio:1.33, aside:1.33, 'stair-kitchen':1.33, blossom:1.33, 'arch-house':1.78, 'aside-cafe':1.33 };
+    'twin-barns':1.78, concrete:1.33, umbrella:1.33, cinema:1.33, loft:1.5, hundred:1.33, 'hundred-in':1.33, 'bath-2':1.33, patio:1.33, aside:1.33, 'stair-kitchen':1.33, blossom:1.33, 'arch-house':1.78, 'aside-cafe':1.33 };
   // [photo, left %, top % of screen, width % of screen, travel (screens) over the scroll; negative drifts down]
   const D = [
     ['living',3,12,15,.7], ['spiral',24,6,8,1.1], ['barn',63,9,13,-.25], ['wine',85,4,9,.55],
@@ -157,15 +169,26 @@ a{color:inherit;text-decoration:none}
   ];
   let tiles = [], mobile, G, key;
   const DEF = { d: { size: 1, spread: 1, hero: 30, speed: 1 }, m: { size: 1, spread: 1, hero: 62, speed: 1 } };
+  // Layout is kept in the page's shared database so Claude can read it
+  let db = null, remote = {}, saveT = 0, lastAt = 0;
+  const mode = () => mobile ? 'm' : 'd';
   function load() {
-    key = 'ds-layout-' + (mobile ? 'm' : 'd');
-    let saved = null; try { saved = JSON.parse(localStorage.getItem(key)); } catch (e) {}
     const base = (mobile ? M : D).map(([f, x, y, w, s]) => ({ f, x, y, w, s }));
-    G = Object.assign({}, DEF[mobile ? 'm' : 'd'], saved && saved.g);
-    if (saved && saved.t && saved.t.length === base.length) saved.t.forEach((o, i) => Object.assign(base[i], o));
+    const saved = remote[mode()];
+    G = Object.assign({}, DEF[mode()], saved && saved.g);
+    if (saved && saved.t && saved.t.length === base.length) saved.t.forEach((o, i) => Object.assign(base[i], o, { s: base[i].s }));
     return base;
   }
-  function save() { try { localStorage.setItem(key, JSON.stringify({ g: G, t: tiles.map(({ x, y, w }) => ({ x: +x.toFixed(1), y: +y.toFixed(1), w: +w.toFixed(1) })) })); } catch (e) {} }
+  function save() {
+    clearTimeout(saveT);
+    saveT = setTimeout(async () => {
+      lastAt = Date.now(); const data = { g: G, t: tiles.map(({ f, x, y, w }) => ({ f, x: +x.toFixed(1), y: +y.toFixed(1), w: +w.toFixed(1) })), at: lastAt };
+      saveT = 0; remote[mode()] = data;
+      if (!db) { msg.textContent = 'Not saved: open this on claude.ai to save.'; return; }
+      try { await db.doc('layout/' + mode()).set(data); msg.textContent = 'Saved. Claude can see it.'; }
+      catch (e) { msg.textContent = 'Could not save (' + (e.code || 'error') + ').'; }
+    }, 500);
+  }
   function place(t) {
     const w = t.w * G.size, cx = 50 + (t.x + t.w / 2 - 50) * G.spread, top = 50 + (t.y - 50) * G.spread;
     t.el.style.left = (cx - w / 2) + '%'; t.el.style.top = top + '%'; t.el.style.width = w + 'vw';
@@ -175,7 +198,7 @@ a{color:inherit;text-decoration:none}
     const L = load();
     wall.innerHTML = L.map(({ f, w }, i) => {
       const far = w < (mobile ? 30 : 10);
-      return `<div class="t${far ? ' far' : ''}" style="--i:${i};--o:${far ? .55 : 1};aspect-ratio:${AR[f]}"><img src="img/${f}.webp" alt=""><i class="h"></i></div>`;
+      return `<div class="t${far ? ' far' : ''}" style="--i:${i};--o:${far ? .55 : 1};aspect-ratio:${AR[f] || 1.33}"><img src="img/${f}.webp" alt=""><i class="h"></i></div>`;
     }).join('');
     tiles = [...wall.children].map((el, i) => Object.assign(L[i], { el }));
     tiles.forEach(place); syncPanel();
@@ -191,7 +214,7 @@ a{color:inherit;text-decoration:none}
     // the main picture rises into the middle, then opens to fill the screen
     const rise = ease(clamp(p / .3)), grow = ease(clamp((p - .3) / .5));
     const w0 = W * G.hero / 100, h0 = mobile ? w0 * 1.2 : w0 / 1.5;
-    const cy0 = H * (1.15 - .65 * rise);
+    const cy0 = H * (.82 - .32 * rise);
     const rw = w0 + (W - w0) * grow, rh = h0 + (H - h0) * grow, cx = W / 2, cy = cy0 + (H / 2 - cy0) * grow;
     const top = cy - rh / 2, left = cx - rw / 2;
     hero.style.clipPath = `inset(${top.toFixed(1)}px ${(W - left - rw).toFixed(1)}px ${(H - top - rh).toFixed(1)}px ${left.toFixed(1)}px)`;
@@ -216,31 +239,47 @@ a{color:inherit;text-decoration:none}
   adj.addEventListener('click', async e => {
     const a = e.target.dataset.a;
     if (a === 'done') root.classList.remove('edit');
-    if (a === 'reset') { try { localStorage.removeItem(key); } catch (er) {} build(); frame(); msg.textContent = 'Back to the original layout.'; }
-    if (a === 'copy') {
-      const txt = 'DS layout (' + (mobile ? 'phone' : 'computer') + '): ' + JSON.stringify({ g: G, t: tiles.map(({ f, x, y, w }) => ({ f, x: +x.toFixed(1), y: +y.toFixed(1), w: +w.toFixed(1) })) });
-      try { await navigator.clipboard.writeText(txt); msg.textContent = 'Copied. Paste it to Claude in the chat.'; }
-      catch (er) { prompt('Copy this and paste it to Claude:', txt); }
-    }
+    if (a === 'reset') { remote[mode()] = null; build(); frame(); save(); msg.textContent = 'Back to the original layout.'; }
   });
   let drag = null;
   wall.addEventListener('pointerdown', e => {
     if (!root.classList.contains('edit')) return;
     const el = e.target.closest('.t'); if (!el) return;
     e.preventDefault(); const t = tiles.find(x => x.el === el);
-    drag = { t, rs: e.target.classList.contains('h'), sx: e.clientX, sy: e.clientY, x: t.x, y: t.y, w: t.w };
+    drag = { t, rs: e.target.classList.contains('h'), sx: e.clientX, sy: e.clientY, x: t.x, y: t.y, w: t.w, moved: false };
     el.setPointerCapture(e.pointerId);
   });
   wall.addEventListener('pointermove', e => {
     if (!drag) return; const W = innerWidth, H = innerHeight, dx = e.clientX - drag.sx, dy = e.clientY - drag.sy, t = drag.t;
+    if (Math.abs(dx) + Math.abs(dy) > 5) drag.moved = true; if (!drag.moved) return;
     if (drag.rs) { t.w = Math.max(3, drag.w + dx / W * 100 / G.size); t.x = drag.x; }
     else { t.x = drag.x + dx / W * 100 / G.spread; t.y = drag.y + dy / H * 100 / G.spread; }
     place(t);
   });
-  const end = () => { if (drag) { drag = null; save(); } };
+  const end = () => { if (!drag) return; const d = drag; drag = null; if (d.moved) save(); else if (!d.rs) openPick(d.t); };
+  const pick = document.querySelector('.pick'), grid = pick.querySelector('.g');
+  let picking = null;
+  function openPick(t) {
+    picking = t;
+    grid.innerHTML = Object.keys(AR).map(f => `<button type="button" data-f="${f}" aria-current="${f === t.f}"><img src="img/${f}.webp" alt="${f}"></button>`).join('');
+    pick.classList.add('open');
+  }
+  pick.addEventListener('click', e => {
+    const b = e.target.closest('[data-f]');
+    if (b && picking) { picking.f = b.dataset.f; picking.el.querySelector('img').src = `img/${picking.f}.webp`; picking.el.style.aspectRatio = AR[picking.f]; save(); }
+    if (b || e.target === pick) { pick.classList.remove('open'); picking = null; }
+  });
   wall.addEventListener('pointerup', end); wall.addEventListener('pointercancel', end);
 
   build(); frame();
+  (async () => {
+    try { db = await window.claude?.use?.('db'); } catch (e) { db = null; }
+    if (!db) return;
+    db.collection('layout').onSnapshot(snap => {
+      remote = {}; snap.docs.forEach(d => { remote[d.id] = d.data(); });
+      const cur = remote[mode()]; if (!drag && !saveT && !(cur && cur.at === lastAt)) { build(); frame(); }
+    }, () => {});
+  })();
   const btn = document.querySelector('.menu'), panel = document.getElementById('panel');
   btn.addEventListener('click', () => { const o = panel.classList.toggle('open'); btn.setAttribute('aria-expanded', o); btn.textContent = o ? 'Close' : 'Menu'; });
 })();
