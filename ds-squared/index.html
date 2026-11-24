@@ -75,11 +75,11 @@ button{font-family:inherit}
 /* Headline, bottom-left: a quiet editorial serif over the picture, Archivo for the line beneath */
 .hero-ui::before{content:"";position:absolute;left:0;bottom:0;width:70%;height:65%;background:radial-gradient(120% 100% at 0% 100%,rgba(20,18,16,.55),rgba(20,18,16,0) 70%);opacity:0;transition:opacity 1s var(--ease-out);pointer-events:none}
 .on .hero-ui::before{opacity:1}
-.copy{position:absolute;left:2vw;bottom:calc(100% - var(--heroH) * .945);z-index:4;color:#fff;max-width:46vw;opacity:0;transform:translateY(14px);filter:blur(6px);transition:opacity .9s var(--ease-out) .35s,transform 1.1s var(--ease-out) .35s,filter .9s var(--ease-out) .35s}
+.copy{position:absolute;left:2vw;bottom:calc(100% - var(--heroH) * .975);z-index:4;color:#fff;max-width:52vw;opacity:0;transform:translateY(14px);filter:blur(6px);transition:opacity .9s var(--ease-out) .35s,transform 1.1s var(--ease-out) .35s,filter .9s var(--ease-out) .35s}
 .on .copy{opacity:1;transform:none;filter:none}
 .copy h1{font-family:var(--serif);font-optical-sizing:auto;font-weight:350;font-size:clamp(2.75rem,6.2vw,6.25rem);line-height:.95;letter-spacing:-.025em;text-wrap:balance}
 .copy h1 em{font-style:italic;font-weight:300}
-.copy p{margin-top:clamp(10px,1.2vw,18px);font-size:clamp(15px,1.25vw,19px);line-height:1.45;max-width:38ch;color:rgba(255,255,255,.9);text-wrap:pretty}
+.copy p{margin-top:clamp(10px,1.2vw,18px);font-size:clamp(15px,1.25vw,19px);line-height:1.45;max-width:58ch;color:rgba(255,255,255,.9);text-wrap:pretty}
 
 /* Accreditations band directly under the picture: warm stone band, logos in one charcoal tone gliding right to left on a loop */
 :root{--band:#ECE7E0;--band-h:104px}
@@ -93,39 +93,36 @@ button{font-family:inherit}
 .replay{position:absolute;right:2vw;top:calc(var(--heroH) * .11);z-index:5;background:var(--ink);color:#fff;border:0;border-radius:8px;font:500 12px/1 var(--f);padding:9px 12px;opacity:0;cursor:pointer}
 .on .replay{opacity:.85;transition:opacity .6s 1s}.replay:hover{opacity:1}
 
-/* Selected work: named projects, filterable, straight after the logo band */
+/* Selected work: their four project types, two rows, one big and one small card in each, swapped on the second row */
 .work{margin-top:calc(var(--heroH) + var(--band-h));padding:clamp(48px,5vw,80px) 2vw clamp(56px,6vw,96px);opacity:0;transition:opacity .8s .5s}
 .on .work{opacity:1}
-.work-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:clamp(20px,2.2vw,32px)}
+.work-head{margin-bottom:clamp(20px,2.2vw,32px)}
 .work-head h2{font-family:var(--serif);font-weight:350;font-size:clamp(2.25rem,4.4vw,4rem);line-height:1;letter-spacing:-.02em}
 .work-head h2 em{font-style:italic;font-weight:300}
-.filters{display:flex;gap:8px;flex-wrap:wrap}
-.filters button{border:1px solid #d6d0c8;background:transparent;color:var(--ink);border-radius:999px;padding:9px 16px;font-size:12px;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
-.filters button:hover{border-color:var(--ink)}
-.filters button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
-.grid{display:flex;flex-wrap:wrap;gap:16px}
-.card{flex:1 1 calc(42% - 8px);min-width:0;transition:opacity .4s var(--ease-out),transform .6s var(--ease-out)}
-.card.big{flex-basis:calc(58% - 8px)}
-.card[hidden]{display:none}
-.card .ph{display:block;overflow:hidden;border-radius:12px;height:clamp(260px,31vw,500px);background:#e6e1d9}
+.row{display:grid;gap:16px;grid-template-columns:7fr 5fr}
+.row+.row{margin-top:clamp(28px,3vw,44px)}
+.row.flip{grid-template-columns:5fr 7fr}
+.card{min-width:0;transition:opacity .7s var(--ease-out),transform .8s var(--ease-out)}
+.card .ph{display:block;overflow:hidden;border-radius:12px;height:clamp(280px,33vw,540px);background:#e6e1d9}
 .card .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s var(--ease-out)}
 .card a:hover .ph img{transform:scale(1.04)}
-.card .meta{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 2px 0}
-.card h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.4rem,1.9vw,1.9rem);line-height:1.1;letter-spacing:-.01em}
-.card p{font-size:15px;color:var(--ink-2);margin-top:4px;max-width:46ch}
-.card .tag{flex:none;font-size:11px;color:var(--ink-2)}
+.card .meta{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding:14px 2px 0}
+.card h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.6rem,2.3vw,2.3rem);line-height:1.05;letter-spacing:-.015em}
+.card p{font-size:15px;color:var(--ink-2);margin-top:6px;max-width:44ch}
+.card .more{flex:none;display:inline-flex;align-items:center;gap:8px;font-size:12px;border-bottom:1.5px solid var(--orange);padding-bottom:3px}
+.card .more svg{transition:transform .3s var(--ease-out)}.card a:hover .more svg{transform:translateX(3px)}
 .card.rise{opacity:0;transform:translateY(24px)}
-.work-foot{margin-top:clamp(28px,3vw,44px);display:flex;justify-content:flex-end}
-.work-foot a{display:inline-flex;align-items:center;gap:10px;font-size:13px;border-bottom:1.5px solid var(--orange);padding-bottom:4px}
-.work-foot a svg{transition:transform .3s var(--ease-out)}.work-foot a:hover svg{transform:translateX(3px)}
 
 @media (max-width:760px){
   .nav{display:none}
   .hero-ui::before{display:none}
   .copy{position:relative;left:auto;right:auto;bottom:auto;top:auto;margin:calc(var(--heroH) + var(--band-h) + 28px) 16px 0;max-width:none;color:var(--ink)}
   .work{margin-top:0;padding:40px 16px 56px}
-  .card,.card.big{flex-basis:100%}
-  .card .ph{height:62vw}
+  .row,.row.flip{grid-template-columns:1fr}
+  .row+.row{margin-top:16px}
+  .card+.card{margin-top:12px}
+  .card .ph{height:64vw}
+  .card .meta{flex-direction:column;align-items:flex-start;gap:10px}
   .copy p{color:var(--ink-2)}
   .menu{display:grid!important}
   .frame{width:80vw;height:100vw;top:52%}
@@ -164,36 +161,32 @@ button{font-family:inherit}
 
 <section class="copy">
   <h1>People and <em>places.</em></h1>
-  <p>Since 2007, DS Squared has designed homes, developments and spaces for healing, made to be lived in, worked in and loved.</p>
+  <p>Since 2007, DS Squared has designed homes, developments and healing spaces, made to be lived in and loved.</p>
 </section>
 
 <section class="band" aria-label="Architects Registration Board, Chartered Institute of Architectural Technologists, RIBA Chartered Practice">
   <div class="track" aria-hidden="true"></div>
 </section>
 
-<!-- Project names are placeholders for their "Residence 1-21": confirm each with Kate -->
+<!-- Their four project types, as on dssquared.co.uk. Lines adapted from their own site. -->
 <section class="work" id="projects" aria-labelledby="work-title">
-  <div class="work-head">
-    <h2 id="work-title">Selected <em>work</em></h2>
-    <div class="filters caps" role="group" aria-label="Filter projects">
-      <button type="button" aria-pressed="true" data-f="all">All</button><button type="button" aria-pressed="false" data-f="homes">Homes</button><button type="button" aria-pressed="false" data-f="developers">Developers</button><button type="button" aria-pressed="false" data-f="healthcare">Healthcare</button>
-    </div>
+  <div class="work-head"><h2 id="work-title">Selected <em>work</em></h2></div>
+  <div class="row">
+    <article class="card"><a href="#projects">
+      <span class="ph"><img src="img/work-residential.webp" alt="Brick and white new build family home" loading="lazy" style="object-position:50% 45%"></span>
+      <div class="meta"><div><h3>Residential</h3><p>From first sketch to the keys of your dream home, with you at every stage.</p></div><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+    <article class="card"><a href="#projects">
+      <span class="ph"><img src="img/work-interiors.webp" alt="Bright kitchen and dining extension opening onto a garden" loading="lazy" style="object-position:50% 50%"></span>
+      <div class="meta"><div><h3>Interiors</h3><p>Rooms designed together with the architecture, so every space feels considered.</p></div><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
   </div>
-  <div class="grid">
-    <article class="card big" data-cat="homes"><a href="#projects">
-      <span class="ph"><img src="img/work-marble.webp" alt="Brick and white new build family home" loading="lazy"></span>
-      <div class="meta"><div><h3>The Marble Stair House</h3><p>A new build family home, finished inside with a sculpted marble staircase.</p></div><span class="tag caps">Homes</span></div></a></article>
-    <article class="card" data-cat="developers"><a href="#projects">
-      <span class="ph"><img src="img/work-lodge.webp" alt="Converted barns around a farm courtyard" loading="lazy"></span>
-      <div class="meta"><div><h3>Lodge Farm</h3><p>Barn conversions and new homes around a rural farm courtyard.</p></div><span class="tag caps">Developers</span></div></a></article>
-    <article class="card" data-cat="healthcare"><a href="#projects">
-      <span class="ph"><img src="img/work-health.webp" alt="Landscaped courtyard of a healthcare building" loading="lazy"></span>
-      <div class="meta"><div><h3>The Haematology Unit</h3><p>Calm treatment spaces around a landscaped courtyard.</p></div><span class="tag caps">Healthcare</span></div></a></article>
-    <article class="card big" data-cat="developers"><a href="#projects">
-      <span class="ph"><img src="img/civic.webp" alt="Concrete and glass civic building" loading="lazy" style="object-position:50% 40%"></span>
-      <div class="meta"><div><h3>The Civic Centre</h3><p>A concrete and glass building with an open, glazed ground floor.</p></div><span class="tag caps">Commercial</span></div></a></article>
+  <div class="row flip">
+    <article class="card"><a href="#projects">
+      <span class="ph"><img src="img/work-healthcare.webp" alt="Landscaped courtyard of a healthcare building" loading="lazy" style="object-position:50% 50%"></span>
+      <div class="meta"><div><h3>Healthcare</h3><p>Spaces for healing and treatment, for NHS and private healthcare partners.</p></div><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+    <article class="card"><a href="#projects">
+      <span class="ph"><img src="img/work-commercial.webp" alt="Brick apartment development with private gardens" loading="lazy" style="object-position:50% 60%"></span>
+      <div class="meta"><div><h3>Commercial</h3><p>Urban design, planning and building services for property developers.</p></div><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
   </div>
-  <div class="work-foot"><a class="caps" href="#projects">All projects <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></a></div>
 </section>
 <button class="replay" type="button">Replay</button>
 
@@ -225,12 +218,8 @@ button{font-family:inherit}
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   let left = 2;
   for (const src of ['img/house-sketch.webp', 'img/civic.webp']) { const im = new Image(); im.onload = im.onerror = () => { if (--left === 0) play(); }; im.src = src; }
-  // project filters, and a gentle rise as each card comes into view
-  const fbtns = [...document.querySelectorAll('.filters button')], cards = [...document.querySelectorAll('.card')];
-  fbtns.forEach(b => b.addEventListener('click', () => {
-    fbtns.forEach(x => x.setAttribute('aria-pressed', x === b));
-    cards.forEach(c => { c.hidden = !(b.dataset.f === 'all' || c.dataset.cat === b.dataset.f); });
-  }));
+  // a gentle rise as each card comes into view
+  const cards = [...document.querySelectorAll('.card')];
   if (!reduce && 'IntersectionObserver' in window) {
     cards.forEach(c => c.classList.add('rise'));
     const io = new IntersectionObserver(es => es.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.remove('rise'), i * 90); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
