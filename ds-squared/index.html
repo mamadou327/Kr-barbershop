@@ -94,29 +94,32 @@ button{font-family:inherit}
 .on .replay{opacity:.85;transition:opacity .6s 1s}.replay:hover{opacity:1}
 
 /* Selected work: one big and one small card per row, each photo at its own shape (never zoomed or cropped), sized so the section fits one screen */
-.work{margin-top:calc(var(--heroH) + var(--band-h));padding:clamp(40px,4vw,72px) 2vw clamp(48px,5vw,88px);opacity:0;transition:opacity .8s .5s}
+.work{margin-top:calc(var(--heroH) + var(--band-h));height:100vh;height:100svh;padding:clamp(14px,1.6vw,24px) 2vw;display:flex;flex-direction:column;opacity:0;transition:opacity .8s .5s}
 .on .work{opacity:1}
-.work-in{width:100%}
+.work-in{width:100%;flex:1;min-height:0;display:flex;flex-direction:column}
 :root{--rowH:calc((100vw - 4vw - 16px) * .5833 / 1.6)}
-.work-head{margin-bottom:clamp(12px,1.4vw,20px)}
+.work-head{margin-bottom:clamp(10px,1vw,16px)}
 .work-head h2,.page h1{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3.4vw,3.25rem);line-height:1;letter-spacing:-.02em}
 .work-head h2 em,.page h1 em{font-style:italic;font-weight:300}
-.rows{display:flex;flex-direction:column;gap:clamp(14px,1.6vw,22px)}
-.row{display:flex;gap:16px;align-items:flex-start}
-.card{flex:7 1 0;min-width:0;transition:opacity .7s var(--ease-out),transform .8s var(--ease-out)}
-.card.sm{flex:5 1 0}
-.card .ph{display:block;overflow:hidden;border-radius:12px;background:#e6e1d9;height:var(--rowH)}
+.rows{flex:1;min-height:0;display:grid;grid-template-rows:1fr 1fr;gap:12px}
+.row{display:flex;gap:12px;min-height:0}
+.card{flex:6.5 1 0;min-width:0;min-height:0;display:flex;transition:opacity .7s var(--ease-out),transform .8s var(--ease-out)}
+.card.sm{flex:5.5 1 0}
+.card>a{position:relative;flex:1;display:block;min-height:0;border-radius:12px;overflow:hidden}
+.card .ph{display:block;height:100%;background:#e6e1d9}
+.card .ph::after{content:"";position:absolute;inset:auto 0 0 0;height:38%;background:linear-gradient(180deg,rgba(20,18,16,0),rgba(20,18,16,.55));pointer-events:none}
 .card .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s var(--ease-out)}
 .card a:hover .ph img{transform:scale(1.03)}
-.card .meta{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:8px 2px 0}
+.card .meta{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding:clamp(12px,1.4vw,20px);color:#fff}
 .card h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.4rem,1.9vw,2rem);line-height:1.05;letter-spacing:-.015em}
-.card .more{flex:none;display:inline-flex;align-items:center;gap:8px;font-size:12px;border-bottom:1.5px solid var(--orange);padding-bottom:3px}
+.card .more{flex:none;display:inline-flex;align-items:center;gap:8px;font-size:12px;border-bottom:1.5px solid var(--orange);padding-bottom:3px;color:#fff}
 .card .more svg{transition:transform .3s var(--ease-out)}.card a:hover .more svg{transform:translateX(3px)}
 .card.rise{opacity:0;transform:translateY(24px)}
 
 /* Projects pages: the four types; each type lists its projects as cards; each project shows all its photos */
 .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr));gap:16px}
 .plist .card .ph{height:auto;aspect-ratio:3/2}
+.pmain .rows{height:calc(100svh - 200px);min-height:520px}
 .page{display:none}
 .sub .page{display:block}
 .sub .frame,.sub .hero-ui,.sub .copy,.sub .band,.sub .work,.sub .replay,.sub .ltitle{display:none!important}
@@ -145,6 +148,9 @@ button{font-family:inherit}
   .work-in{width:100%}
   .row{flex-direction:column;align-items:stretch}
   .card .ph{height:auto;aspect-ratio:4/3}
+  .work{height:auto}
+  .rows{display:flex;flex-direction:column}
+  .pmain .rows{height:auto;min-height:0}
   .pbar{gap:14px;padding:10px 16px}.pbar .plogo{width:40px}.pbar .pcta{display:none}
   .pmain{padding:20px 16px 56px}
   .copy p{color:var(--ink-2)}
@@ -198,7 +204,7 @@ button{font-family:inherit}
   <div class="rows">
   <div class="row">
     <article class="card"><a href="#residential">
-      <span class="ph" style="--a:1.333"><img src="img/work-residential.webp" alt="Brick and white new build family home" loading="lazy"></span>
+      <span class="ph" style="--a:1.333"><img src="img/work-residential.webp" alt="Brick and white new build family home" loading="lazy" style="object-position:50% 12%"></span>
       <div class="meta"><h3>Residential</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
     <article class="card sm"><a href="#interiors">
       <span class="ph" style="--a:1.333"><img src="img/work-interiors.webp" alt="Games room with a pool table and a lit bar behind" loading="lazy"></span>
@@ -226,7 +232,7 @@ button{font-family:inherit}
   <template id="t-projects"><div class="work-in"><div class="ptitle"><h1>Our <em>projects</em></h1></div><div class="rows">
   <div class="row">
     <article class="card"><a href="#residential">
-      <span class="ph" style="--a:1.333"><img src="img/work-residential.webp" alt="Brick and white new build family home" loading="lazy"></span>
+      <span class="ph" style="--a:1.333"><img src="img/work-residential.webp" alt="Brick and white new build family home" loading="lazy" style="object-position:50% 12%"></span>
       <div class="meta"><h3>Residential</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
     <article class="card sm"><a href="#interiors">
       <span class="ph" style="--a:1.333"><img src="img/work-interiors.webp" alt="Games room with a pool table and a lit bar behind" loading="lazy"></span>
