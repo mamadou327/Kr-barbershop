@@ -137,15 +137,31 @@ button{font-family:inherit}
 .facts div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #dcd6ce;font-size:14px}
 .facts dt{color:var(--ink-2)}
 .pinfo .pcta2{display:inline-flex;margin-top:22px;background:var(--orange);color:var(--ink);border-radius:10px;padding:13px 18px;font-size:12px}
-.enq{margin-top:clamp(36px,4vw,64px);background:var(--band);border-radius:16px;padding:clamp(24px,3.2vw,48px);display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:end}
+.enq{margin-top:clamp(24px,3vw,40px);background:var(--band);border-radius:16px;padding:clamp(24px,3.2vw,48px);display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:end}
 .enq h2{font-family:var(--serif);font-weight:350;font-size:clamp(1.8rem,3vw,2.8rem);line-height:1.05;letter-spacing:-.02em}
 .enq h2 em{font-style:italic;font-weight:300}
 .enq p{color:var(--ink-2);margin-top:10px;max-width:44ch}
 .enq .acts{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
 .enq .acts a.big{background:var(--orange);color:var(--ink);border-radius:10px;padding:14px 20px;font-size:13px}
 .enq .acts a.ln{font-size:15px;border-bottom:1px solid #c9c2b8}
-.nextp{display:flex;justify-content:space-between;align-items:center;margin-top:20px;font-size:13px}
+.nextp{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:clamp(24px,3vw,40px);padding-top:18px;border-top:1px solid #dcd6ce;font-size:13px}
 .nextp a{display:inline-flex;align-items:center;gap:8px;border-bottom:1.5px solid var(--orange);padding-bottom:3px}
+
+/* Footer: charcoal, contact first, then the site map, their socials, and a large serif wordmark */
+.foot2{background:var(--ink);color:#F4F1EC;padding:clamp(40px,5vw,72px) 2vw 20px;opacity:0;transition:opacity .8s .6s}
+.on .foot2,.sub .foot2{opacity:1}
+.ft-top{display:grid;grid-template-columns:1.3fr 2.7fr;gap:clamp(28px,4vw,64px)}
+.ft-brand img{width:56px;display:block;border-radius:14%}
+.ft-brand p{font-family:var(--serif);font-weight:300;font-size:clamp(1.4rem,2vw,1.9rem);line-height:1.2;margin-top:18px;max-width:20ch}
+.ft-brand .pcta3{display:inline-flex;margin-top:22px;background:var(--orange);color:var(--ink);border-radius:10px;padding:13px 18px;font-size:12px}
+.ft-cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.ft-cols h4{font-size:11px;font-weight:600;font-stretch:87.5%;letter-spacing:.06em;text-transform:uppercase;color:#a69d93;margin-bottom:12px}
+.ft-cols a,.ft-cols span{display:block;font-size:15px;padding:4px 0;color:#F4F1EC;width:fit-content}
+.ft-cols a{background:linear-gradient(var(--orange),var(--orange)) 0 100%/0 1.5px no-repeat;transition:background-size .35s var(--ease-out)}
+.ft-cols a:hover{background-size:100% 1.5px}
+.ft-word{font-family:var(--serif);font-weight:300;font-size:20.2vw;line-height:.78;letter-spacing:-.045em;white-space:nowrap;margin-top:clamp(36px,5vw,72px);color:#F4F1EC;user-select:none}
+.ft-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:18px;padding-top:14px;border-top:1px solid #3a3531;font-size:12px;color:#a69d93}
+.ft-bottom a{color:#a69d93}.ft-bottom a:hover{color:#F4F1EC}
 
 /* Projects pages: the four types; each type lists its projects as cards; each project shows all its photos */
 .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr));gap:16px}
@@ -188,6 +204,9 @@ button{font-family:inherit}
   .pbar nav{gap:14px}
   .stage{height:auto;aspect-ratio:4/3;min-height:0}
   .enq{grid-template-columns:1fr}
+  .ft-top{grid-template-columns:1fr}
+  .ft-cols{grid-template-columns:1fr 1fr}
+  .foot2{padding:40px 16px 16px}
   .copy p{color:var(--ink-2)}
   .menu{display:grid!important}
   .frame{width:80vw;height:100vw;top:52%}
@@ -283,6 +302,23 @@ button{font-family:inherit}
   </div>
   </div></div></template>
 </div>
+<footer class="foot2">
+  <div class="ft-top">
+    <div class="ft-brand">
+      <img src="img/logo.png" alt="DS Squared">
+      <p>Architecture and interiors from our Fulham and Edgware studios.</p>
+      <a class="pcta3 caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
+    </div>
+    <div class="ft-cols">
+      <div><h4>Contact</h4><a href="tel:02087325620">020 8732 5620</a><a href="mailto:design@dssquared.co.uk">design@dssquared.co.uk</a></div>
+      <div><h4>Projects</h4><a href="#residential">Residential</a><a href="#interiors">Interiors</a><a href="#healthcare">Healthcare</a><a href="#commercial">Commercial</a></div>
+      <div><h4>What we do</h4><a href="#services">Architecture</a><a href="#services">Interior design</a><a href="#services">Planning</a><a href="#services">Extensions</a><a href="#services">New builds</a><a href="#services">Basements</a></div>
+      <div><h4>Follow</h4><a href="https://www.linkedin.com/company/ds-squared-architects/" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.facebook.com/DS-Squared-Architects-108608531844338" target="_blank" rel="noopener">Facebook</a><a href="https://twitter.com/squared_ds" target="_blank" rel="noopener">X (Twitter)</a></div>
+    </div>
+  </div>
+  <div class="ft-word" aria-hidden="true">DS Squared</div>
+  <div class="ft-bottom"><span>&copy; 2026 DS Squared. All rights reserved.</span><a href="#legal">Legal information</a></div>
+</footer>
 <button class="replay" type="button">Replay</button>
 
 <script>
@@ -313,7 +349,7 @@ button{font-family:inherit}
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   function startLoading() { let left = 2; for (const src of ['img/house-sketch.webp', 'img/civic.webp']) { const im = new Image(); im.onload = im.onerror = () => { if (--left === 0) play(); }; im.src = src; } }
   // Projects pages: a small hash router. #projects shows the four types; each type shows its project and photos.
-  const TYPES = {"residential": {"title": "Residential", "name": "The Marble Stair House", "line": "A new build family home", "imgs": [["img/proj/residential-00.webp", 1.333], ["img/proj/residential-01.webp", 1.333], ["img/proj/residential-02.webp", 1.333], ["img/proj/residential-03.webp", 1.333], ["img/proj/residential-04.webp", 1.333], ["img/proj/residential-05.webp", 0.667], ["img/proj/residential-06.webp", 0.667], ["img/proj/residential-07.webp", 0.667], ["img/proj/residential-08.webp", 0.667], ["img/proj/residential-09.webp", 0.667], ["img/proj/residential-10.webp", 0.667], ["img/proj/residential-11.webp", 0.667], ["img/proj/residential-12.webp", 0.667]], "slug": "the-marble-stair-house", "desc": "A new build family home in brick and white render. Inside, a sculpted marble staircase rises through the house, framed by dark timber doors and full-height glazing.", "facts": [["Sector", "Residential"], ["Project", "New build home"], ["Highlights", "Marble staircase, bespoke joinery"]]}, "interiors": {"title": "Interiors", "name": "The Games Room", "line": "A basement games room, bar and cinema", "imgs": [["img/proj/interiors-00.webp", 1.333], ["img/proj/interiors-01.webp", 1.333], ["img/proj/interiors-02.webp", 1.333], ["img/proj/interiors-03.webp", 1.333], ["img/proj/interiors-04.webp", 1.333], ["img/proj/interiors-05.webp", 1.333]], "slug": "the-games-room", "desc": "A basement made for entertaining: a games room under a long rooflight, a backlit bar and drinks display, and a home cinema with a starlit ceiling.", "facts": [["Sector", "Interiors"], ["Project", "Basement fit-out"], ["Highlights", "Games room, bar, cinema"]]}, "healthcare": {"title": "Healthcare", "name": "The Wellness Centre", "line": "Timber pavilions around a landscaped garden", "imgs": [["img/proj/healthcare-00.webp", 1.939], ["img/proj/healthcare-01.webp", 1.939], ["img/proj/healthcare-02.webp", 1.939]], "slug": "the-wellness-centre", "desc": "Timber-roofed pavilions set around a landscaped garden, with glazed walls that open the treatment rooms onto the planting outside.", "facts": [["Sector", "Healthcare"], ["Project", "Wellness centre"], ["Highlights", "Garden setting, natural light"]]}, "commercial": {"title": "Commercial", "name": "Peckham Gallery and Studios", "line": "Artist studios and gallery space", "imgs": [["img/proj/commercial-00.webp", 1.333], ["img/proj/commercial-01.webp", 1.333], ["img/proj/commercial-02.webp", 1.333], ["img/proj/commercial-03.webp", 1.333], ["img/proj/commercial-04.webp", 1.333], ["img/proj/commercial-05.webp", 1.333], ["img/proj/commercial-06.webp", 1.333], ["img/proj/commercial-07.webp", 1.333], ["img/proj/commercial-08.webp", 1.333], ["img/proj/commercial-09.webp", 1.333], ["img/proj/commercial-10.webp", 0.667], ["img/proj/commercial-11.webp", 0.667]], "slug": "peckham-gallery-and-studios", "desc": "Artist studios and a gallery in Peckham, opened up with rooflights and tall sash windows so every space works in daylight.", "facts": [["Sector", "Commercial"], ["Project", "Studios and gallery"], ["Highlights", "Rooflights, flexible studios"]]}};
+  const TYPES = {"residential": {"title": "Residential", "projects": [{"slug": "the-marble-stair-house", "name": "The Marble Stair House", "line": "A new build family home", "imgs": [["img/proj/residential-00.webp", 1.333], ["img/proj/residential-01.webp", 1.333], ["img/proj/residential-02.webp", 1.333], ["img/proj/residential-03.webp", 1.333], ["img/proj/residential-04.webp", 1.333], ["img/proj/residential-05.webp", 0.667], ["img/proj/residential-06.webp", 0.667], ["img/proj/residential-07.webp", 0.667], ["img/proj/residential-08.webp", 0.667], ["img/proj/residential-09.webp", 0.667], ["img/proj/residential-10.webp", 0.667], ["img/proj/residential-11.webp", 0.667], ["img/proj/residential-12.webp", 0.667]], "desc": "A new build family home in brick and white render. Inside, a sculpted marble staircase rises through the house, framed by dark timber doors and full-height glazing.", "facts": [["Sector", "Residential"], ["Project", "New build home"], ["Highlights", "Marble staircase, bespoke joinery"]]}]}, "interiors": {"title": "Interiors", "projects": [{"slug": "the-games-room", "name": "The Games Room", "line": "A basement games room, bar and cinema", "imgs": [["img/proj/interiors-00.webp", 1.333], ["img/proj/interiors-01.webp", 1.333], ["img/proj/interiors-02.webp", 1.333], ["img/proj/interiors-03.webp", 1.333], ["img/proj/interiors-04.webp", 1.333], ["img/proj/interiors-05.webp", 1.333]], "desc": "A basement made for entertaining: a games room under a long rooflight, a backlit bar and drinks display, and a home cinema with a starlit ceiling.", "facts": [["Sector", "Interiors"], ["Project", "Basement fit-out"], ["Highlights", "Games room, bar, cinema"]]}]}, "healthcare": {"title": "Healthcare", "projects": [{"slug": "the-wellness-centre", "name": "The Wellness Centre", "line": "Timber pavilions around a landscaped garden", "imgs": [["img/proj/healthcare-00.webp", 1.939], ["img/proj/healthcare-01.webp", 1.939], ["img/proj/healthcare-02.webp", 1.939]], "desc": "Timber-roofed pavilions set around a landscaped garden, with glazed walls that open the treatment rooms onto the planting outside.", "facts": [["Sector", "Healthcare"], ["Project", "Wellness centre"], ["Highlights", "Garden setting, natural light"]]}]}, "commercial": {"title": "Commercial", "projects": [{"slug": "peckham-gallery-and-studios", "name": "Peckham Gallery and Studios", "line": "Artist studios and gallery space", "imgs": [["img/proj/commercial-00.webp", 1.333], ["img/proj/commercial-01.webp", 1.333], ["img/proj/commercial-02.webp", 1.333], ["img/proj/commercial-03.webp", 1.333], ["img/proj/commercial-04.webp", 1.333], ["img/proj/commercial-05.webp", 1.333], ["img/proj/commercial-06.webp", 1.333], ["img/proj/commercial-07.webp", 1.333], ["img/proj/commercial-08.webp", 1.333], ["img/proj/commercial-09.webp", 1.333], ["img/proj/commercial-10.webp", 0.667], ["img/proj/commercial-11.webp", 0.667]], "desc": "Artist studios and a gallery in Peckham, opened up with rooflights and tall sash windows so every space works in daylight.", "facts": [["Sector", "Commercial"], ["Project", "Studios and gallery"], ["Highlights", "Rooflights, flexible studios"]]}]}};
   const ARROW = '<svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg>';
   const pmain = document.getElementById('pmain'), tpl = document.getElementById('t-projects');
   let played = false;
@@ -327,38 +363,38 @@ button{font-family:inherit}
     const esc = x => String(x).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     const [type, slug] = h.split('/'), t = TYPES[type];
     if (h === 'projects') { pmain.innerHTML = ''; pmain.appendChild(tpl.content.cloneNode(true)); }
-    else if (!slug) {
-      // a type page: one card per project (the concept shows one; the real site would list them all)
+    else if (!slug || !t.projects.some(x => x.slug === slug)) {
+      // a type page: one card per project
       pmain.innerHTML = `<p class="crumb"><a href="#projects">Projects</a> / ${esc(t.title)}</p>
         <div class="ptitle"><h1>${esc(t.title)}</h1></div>
-        <div class="plist"><article class="card"><a href="#${type}/${t.slug}">
-          <span class="ph"><img src="${t.imgs[0][0]}" alt="${esc(t.name)}"></span>
-          <div class="meta"><h3>${esc(t.name)}</h3><span class="more caps">View project ${ARROW}</span></div></a></article></div>`;
+        <div class="plist">${t.projects.map(p => `<article class="card"><a href="#${type}/${p.slug}">
+          <span class="ph"><img src="${p.imgs[0][0]}" alt="${esc(p.name)}"></span>
+          <div class="meta"><h3>${esc(p.name)}</h3><span class="more caps">View project ${ARROW}</span></div></a></article>`).join('')}</div>`;
     } else {
-      // project page: slider + description, then an enquiry strip and the next project
-      const keys = Object.keys(TYPES), nk = keys[(keys.indexOf(type) + 1) % keys.length], n = TYPES[nk];
+      // project page: slider + description, links to the type and to the next project of the same type, then the enquiry strip
+      const idx = t.projects.findIndex(x => x.slug === slug), p = t.projects[idx], n = t.projects[(idx + 1) % t.projects.length];
       const L = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.7"/></svg>';
       const Rr = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m6 3 5 5-5 5" stroke="currentColor" stroke-width="1.7"/></svg>';
-      pmain.innerHTML = `<p class="crumb"><a href="#projects">Projects</a> / <a href="#${type}">${esc(t.title)}</a> / ${esc(t.name)}</p>
+      pmain.innerHTML = `<p class="crumb"><a href="#projects">Projects</a> / <a href="#${type}">${esc(t.title)}</a> / ${esc(p.name)}</p>
         <div class="proj">
-          <div class="slider" aria-roledescription="carousel" aria-label="${esc(t.name)} photos">
-            <div class="stage"><div class="strack">${t.imgs.map(([src], i) => `<img src="${src}" alt="${esc(t.name)}, photo ${i + 1} of ${t.imgs.length}" ${i > 1 ? 'loading="lazy"' : ''}>`).join('')}</div>
+          <div class="slider" aria-roledescription="carousel" aria-label="${esc(p.name)} photos">
+            <div class="stage"><div class="strack">${p.imgs.map(([src], i) => `<img src="${src}" alt="${esc(p.name)}, photo ${i + 1} of ${p.imgs.length}" ${i > 1 ? 'loading="lazy"' : ''}>`).join('')}</div>
               <span class="count" aria-live="polite"></span>
               <div class="sctl"><button type="button" class="prev" aria-label="Previous photo">${L}</button><button type="button" class="next" aria-label="Next photo">${Rr}</button></div></div>
-            <div class="thumbs">${t.imgs.map(([src], i) => `<button type="button" aria-label="Photo ${i + 1}"><img src="${src}" alt="" loading="lazy"></button>`).join('')}</div>
+            <div class="thumbs">${p.imgs.map(([src], i) => `<button type="button" aria-label="Photo ${i + 1}"><img src="${src}" alt="" loading="lazy"></button>`).join('')}</div>
           </div>
           <aside class="pinfo">
-            <h1>${esc(t.name)}</h1>
-            <p class="kick">${esc(t.line)}</p>
-            <p class="desc">${esc(t.desc)}</p>
-            <dl class="facts">${t.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+            <h1>${esc(p.name)}</h1>
+            <p class="kick">${esc(p.line)}</p>
+            <p class="desc">${esc(p.desc)}</p>
+            <dl class="facts">${p.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
           </aside>
         </div>
+        <div class="nextp"><a href="#${type}" class="caps">All ${esc(t.title.toLowerCase())} projects</a>${t.projects.length > 1 ? `<a href="#${type}/${n.slug}" class="caps">Next: ${esc(n.name)} ${ARROW}</a>` : ""}</div>
         <section class="enq">
           <div><h2>Planning something <em>like this?</em></h2><p>Tell us about your project and we'll show you what's possible, from the first sketch to the finished building.</p></div>
           <div class="acts"><a class="big caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a><a class="ln" href="tel:02087325620">020 8732 5620</a><a class="ln" href="mailto:design@dssquared.co.uk">design@dssquared.co.uk</a></div>
-        </section>
-        <div class="nextp"><a href="#${type}" class="caps">All ${esc(t.title.toLowerCase())} projects</a><a href="#${nk}/${n.slug}" class="caps">Next: ${esc(n.name)} ${ARROW}</a></div>`;
+        </section>`;
       slider(pmain.querySelector('.slider'));
     }
     scrollTo(0, 0);
