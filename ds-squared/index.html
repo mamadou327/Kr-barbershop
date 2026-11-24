@@ -208,9 +208,9 @@ a{color:inherit;text-decoration:none}
   let on = false;
   function frame() {
     const W = innerWidth, H = innerHeight;
-    const p = reduce ? 1 : clamp(-film.getBoundingClientRect().top / (film.offsetHeight - H));
+    const p = clamp(-film.getBoundingClientRect().top / (film.offsetHeight - H));
     // photos drift at their own speeds: most rise, a few sink
-    for (const t of tiles) t.el.style.transform = `translate3d(0,${(-p * t.s * G.speed * H).toFixed(1)}px,0)`;
+    for (const t of tiles) t.el.style.transform = `translate3d(0,${(-p * t.s * G.speed * (reduce ? .3 : 1) * H).toFixed(1)}px,0)`;
     // the main picture rises into the middle, then opens to fill the screen
     const rise = ease(clamp(p / .3)), grow = ease(clamp((p - .3) / .5));
     const w0 = W * G.hero / 100, h0 = mobile ? w0 * 1.2 : w0 / 1.5;
@@ -271,6 +271,9 @@ a{color:inherit;text-decoration:none}
   });
   wall.addEventListener('pointerup', end); wall.addEventListener('pointercancel', end);
 
+  // always open on the loading screen, never part-way down
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  scrollTo(0, 0);
   build(); frame();
   (async () => {
     try { db = await window.claude?.use?.('db'); } catch (e) { db = null; }
