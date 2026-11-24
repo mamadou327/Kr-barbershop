@@ -11,86 +11,76 @@
 <link rel="preload" as="image" href="img/main.webp">
 <style>
 :root{
-  --stone:#F4F1EC; --ink:#1F1C1A; --ink-2:#5E5852; --orange:#EB5D0B; --white:#fff;
-  --ease-out:cubic-bezier(.16,1,.3,1); --ease-io:cubic-bezier(.76,0,.24,1);
-  --gap:8px; --head:60px; --pad:24px;
+  --stone:#F4F1EC; --ink:#1F1C1A; --ink-2:#6A635C; --orange:#EC542D; --white:#fff;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --head:60px; --pad:24px;
   color-scheme:light;
 }
 *{box-sizing:border-box;margin:0}
-html,body{height:100%}
-body{background:var(--stone);color:var(--ink);font:400 16px/1.5 "Hanken Grotesk",system-ui,sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased}
-::selection{background:var(--orange);color:var(--ink)}
+body{background:var(--stone);color:var(--ink);font:400 16px/1.5 "Hanken Grotesk",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+::selection{background:var(--orange);color:#fff}
 a{color:inherit;text-decoration:none}
 :focus-visible{outline:2px solid var(--orange);outline-offset:3px;border-radius:2px}
 
 /* Header */
-.top{position:fixed;inset:0 0 auto 0;height:var(--head);z-index:5;display:flex;align-items:center;gap:32px;padding:0 var(--pad);color:var(--ink);transition:color .6s var(--ease-out)}
-.logo{width:30px;height:30px;background:var(--orange);color:#fff;display:grid;place-items:center;font-weight:600;font-size:12px;letter-spacing:.02em;flex:none}
+.top{position:fixed;inset:0 0 auto 0;height:var(--head);z-index:5;display:flex;align-items:center;gap:32px;padding:0 var(--pad);color:var(--ink);transition:color .5s var(--ease-out)}
+.logo{display:block;width:34px;height:34px;flex:none}
+.logo img{width:100%;height:100%;display:block}
 .nav{display:flex;gap:24px;font-size:14px;font-weight:500}
 .nav a,.book-sm{position:relative}
 .nav a::after,.book-sm::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease-out)}
 .nav a:hover::after,.book-sm:hover::after{transform:scaleX(1)}
 .book-sm{margin-left:auto;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
 .book-sm i{width:7px;height:7px;background:var(--orange);display:block}
-.menu{display:none;margin-left:16px;font:600 14px/1 inherit;background:none;border:0;color:inherit;cursor:pointer;padding:8px 0}
-.top{background:var(--stone)}.on .top{color:var(--white);background:transparent;transition:color .6s var(--ease-out),background .4s}
-
-/* Wall of their work: columns drift, alternate ones up and down */
-.wall{position:fixed;inset:0 var(--pad);display:flex;gap:var(--gap);overflow:hidden}
-.col{flex:1;min-width:0;opacity:0;transform:translateY(40px);--sp:40s}
-.track{display:flex;flex-direction:column;gap:var(--gap);animation:up var(--sp) linear infinite;will-change:transform}
-.col:nth-child(even) .track{animation-name:down}
-@keyframes up{from{transform:translateY(0)}to{transform:translateY(calc(-33.3333% - var(--gap)/3))}}
-@keyframes down{from{transform:translateY(calc(-33.3333% - var(--gap)/3))}to{transform:translateY(0)}}
-.t{overflow:hidden;background:#e6e1d9;flex:none}
-.t img{width:100%;height:100%;object-fit:cover;display:block}
-.ready .col{opacity:1;transform:none;transition:opacity .9s var(--ease-out),transform 1.2s var(--ease-out);transition-delay:calc(var(--i)*70ms)}
-.on .col{opacity:0;transform:scale(.94);transition:opacity .6s var(--ease-out),transform 1.3s var(--ease-io);transition-delay:0s}
-.on .track{animation-play-state:paused}
-.slot{position:fixed;left:50%;top:50%;width:min(36vw,560px);aspect-ratio:3/2;transform:translate(-50%,-46%)}
-
-/* The main picture: a full-screen image clipped to the centre tile, then opened */
-.hero{position:fixed;inset:0;z-index:2;clip-path:inset(var(--ct,50%) var(--cr,50%) var(--cb,50%) var(--cl,50%));opacity:0}
-.ready .hero{opacity:1;transition:opacity .7s var(--ease-out) .1s}
-.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 60%;transform:scale(var(--s,.4));transform-origin:var(--ox,50%) var(--oy,50%)}
-.on .hero{clip-path:inset(0 0 0 0);transition:clip-path 1.3s var(--ease-io)}
-.on .hero img{transform:scale(1);transition:transform 1.3s var(--ease-io)}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,16,.38) 0,rgba(20,18,16,0) 22%,rgba(20,18,16,0) 48%,rgba(20,18,16,.62) 100%);opacity:0;transition:opacity 1s var(--ease-out) .6s}
-.on .hero::after{opacity:1}
-
-/* Landing copy, bottom-left */
-.copy{position:fixed;left:var(--pad);bottom:var(--pad);right:var(--pad);z-index:4;color:#fff;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;pointer-events:none}
-.copy>*{pointer-events:auto}
-.copy h1{font-weight:500;font-size:clamp(3.5rem,9vw,6rem);line-height:.92;letter-spacing:-.04em}
-.copy p{font-size:clamp(1rem,1.3vw,1.125rem);max-width:34ch;margin-top:12px;color:rgba(255,255,255,.88)}
-.cta{display:inline-flex;align-items:center;gap:10px;margin-top:20px;background:var(--orange);color:var(--ink);font-weight:600;font-size:15px;padding:13px 18px;transition:background .25s,transform .25s var(--ease-out)}
-.cta:hover{background:#ff6d1a}.cta:active{transform:scale(.98)}
-.cta svg{transition:transform .3s var(--ease-out)}.cta:hover svg{transform:translateX(3px)}
-.note{font-size:12px;color:rgba(255,255,255,.72);text-align:right}
-.reveal{opacity:0;transform:translateY(18px);filter:blur(6px)}
-.on .reveal{opacity:1;transform:none;filter:none;transition:opacity .9s var(--ease-out),transform 1.1s var(--ease-out),filter .9s var(--ease-out);transition-delay:calc(1s + var(--r,0)*120ms)}
-
-@media (max-width:760px){
-  :root{--pad:16px;--head:56px;--gap:6px}
-  .nav,.book-sm{display:none}
-  .menu{display:block;margin-left:auto}
-  .slot{width:64vw;aspect-ratio:4/5}
-  .copy{flex-direction:column;align-items:flex-start}
-  .note{text-align:left}
-  .hero img{object-position:42% 60%}
-}
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{transition-duration:.01ms!important;transition-delay:0s!important}
-  .track{animation:none}
-}
+.menu{display:none;margin-left:auto;font:600 14px/1 inherit;background:none;border:0;color:inherit;cursor:pointer;padding:8px 0}
+.on .top{color:var(--white)}
 .panel{position:fixed;inset:var(--head) 0 auto 0;z-index:6;background:var(--stone);color:var(--ink);padding:8px var(--pad) 20px;display:none;flex-direction:column;font-size:20px;font-weight:500}
 .panel a{padding:8px 0;border-bottom:1px solid #ddd6cc}
 .panel.open{display:flex}
+
+/* Scroll film: a tall section with a pinned stage */
+.film{height:340vh;position:relative}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.label{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-weight:500;font-size:clamp(2.5rem,6vw,5.5rem);letter-spacing:-.04em;line-height:1;white-space:nowrap;z-index:0}
+.label sup{font-size:.32em;letter-spacing:0;vertical-align:top;position:relative;top:.35em;margin-left:.15em}
+.t{position:absolute;overflow:hidden;background:#e6e1d9;z-index:1;opacity:0;will-change:transform}
+.t img{width:100%;height:100%;object-fit:cover;display:block}
+.t.far{z-index:0}
+.ready .t{opacity:var(--o,1);transition:opacity 1s var(--ease-out);transition-delay:calc(var(--i)*60ms)}
+
+/* The main picture: full-screen image, clipped and scaled to a tile, opened by scroll */
+.hero{position:absolute;inset:0;z-index:2;opacity:0}
+.ready .hero{opacity:1;transition:opacity .8s var(--ease-out) .3s}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 60%;transform-origin:50% 50%;will-change:transform}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,16,.38) 0,rgba(20,18,16,0) 22%,rgba(20,18,16,0) 48%,rgba(20,18,16,.62) 100%);opacity:0}
+
+/* Landing copy, bottom-left */
+.copy{position:absolute;left:var(--pad);bottom:var(--pad);right:var(--pad);z-index:4;color:#fff;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;pointer-events:none}
+.on .copy>*{pointer-events:auto}
+.copy h1{font-weight:500;font-size:clamp(3.5rem,9vw,6rem);line-height:.92;letter-spacing:-.04em}
+.copy p{font-size:clamp(1rem,1.3vw,1.125rem);max-width:34ch;margin-top:12px;color:rgba(255,255,255,.88)}
+.cta{display:inline-flex;align-items:center;gap:10px;margin-top:20px;background:var(--orange);color:#fff;font-weight:600;font-size:16px;padding:13px 18px;transition:background .25s,transform .25s var(--ease-out)}
+.cta:hover{background:#d9461f}.cta:active{transform:scale(.98)}
+.cta svg{transition:transform .3s var(--ease-out)}.cta:hover svg{transform:translateX(3px)}
+.note{font-size:12px;color:rgba(255,255,255,.72);text-align:right}
+.reveal{opacity:0;transform:translateY(18px);filter:blur(6px);transition:opacity .4s,transform .4s,filter .4s}
+.on .reveal{opacity:1;transform:none;filter:none;transition:opacity .9s var(--ease-out),transform 1.1s var(--ease-out),filter .9s var(--ease-out);transition-delay:calc(var(--r,0)*110ms)}
+
+@media (max-width:760px){
+  :root{--pad:16px;--head:56px}
+  .nav,.book-sm{display:none}
+  .menu{display:block}
+  .copy{flex-direction:column;align-items:flex-start}
+  .note{text-align:left}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;transition-delay:0s!important}
+}
 </style>
 </head>
 <body>
 <header class="top">
-  <a class="logo" href="#" aria-label="DS Squared home">DS</a>
+  <a class="logo" href="#" aria-label="DS Squared home"><img src="img/logo.png" alt=""></a>
   <nav class="nav" aria-label="Main">
     <a href="#projects">Projects</a><a href="#about">About</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a>
   </nav>
@@ -102,64 +92,79 @@ a{color:inherit;text-decoration:none}
 </nav>
 
 <!-- Their real project photos (dssquared.co.uk). Project names to confirm with Kate. -->
-<main class="wall" aria-hidden="true"></main>
-<div class="slot"></div>
-
-<div class="hero"><img src="img/main.webp" alt="A brick and white render family home with dark window frames, designed by DS Squared"></div>
-
-<section class="copy">
-  <div>
-    <h1 class="reveal" style="--r:0">DS Squared</h1>
-    <p class="reveal" style="--r:1">RIBA Chartered architects for homes, developers and healthcare, from first sketch to finished building.</p>
-    <a class="cta reveal" style="--r:2" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></a>
+<section class="film">
+  <div class="stage">
+    <div class="label" aria-hidden="true">Selected work<sup>(17)</sup></div>
+    <div class="wall" aria-hidden="true"></div>
+    <div class="hero"><img src="img/main.webp" alt="A brick and white render family home with dark window frames, designed by DS Squared"><div class="shade"></div></div>
+    <div class="copy">
+      <div>
+        <h1 class="reveal" style="--r:0">DS Squared</h1>
+        <p class="reveal" style="--r:1">RIBA Chartered architects for homes, developers and healthcare, from first sketch to finished building.</p>
+        <a class="cta reveal" style="--r:2" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></a>
+      </div>
+      <p class="note reveal" style="--r:3">Unofficial concept by AIV Designs</p>
+    </div>
   </div>
-  <p class="note reveal" style="--r:3">Unofficial concept by AIV Designs</p>
 </section>
 
 <script>
 (() => {
-  const root = document.documentElement, hero = document.querySelector('.hero'), slot = document.querySelector('.slot');
+  const root = document.documentElement, film = document.querySelector('.film'), wall = document.querySelector('.wall');
+  const hero = document.querySelector('.hero'), img = hero.querySelector('img'), shade = hero.querySelector('.shade'), label = document.querySelector('.label');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // [file, width/height]
-  const P = [['living',1.94],['spiral',1.33],['wine',.67],['barn',1.78],['bath',.67],['stone-barns',1.33],['garden',1.33],['terrace',1.33],
-    ['games',1.33],['twin-barns',1.78],['patio',1.33],['aside',1.33],['stair-kitchen',1.33],['blossom',1.33],['arch-house',1.78],['aside-cafe',1.33]];
-  const wall = document.querySelector('.wall');
+  const AR = { living:1.94, spiral:1.33, wine:.67, barn:1.78, bath:.67, 'stone-barns':1.33, garden:1.33, terrace:1.33, games:1.33,
+    'twin-barns':1.78, patio:1.33, aside:1.33, 'stair-kitchen':1.33, blossom:1.33, 'arch-house':1.78, 'aside-cafe':1.33 };
+  // [photo, left %, top % of screen, width % of screen, travel (screens) over the scroll; negative drifts down]
+  const D = [
+    ['living',3,12,15,.7], ['spiral',24,6,8,1.1], ['barn',63,9,13,-.25], ['wine',85,4,9,.55],
+    ['bath',5,50,8,1.35], ['stone-barns',84,38,11,-.2], ['garden',27,64,12,1.6], ['terrace',70,62,14,1.05],
+    ['games',12,96,13,1.3], ['twin-barns',52,98,12,1.75], ['patio',86,96,10,.85], ['aside',3,128,12,1.5],
+    ['stair-kitchen',38,132,10,1.85], ['blossom',66,130,13,1.6], ['arch-house',22,160,14,1.95], ['aside-cafe',80,158,11,1.7]
+  ];
+  const M = [
+    ['living',4,12,44,.7], ['spiral',60,8,30,1.1], ['wine',72,30,24,.5], ['bath',6,40,26,1.3], ['barn',56,58,40,-.2],
+    ['garden',8,78,38,1.6], ['terrace',58,96,36,1.2], ['games',4,112,40,1.5], ['blossom',52,138,42,1.8], ['arch-house',10,160,44,1.9]
+  ];
+  let tiles = [], mobile;
   function build() {
-    const n = innerWidth <= 760 ? 3 : innerWidth <= 1100 ? 5 : 6, per = n === 3 ? 6 : 4;
-    const speeds = [46, 34, 52, 38, 44, 32];
-    let k = 0, html = '';
-    for (let c = 0; c < n; c++) {
-      let set = '';
-      for (let j = 0; j < per; j++) { const [f, r] = P[(k++ * 7) % P.length]; set += `<div class="t" style="aspect-ratio:${r}"><img src="img/${f}.webp" alt=""></div>`; }
-      html += `<div class="col" style="--i:${c};--sp:${speeds[c]}s"><div class="track" style="animation-delay:-${c * 5}s">${set + set + set}</div></div>`;
-    }
-    wall.innerHTML = html;
+    mobile = innerWidth <= 760;
+    const L = mobile ? M : D;
+    wall.innerHTML = L.map(([f, x, y, w, s], i) => {
+      const far = w < (mobile ? 30 : 10);
+      return `<div class="t${far ? ' far' : ''}" style="--i:${i};--o:${far ? .55 : 1};left:${x}%;top:${y}%;width:${w}vw;aspect-ratio:${AR[f]}" data-s="${s}"><img src="img/${f}.webp" alt=""></div>`;
+    }).join('');
+    tiles = [...wall.children].map(el => ({ el, s: +el.dataset.s }));
   }
-  build();
-  let bw = innerWidth; addEventListener('resize', () => { if ((bw <= 760) !== (innerWidth <= 760) || (bw <= 1100) !== (innerWidth <= 1100)) build(); bw = innerWidth; });
-  let opened = false;
-  function fit() {
-    if (opened) return;
-    const r = slot.getBoundingClientRect(), w = innerWidth, h = innerHeight;
-    hero.style.setProperty('--ct', r.top + 'px'); hero.style.setProperty('--cl', r.left + 'px');
-    hero.style.setProperty('--cr', (w - r.right) + 'px'); hero.style.setProperty('--cb', (h - r.bottom) + 'px');
-    // shrink the full-screen picture so the whole house sits inside the tile, then it grows with the opening
-    const im = hero.querySelector('img'), sc = Math.max(r.width / w, r.height / h) * 1.02;
-    im.style.setProperty('--s', sc); im.style.setProperty('--ox', (r.left + r.width / 2 + sc * (r.left + r.width / 2 - w / 2) / (1 - sc)) + 'px');
-    im.style.setProperty('--oy', (r.top + r.height / 2 + sc * (r.top + r.height / 2 - h / 2) / (1 - sc)) + 'px');
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  let on = false;
+  function frame() {
+    const W = innerWidth, H = innerHeight;
+    const p = reduce ? 1 : clamp(-film.getBoundingClientRect().top / (film.offsetHeight - H));
+    // photos drift at their own speeds: most rise, a few sink
+    for (const t of tiles) t.el.style.transform = `translate3d(0,${(-p * t.s * H).toFixed(1)}px,0)`;
+    // the main picture rises into the middle, then opens to fill the screen
+    const rise = ease(clamp(p / .3)), grow = ease(clamp((p - .3) / .5));
+    const w0 = mobile ? W * .62 : Math.min(W * .3, 520), h0 = mobile ? w0 * 1.2 : w0 / 1.5;
+    const cy0 = H * (1.15 - .65 * rise);
+    const rw = w0 + (W - w0) * grow, rh = h0 + (H - h0) * grow, cx = W / 2, cy = cy0 + (H / 2 - cy0) * grow;
+    const top = cy - rh / 2, left = cx - rw / 2;
+    hero.style.clipPath = `inset(${top.toFixed(1)}px ${(W - left - rw).toFixed(1)}px ${(H - top - rh).toFixed(1)}px ${left.toFixed(1)}px)`;
+    const sc = Math.max(rw / W, rh / H) * (1 + .04 * (1 - grow));
+    img.style.transform = `translate3d(${(cx - W / 2).toFixed(1)}px,${(cy - H / 2).toFixed(1)}px,0) scale(${sc.toFixed(4)})`;
+    label.style.opacity = (1 - clamp((p - .25) / .25)).toFixed(3);
+    shade.style.opacity = clamp((p - .7) / .2).toFixed(3);
+    const want = p > .9;
+    if (want !== on) { on = want; root.classList.toggle('on', on); }
   }
-  function open() { if (opened) return; opened = true; root.classList.add('on'); }
-  fit(); addEventListener('resize', fit);
-  const img = hero.querySelector('img');
-  const start = () => requestAnimationFrame(() => {
-    root.classList.add('ready');
-    setTimeout(open, reduce ? 0 : 3200);
-  });
-  img.complete ? start() : (img.onload = img.onerror = start);
-  // Any click or key on the collage skips straight to the landing picture
-  addEventListener('pointerdown', e => { if (!e.target.closest('a,button')) open(); });
-  addEventListener('keydown', open, { once: true });
+  let raf = 0; const req = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; frame(); }); };
+  build(); frame();
+  addEventListener('scroll', req, { passive: true });
+  addEventListener('resize', () => { if ((innerWidth <= 760) !== mobile) build(); req(); });
+  const go = () => requestAnimationFrame(() => root.classList.add('ready'));
+  img.complete ? go() : (img.onload = img.onerror = go);
   const btn = document.querySelector('.menu'), panel = document.getElementById('panel');
   btn.addEventListener('click', () => { const o = panel.classList.toggle('open'); btn.setAttribute('aria-expanded', o); btn.textContent = o ? 'Close' : 'Menu'; });
 })();
