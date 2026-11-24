@@ -7,7 +7,7 @@
 <meta name="description" content="Unofficial concept by AIV Designs for DS Squared, RIBA Chartered architects.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..500&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="img/civic.webp">
 <style>
 /* Type: Archivo, a grotesk with a width axis. Semi-condensed capitals for the menu and button read like the lettering on architectural drawings. */
@@ -18,6 +18,7 @@
   --heroH:min(calc(100vw / var(--ar)), calc(100svh - var(--band-h)));
   --band-h:max(calc(100vw * .07),64px);
   --f:"Archivo",system-ui,sans-serif;
+  --serif:"Newsreader",Georgia,serif;
   color-scheme:light;
 }
 *{box-sizing:border-box;margin:0}
@@ -71,6 +72,15 @@ button{font-family:inherit}
 .panel a{padding:12px 0;border-bottom:1px solid #dcdcdc}
 .panel.open{transform:none}
 
+/* Headline, bottom-left: a quiet editorial serif over the picture, Archivo for the line beneath */
+.hero-ui::before{content:"";position:absolute;left:0;bottom:0;width:70%;height:65%;background:radial-gradient(120% 100% at 0% 100%,rgba(20,18,16,.55),rgba(20,18,16,0) 70%);opacity:0;transition:opacity 1s var(--ease-out);pointer-events:none}
+.on .hero-ui::before{opacity:1}
+.copy{position:absolute;left:2vw;bottom:calc(100% - var(--heroH) * .945);z-index:4;color:#fff;max-width:46vw;opacity:0;transform:translateY(14px);filter:blur(6px);transition:opacity .9s var(--ease-out) .35s,transform 1.1s var(--ease-out) .35s,filter .9s var(--ease-out) .35s}
+.on .copy{opacity:1;transform:none;filter:none}
+.copy h1{font-family:var(--serif);font-optical-sizing:auto;font-weight:350;font-size:clamp(2.75rem,6.2vw,6.25rem);line-height:.95;letter-spacing:-.025em;text-wrap:balance}
+.copy h1 em{font-style:italic;font-weight:300}
+.copy p{margin-top:clamp(10px,1.2vw,18px);font-size:clamp(15px,1.25vw,19px);line-height:1.45;max-width:38ch;color:rgba(255,255,255,.9);text-wrap:pretty}
+
 /* Accreditations band directly under the picture: warm stone band, logos in one charcoal tone gliding right to left on a loop */
 :root{--band:#ECE7E0;--band-h:104px}
 .band{position:absolute;left:0;right:0;top:var(--heroH);height:var(--band-h);background:var(--band);overflow:hidden;display:flex;align-items:center;opacity:0}
@@ -80,11 +90,14 @@ button{font-family:inherit}
 .track img{height:40px;width:auto;display:block;opacity:.85}
 .track img.tall{height:70px}
 @keyframes glide{to{transform:translateX(-50%)}}
-.replay{position:fixed;left:16px;bottom:calc(var(--band-h) + 12px);z-index:5;background:var(--ink);color:#fff;border:0;border-radius:8px;font:500 12px/1 var(--f);padding:9px 12px;opacity:0;cursor:pointer}
+.replay{position:absolute;right:2vw;top:calc(var(--heroH) * .11);z-index:5;background:var(--ink);color:#fff;border:0;border-radius:8px;font:500 12px/1 var(--f);padding:9px 12px;opacity:0;cursor:pointer}
 .on .replay{opacity:.85;transition:opacity .6s 1s}.replay:hover{opacity:1}
 
 @media (max-width:760px){
   .nav{display:none}
+  .hero-ui::before{display:none}
+  .copy{position:absolute;left:16px;right:16px;bottom:auto;top:calc(var(--heroH) + var(--band-h) + 28px);max-width:none;color:var(--ink)}
+  .copy p{color:var(--ink-2)}
   .menu{display:grid!important}
   .frame{width:80vw;height:100vw;top:52%}
   :root{--band-h:76px}
@@ -119,6 +132,11 @@ button{font-family:inherit}
 <nav class="panel" id="panel" aria-label="Menu">
   <a href="#projects">Project</a><a href="#about">About us</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a><a href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
 </nav>
+
+<section class="copy">
+  <h1>People and <em>places.</em></h1>
+  <p>Since 2007, DS Squared has designed homes, developments and spaces for healing, made to be lived in, worked in and loved.</p>
+</section>
 
 <section class="band" aria-label="Architects Registration Board, Chartered Institute of Architectural Technologists, RIBA Chartered Practice">
   <div class="track" aria-hidden="true"></div>
