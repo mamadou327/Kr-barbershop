@@ -116,6 +116,37 @@ button{font-family:inherit}
 .card .more svg{transition:transform .3s var(--ease-out)}.card a:hover .more svg{transform:translateX(3px)}
 .card.rise{opacity:0;transform:translateY(24px)}
 
+/* Project page: photo slider on the left, description on the right, enquiry strip below */
+.proj{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(280px,1fr);gap:clamp(20px,2.6vw,40px);align-items:start}
+.slider{position:relative}
+.stage{position:relative;overflow:hidden;border-radius:12px;background:var(--band);height:calc(100svh - 230px);min-height:360px;touch-action:pan-y;user-select:none}
+.strack{display:flex;height:100%;transition:transform .7s var(--ease-io)}
+.strack img{flex:0 0 100%;width:100%;height:100%;object-fit:contain;display:block;-webkit-user-drag:none}
+.sctl{position:absolute;right:14px;bottom:14px;display:flex;gap:8px}
+.sctl button{width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 14px rgba(20,18,16,.12);transition:transform .2s var(--ease-out),background .2s}
+.sctl button:hover{background:#fff}.sctl button:active{transform:scale(.94)}
+.count{position:absolute;left:14px;bottom:14px;background:rgba(255,255,255,.92);border-radius:999px;padding:7px 12px;font-size:12px;font-variant-numeric:tabular-nums}
+.thumbs{display:flex;gap:8px;margin-top:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.thumbs button{flex:none;width:76px;height:54px;border:0;padding:0;border-radius:6px;overflow:hidden;cursor:pointer;opacity:.55;outline:2px solid transparent;outline-offset:-2px;transition:opacity .25s,outline-color .25s}
+.thumbs button[aria-current=true]{opacity:1;outline-color:var(--orange)}
+.thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.pinfo h1{margin-top:2px}
+.pinfo .kick{font-size:15px;color:var(--ink-2);margin-top:10px}
+.pinfo .desc{font-size:17px;line-height:1.6;margin-top:18px;max-width:46ch;text-wrap:pretty}
+.facts{margin-top:22px;border-top:1px solid #dcd6ce}
+.facts div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #dcd6ce;font-size:14px}
+.facts dt{color:var(--ink-2)}
+.pinfo .pcta2{display:inline-flex;margin-top:22px;background:var(--orange);color:var(--ink);border-radius:10px;padding:13px 18px;font-size:12px}
+.enq{margin-top:clamp(36px,4vw,64px);background:var(--band);border-radius:16px;padding:clamp(24px,3.2vw,48px);display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:end}
+.enq h2{font-family:var(--serif);font-weight:350;font-size:clamp(1.8rem,3vw,2.8rem);line-height:1.05;letter-spacing:-.02em}
+.enq h2 em{font-style:italic;font-weight:300}
+.enq p{color:var(--ink-2);margin-top:10px;max-width:44ch}
+.enq .acts{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.enq .acts a.big{background:var(--orange);color:var(--ink);border-radius:10px;padding:14px 20px;font-size:13px}
+.enq .acts a.ln{font-size:15px;border-bottom:1px solid #c9c2b8}
+.nextp{display:flex;justify-content:space-between;align-items:center;margin-top:20px;font-size:13px}
+.nextp a{display:inline-flex;align-items:center;gap:8px;border-bottom:1.5px solid var(--orange);padding-bottom:3px}
+
 /* Projects pages: the four types; each type lists its projects as cards; each project shows all its photos */
 .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr));gap:16px}
 .plist .card .ph{height:auto;aspect-ratio:3/2}
@@ -126,7 +157,7 @@ button{font-family:inherit}
 .sub body{overflow:auto}
 .pbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:28px;padding:12px 2vw;background:rgba(245,245,245,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .pbar .plogo{width:52px;flex:none}.pbar .plogo img{width:100%;display:block;border-radius:14%}
-.pbar nav{display:flex;gap:1.6vw;margin-left:auto;font-size:13px;overflow-x:auto}
+.pbar nav{display:flex;gap:1.6vw;margin-left:auto;font-size:13px;overflow-x:auto;min-width:0}
 .pbar nav a{padding:4px 0;border-bottom:1.5px solid transparent;white-space:nowrap}
 .pbar nav a:hover,.pbar nav a[aria-current=page]{border-color:var(--orange)}
 .pbar .pcta{flex:none;background:var(--orange);color:var(--ink);border-radius:10px;padding:11px 16px;font-size:12px}
@@ -153,6 +184,10 @@ button{font-family:inherit}
   .pmain .rows{height:auto;min-height:0}
   .pbar{gap:14px;padding:10px 16px}.pbar .plogo{width:40px}.pbar .pcta{display:none}
   .pmain{padding:20px 16px 56px}
+  .proj{grid-template-columns:minmax(0,1fr)}
+  .pbar nav{gap:14px}
+  .stage{height:auto;aspect-ratio:4/3;min-height:0}
+  .enq{grid-template-columns:1fr}
   .copy p{color:var(--ink-2)}
   .menu{display:grid!important}
   .frame{width:80vw;height:100vw;top:52%}
@@ -278,7 +313,7 @@ button{font-family:inherit}
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   function startLoading() { let left = 2; for (const src of ['img/house-sketch.webp', 'img/civic.webp']) { const im = new Image(); im.onload = im.onerror = () => { if (--left === 0) play(); }; im.src = src; } }
   // Projects pages: a small hash router. #projects shows the four types; each type shows its project and photos.
-  const TYPES = {"residential": {"title": "Residential", "name": "The Marble Stair House", "line": "A new build family home", "imgs": [["img/proj/residential-00.webp", 1.333], ["img/proj/residential-01.webp", 1.333], ["img/proj/residential-02.webp", 1.333], ["img/proj/residential-03.webp", 1.333], ["img/proj/residential-04.webp", 1.333], ["img/proj/residential-05.webp", 0.667], ["img/proj/residential-06.webp", 0.667], ["img/proj/residential-07.webp", 0.667], ["img/proj/residential-08.webp", 0.667], ["img/proj/residential-09.webp", 0.667], ["img/proj/residential-10.webp", 0.667], ["img/proj/residential-11.webp", 0.667], ["img/proj/residential-12.webp", 0.667]], "slug": "the-marble-stair-house"}, "interiors": {"title": "Interiors", "name": "The Games Room", "line": "A basement games room, bar and cinema", "imgs": [["img/proj/interiors-00.webp", 1.333], ["img/proj/interiors-01.webp", 1.333], ["img/proj/interiors-02.webp", 1.333], ["img/proj/interiors-03.webp", 1.333], ["img/proj/interiors-04.webp", 1.333], ["img/proj/interiors-05.webp", 1.333]], "slug": "the-games-room"}, "healthcare": {"title": "Healthcare", "name": "The Wellness Centre", "line": "Timber pavilions around a landscaped garden", "imgs": [["img/proj/healthcare-00.webp", 1.939], ["img/proj/healthcare-01.webp", 1.939], ["img/proj/healthcare-02.webp", 1.939]], "slug": "the-wellness-centre"}, "commercial": {"title": "Commercial", "name": "Peckham Gallery and Studios", "line": "Artist studios and gallery space", "imgs": [["img/proj/commercial-00.webp", 1.333], ["img/proj/commercial-01.webp", 1.333], ["img/proj/commercial-02.webp", 1.333], ["img/proj/commercial-03.webp", 1.333], ["img/proj/commercial-04.webp", 1.333], ["img/proj/commercial-05.webp", 1.333], ["img/proj/commercial-06.webp", 1.333], ["img/proj/commercial-07.webp", 1.333], ["img/proj/commercial-08.webp", 1.333], ["img/proj/commercial-09.webp", 1.333], ["img/proj/commercial-10.webp", 0.667], ["img/proj/commercial-11.webp", 0.667]], "slug": "peckham-gallery-and-studios"}};
+  const TYPES = {"residential": {"title": "Residential", "name": "The Marble Stair House", "line": "A new build family home", "imgs": [["img/proj/residential-00.webp", 1.333], ["img/proj/residential-01.webp", 1.333], ["img/proj/residential-02.webp", 1.333], ["img/proj/residential-03.webp", 1.333], ["img/proj/residential-04.webp", 1.333], ["img/proj/residential-05.webp", 0.667], ["img/proj/residential-06.webp", 0.667], ["img/proj/residential-07.webp", 0.667], ["img/proj/residential-08.webp", 0.667], ["img/proj/residential-09.webp", 0.667], ["img/proj/residential-10.webp", 0.667], ["img/proj/residential-11.webp", 0.667], ["img/proj/residential-12.webp", 0.667]], "slug": "the-marble-stair-house", "desc": "A new build family home in brick and white render. Inside, a sculpted marble staircase rises through the house, framed by dark timber doors and full-height glazing.", "facts": [["Sector", "Residential"], ["Project", "New build home"], ["Highlights", "Marble staircase, bespoke joinery"]]}, "interiors": {"title": "Interiors", "name": "The Games Room", "line": "A basement games room, bar and cinema", "imgs": [["img/proj/interiors-00.webp", 1.333], ["img/proj/interiors-01.webp", 1.333], ["img/proj/interiors-02.webp", 1.333], ["img/proj/interiors-03.webp", 1.333], ["img/proj/interiors-04.webp", 1.333], ["img/proj/interiors-05.webp", 1.333]], "slug": "the-games-room", "desc": "A basement made for entertaining: a games room under a long rooflight, a backlit bar and drinks display, and a home cinema with a starlit ceiling.", "facts": [["Sector", "Interiors"], ["Project", "Basement fit-out"], ["Highlights", "Games room, bar, cinema"]]}, "healthcare": {"title": "Healthcare", "name": "The Wellness Centre", "line": "Timber pavilions around a landscaped garden", "imgs": [["img/proj/healthcare-00.webp", 1.939], ["img/proj/healthcare-01.webp", 1.939], ["img/proj/healthcare-02.webp", 1.939]], "slug": "the-wellness-centre", "desc": "Timber-roofed pavilions set around a landscaped garden, with glazed walls that open the treatment rooms onto the planting outside.", "facts": [["Sector", "Healthcare"], ["Project", "Wellness centre"], ["Highlights", "Garden setting, natural light"]]}, "commercial": {"title": "Commercial", "name": "Peckham Gallery and Studios", "line": "Artist studios and gallery space", "imgs": [["img/proj/commercial-00.webp", 1.333], ["img/proj/commercial-01.webp", 1.333], ["img/proj/commercial-02.webp", 1.333], ["img/proj/commercial-03.webp", 1.333], ["img/proj/commercial-04.webp", 1.333], ["img/proj/commercial-05.webp", 1.333], ["img/proj/commercial-06.webp", 1.333], ["img/proj/commercial-07.webp", 1.333], ["img/proj/commercial-08.webp", 1.333], ["img/proj/commercial-09.webp", 1.333], ["img/proj/commercial-10.webp", 0.667], ["img/proj/commercial-11.webp", 0.667]], "slug": "peckham-gallery-and-studios", "desc": "Artist studios and a gallery in Peckham, opened up with rooflights and tall sash windows so every space works in daylight.", "facts": [["Sector", "Commercial"], ["Project", "Studios and gallery"], ["Highlights", "Rooflights, flexible studios"]]}};
   const ARROW = '<svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg>';
   const pmain = document.getElementById('pmain'), tpl = document.getElementById('t-projects');
   let played = false;
@@ -300,15 +335,49 @@ button{font-family:inherit}
           <span class="ph"><img src="${t.imgs[0][0]}" alt="${esc(t.name)}"></span>
           <div class="meta"><h3>${esc(t.name)}</h3><span class="more caps">View project ${ARROW}</span></div></a></article></div>`;
     } else {
-      const [lead, ...rest] = t.imgs;
+      // project page: slider + description, then an enquiry strip and the next project
+      const keys = Object.keys(TYPES), nk = keys[(keys.indexOf(type) + 1) % keys.length], n = TYPES[nk];
+      const L = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.7"/></svg>';
+      const Rr = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m6 3 5 5-5 5" stroke="currentColor" stroke-width="1.7"/></svg>';
       pmain.innerHTML = `<p class="crumb"><a href="#projects">Projects</a> / <a href="#${type}">${esc(t.title)}</a> / ${esc(t.name)}</p>
-        <div class="ptitle"><h1>${esc(t.name)}</h1><p>${esc(t.line)}</p></div>
-        <figure class="lead"><img src="${lead[0]}" alt="${esc(t.name)}"></figure>
-        <div class="gallery">${rest.map(([src]) => `<img src="${src}" alt="${esc(t.name)}" loading="lazy">`).join('')}</div>`;
+        <div class="proj">
+          <div class="slider" aria-roledescription="carousel" aria-label="${esc(t.name)} photos">
+            <div class="stage"><div class="strack">${t.imgs.map(([src], i) => `<img src="${src}" alt="${esc(t.name)}, photo ${i + 1} of ${t.imgs.length}" ${i > 1 ? 'loading="lazy"' : ''}>`).join('')}</div>
+              <span class="count" aria-live="polite"></span>
+              <div class="sctl"><button type="button" class="prev" aria-label="Previous photo">${L}</button><button type="button" class="next" aria-label="Next photo">${Rr}</button></div></div>
+            <div class="thumbs">${t.imgs.map(([src], i) => `<button type="button" aria-label="Photo ${i + 1}"><img src="${src}" alt="" loading="lazy"></button>`).join('')}</div>
+          </div>
+          <aside class="pinfo">
+            <h1>${esc(t.name)}</h1>
+            <p class="kick">${esc(t.line)}</p>
+            <p class="desc">${esc(t.desc)}</p>
+            <dl class="facts">${t.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+          </aside>
+        </div>
+        <section class="enq">
+          <div><h2>Planning something <em>like this?</em></h2><p>Tell us about your project and we'll show you what's possible, from the first sketch to the finished building.</p></div>
+          <div class="acts"><a class="big caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a><a class="ln" href="tel:02087325620">020 8732 5620</a><a class="ln" href="mailto:design@dssquared.co.uk">design@dssquared.co.uk</a></div>
+        </section>
+        <div class="nextp"><a href="#${type}" class="caps">All ${esc(t.title.toLowerCase())} projects</a><a href="#${nk}/${n.slug}" class="caps">Next: ${esc(n.name)} ${ARROW}</a></div>`;
+      slider(pmain.querySelector('.slider'));
     }
     scrollTo(0, 0);
   }
   addEventListener('hashchange', route);
+  function slider(el) {
+    const track = el.querySelector('.strack'), imgs = track.children, count = el.querySelector('.count'), th = [...el.querySelectorAll('.thumbs button')];
+    let i = 0;
+    const go = k => { i = (k + imgs.length) % imgs.length; track.style.transform = `translateX(${-i * 100}%)`;
+      count.textContent = `${String(i + 1).padStart(2, '0')} / ${String(imgs.length).padStart(2, '0')}`;
+      th.forEach((b, j) => b.setAttribute('aria-current', j === i)); th[i].scrollIntoView({ block: 'nearest', inline: 'nearest' }); };
+    el.querySelector('.prev').onclick = () => go(i - 1); el.querySelector('.next').onclick = () => go(i + 1);
+    th.forEach((b, j) => b.onclick = () => go(j));
+    el.tabIndex = 0; el.onkeydown = e => { if (e.key === 'ArrowLeft') go(i - 1); if (e.key === 'ArrowRight') go(i + 1); };
+    let x0 = null; const stage = el.querySelector('.stage');
+    stage.onpointerdown = e => { x0 = e.clientX; };
+    stage.onpointerup = e => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 40) go(i + (dx < 0 ? 1 : -1)); };
+    go(0);
+  }
 
   // a gentle rise as each card comes into view
   const cards = [...document.querySelectorAll('.card')];
