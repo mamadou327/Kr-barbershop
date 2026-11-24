@@ -53,11 +53,11 @@ button{font-family:inherit}
 .on .hero-ui>*{opacity:1;transform:none}
 .logo{left:1%;top:1.5%;width:6.8vw;min-width:44px;transform:translateY(-8px)}
 .logo img{width:100%;display:block;border-radius:14%}
-.nav{right:7.4vw;top:4.4%;display:flex;gap:1.15vw;font-size:clamp(9px,1.02vw,15px);color:var(--ink);transform:translateY(-8px);transition-delay:.1s}
+.nav{right:2vw;top:4.4%;display:flex;gap:1.6vw;font-size:clamp(9px,1.02vw,15px);color:#fff;text-shadow:0 1px 10px rgba(20,18,16,.45);transform:translateY(-8px);transition-delay:.1s}
 .nav a{position:relative;padding:4px 0}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease-out)}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;background:#fff;transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease-out)}
 .nav a:hover::after{transform:scaleX(1)}
-.menu{right:1.4vw;top:2.4%;width:4.2vw;height:4.2vw;min-width:38px;min-height:38px;border:0;border-radius:22%;background:var(--orange);cursor:pointer;display:grid;place-items:center;transform:translateY(-8px);transition-delay:.15s}
+.menu{display:none!important;right:1.4vw;top:2.4%;width:4.2vw;height:4.2vw;min-width:38px;min-height:38px;border:0;border-radius:22%;background:var(--orange);cursor:pointer;display:grid;place-items:center;transform:translateY(-8px);transition-delay:.15s}
 .menu span,.menu span::before,.menu span::after{display:block;width:max(16px,2vw);height:1.6px;border-radius:2px;background:#fff;position:relative;transition:transform .3s var(--ease-out),background .2s}
 .menu span::before,.menu span::after{content:"";position:absolute;left:0;width:100%}
 .menu span::before{top:max(-6px,-.6vw)}.menu span::after{top:min(6px,.6vw)}
@@ -70,22 +70,25 @@ button{font-family:inherit}
 .panel a{padding:12px 0;border-bottom:1px solid #dcdcdc}
 .panel.open{transform:none}
 
-/* Accreditations band directly under the picture: logos gliding right to left on a loop */
+/* Accreditations band directly under the picture: warm stone band, logos in one charcoal tone gliding right to left on a loop */
+:root{--band:#ECE7E0;--band-h:104px}
 .band{position:absolute;left:0;right:0;top:var(--heroH);height:var(--band-h);background:var(--band);overflow:hidden;display:flex;align-items:center;opacity:0}
 .on .band{opacity:1;transition:opacity .8s var(--ease-out) .3s}
-.track{display:flex;align-items:center;gap:13vw;padding-right:13vw;width:max-content;animation:glide 30s linear infinite}
-.track img{height:calc(var(--band-h) * .84);width:auto;display:block;border-radius:4px}
-.track img.arb{height:calc(var(--band-h) * .56);border-radius:0}
+.track{display:flex;align-items:center;gap:96px;padding-right:96px;width:max-content;animation:glide 26s linear infinite}
+.band:hover .track{animation-play-state:paused}
+.track img{height:40px;width:auto;display:block;opacity:.85}
+.track img.tall{height:70px}
 @keyframes glide{to{transform:translateX(-50%)}}
-.foot{position:absolute;left:0;right:0;top:calc(var(--heroH) + var(--band-h));padding:20px 1.4vw 32px;font-size:12px;color:var(--ink-2);opacity:0}
-.on .foot{opacity:1;transition:opacity .8s .6s}
 .replay{position:fixed;right:16px;bottom:16px;z-index:5;background:var(--ink);color:#fff;border:0;border-radius:8px;font:500 12px/1 var(--f);padding:9px 12px;opacity:0;cursor:pointer}
 .on .replay{opacity:.85;transition:opacity .6s 1s}.replay:hover{opacity:1}
 
 @media (max-width:760px){
   .nav{display:none}
+  .menu{display:grid!important}
   .frame{width:80vw;height:100vw;top:52%}
-  .track{gap:18vw;padding-right:18vw}
+  :root{--band-h:76px}
+  .track{gap:56px;padding-right:56px}
+  .track img{height:28px}.track img.tall{height:52px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms!important;transition-delay:0s!important}
@@ -119,7 +122,6 @@ button{font-family:inherit}
 <section class="band" aria-label="Architects Registration Board, Chartered Institute of Architectural Technologists, RIBA Chartered Practice">
   <div class="track" aria-hidden="true"></div>
 </section>
-<p class="foot">Unofficial concept by AIV Designs</p>
 <button class="replay" type="button">Replay</button>
 
 <script>
@@ -127,8 +129,8 @@ button{font-family:inherit}
   const root = document.documentElement;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   // logo band: one set repeated until it is wider than the screen, twice over, so the loop never shows a gap
-  const set = '<img src="img/acc-arb.png" alt="" class="arb"><img src="img/acc-ciat.png" alt=""><img src="img/acc-riba.png" alt="">';
-  let half = ''; for (let i = 0; i < 3; i++) half += set;
+  const set = '<img src="img/acc-riba.png" alt="" class="tall"><img src="img/acc-arb.png" alt=""><img src="img/acc-ciat.png" alt="" class="tall">';
+  let half = ''; for (let i = 0; i < 4; i++) half += set;
   document.querySelector('.track').innerHTML = half + half;
 
   let timers = [];
