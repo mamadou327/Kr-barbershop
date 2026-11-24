@@ -94,21 +94,22 @@ button{font-family:inherit}
 .on .replay{opacity:.85;transition:opacity .6s 1s}.replay:hover{opacity:1}
 
 /* Selected work: their four project types, two rows, one big and one small card in each, swapped on the second row */
-.work{margin-top:calc(var(--heroH) + var(--band-h));padding:clamp(48px,5vw,80px) 2vw clamp(56px,6vw,96px);opacity:0;transition:opacity .8s .5s}
+.work{margin-top:calc(var(--heroH) + var(--band-h));height:100vh;height:100svh;padding:clamp(20px,2.4vw,36px) 2vw clamp(18px,2vw,28px);display:flex;flex-direction:column;opacity:0;transition:opacity .8s .5s}
+.rows{flex:1;min-height:0;display:grid;grid-template-rows:1fr 1fr;gap:clamp(14px,1.6vw,22px)}
 .on .work{opacity:1}
-.work-head{margin-bottom:clamp(20px,2.2vw,32px)}
-.work-head h2{font-family:var(--serif);font-weight:350;font-size:clamp(2.25rem,4.4vw,4rem);line-height:1;letter-spacing:-.02em}
+.work-head{margin-bottom:clamp(12px,1.4vw,20px)}
+.work-head h2{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3.4vw,3.25rem);line-height:1;letter-spacing:-.02em}
 .work-head h2 em{font-style:italic;font-weight:300}
-.row{display:grid;gap:16px;grid-template-columns:7fr 5fr}
-.row+.row{margin-top:clamp(28px,3vw,44px)}
+.row{display:grid;gap:16px;grid-template-columns:7fr 5fr;min-height:0}
 .row.flip{grid-template-columns:5fr 7fr}
-.card{min-width:0;transition:opacity .7s var(--ease-out),transform .8s var(--ease-out)}
-.card .ph{display:block;overflow:hidden;border-radius:12px;height:clamp(280px,33vw,540px);background:#e6e1d9}
+.card{min-width:0;min-height:0;display:flex;transition:opacity .7s var(--ease-out),transform .8s var(--ease-out)}
+.card>a{display:flex;flex-direction:column;flex:1;min-height:0}
+.card .ph{display:block;flex:1;min-height:0;overflow:hidden;border-radius:12px;background:#e6e1d9}
 .card .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s var(--ease-out)}
 .card a:hover .ph img{transform:scale(1.04)}
-.card .meta{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding:14px 2px 0}
-.card h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.6rem,2.3vw,2.3rem);line-height:1.05;letter-spacing:-.015em}
-.card p{font-size:15px;color:var(--ink-2);margin-top:6px;max-width:44ch}
+.card .meta{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding:10px 2px 0}
+.card h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.4rem,1.9vw,2rem);line-height:1.05;letter-spacing:-.015em}
+.card p{font-size:14px;color:var(--ink-2);margin-top:3px;max-width:52ch}
 .card .more{flex:none;display:inline-flex;align-items:center;gap:8px;font-size:12px;border-bottom:1.5px solid var(--orange);padding-bottom:3px}
 .card .more svg{transition:transform .3s var(--ease-out)}.card a:hover .more svg{transform:translateX(3px)}
 .card.rise{opacity:0;transform:translateY(24px)}
@@ -118,9 +119,12 @@ button{font-family:inherit}
   .hero-ui::before{display:none}
   .copy{position:relative;left:auto;right:auto;bottom:auto;top:auto;margin:calc(var(--heroH) + var(--band-h) + 28px) 16px 0;max-width:none;color:var(--ink)}
   .work{margin-top:0;padding:40px 16px 56px}
+  .work{height:auto;display:block}
+  .rows{display:block}
   .row,.row.flip{grid-template-columns:1fr}
   .row+.row{margin-top:16px}
   .card+.card{margin-top:12px}
+  .card>a{display:block}
   .card .ph{height:64vw}
   .card .meta{flex-direction:column;align-items:flex-start;gap:10px}
   .copy p{color:var(--ink-2)}
@@ -171,6 +175,7 @@ button{font-family:inherit}
 <!-- Their four project types, as on dssquared.co.uk. Lines adapted from their own site. -->
 <section class="work" id="projects" aria-labelledby="work-title">
   <div class="work-head"><h2 id="work-title">Selected <em>work</em></h2></div>
+  <div class="rows">
   <div class="row">
     <article class="card"><a href="#projects">
       <span class="ph"><img src="img/work-residential.webp" alt="Brick and white new build family home" loading="lazy" style="object-position:50% 45%"></span>
@@ -186,6 +191,7 @@ button{font-family:inherit}
     <article class="card"><a href="#projects">
       <span class="ph"><img src="img/work-commercial.webp" alt="Brick apartment development with private gardens" loading="lazy" style="object-position:50% 60%"></span>
       <div class="meta"><div><h3>Commercial</h3><p>Urban design, planning and building services for property developers.</p></div><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+  </div>
   </div>
 </section>
 <button class="replay" type="button">Replay</button>
