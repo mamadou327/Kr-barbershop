@@ -33,22 +33,28 @@ a{color:inherit;text-decoration:none}
 .book-sm{margin-left:auto;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
 .book-sm i{width:7px;height:7px;background:var(--orange);display:block}
 .menu{display:none;margin-left:16px;font:600 14px/1 inherit;background:none;border:0;color:inherit;cursor:pointer;padding:8px 0}
-.on .top{color:var(--white)}
+.top{background:var(--stone)}.on .top{color:var(--white);background:transparent;transition:color .6s var(--ease-out),background .4s}
 
-/* Collage of their work */
-.wall{position:fixed;inset:var(--head) var(--pad) var(--pad);display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(8,1fr);gap:var(--gap)}
-.t{grid-area:var(--d);overflow:hidden;background:#e6e1d9;opacity:0;transform:translateY(14px) scale(.97)}
+/* Wall of their work: columns drift, alternate ones up and down */
+.wall{position:fixed;inset:0 var(--pad);display:flex;gap:var(--gap);overflow:hidden}
+.col{flex:1;min-width:0;opacity:0;transform:translateY(40px);--sp:40s}
+.track{display:flex;flex-direction:column;gap:var(--gap);animation:up var(--sp) linear infinite;will-change:transform}
+.col:nth-child(even) .track{animation-name:down}
+@keyframes up{from{transform:translateY(0)}to{transform:translateY(calc(-33.3333% - var(--gap)/3))}}
+@keyframes down{from{transform:translateY(calc(-33.3333% - var(--gap)/3))}to{transform:translateY(0)}}
+.t{overflow:hidden;background:#e6e1d9;flex:none}
 .t img{width:100%;height:100%;object-fit:cover;display:block}
-.slot{grid-area:3/5/7/9}
-.ready .t{opacity:1;transform:none;transition:opacity .7s var(--ease-out),transform .9s var(--ease-out);transition-delay:calc(var(--i)*45ms)}
-.on .t{opacity:0;transform:scale(.92) translate(var(--x,0),var(--y,0));transition:opacity .5s var(--ease-out),transform 1.2s var(--ease-io);transition-delay:0s}
+.ready .col{opacity:1;transform:none;transition:opacity .9s var(--ease-out),transform 1.2s var(--ease-out);transition-delay:calc(var(--i)*70ms)}
+.on .col{opacity:0;transform:scale(.94);transition:opacity .6s var(--ease-out),transform 1.3s var(--ease-io);transition-delay:0s}
+.on .track{animation-play-state:paused}
+.slot{position:fixed;left:50%;top:50%;width:min(36vw,560px);aspect-ratio:3/2;transform:translate(-50%,-46%)}
 
 /* The main picture: a full-screen image clipped to the centre tile, then opened */
 .hero{position:fixed;inset:0;z-index:2;clip-path:inset(var(--ct,50%) var(--cr,50%) var(--cb,50%) var(--cl,50%));opacity:0}
 .ready .hero{opacity:1;transition:opacity .7s var(--ease-out) .1s}
-.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 60%;transform:scale(1.14);transform-origin:50% 55%}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 60%;transform:scale(var(--s,.4));transform-origin:var(--ox,50%) var(--oy,50%)}
 .on .hero{clip-path:inset(0 0 0 0);transition:clip-path 1.3s var(--ease-io)}
-.on .hero img{transform:scale(1);transition:transform 1.8s var(--ease-io)}
+.on .hero img{transform:scale(1);transition:transform 1.3s var(--ease-io)}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,16,.38) 0,rgba(20,18,16,0) 22%,rgba(20,18,16,0) 48%,rgba(20,18,16,.62) 100%);opacity:0;transition:opacity 1s var(--ease-out) .6s}
 .on .hero::after{opacity:1}
 
@@ -68,16 +74,14 @@ a{color:inherit;text-decoration:none}
   :root{--pad:16px;--head:56px;--gap:6px}
   .nav,.book-sm{display:none}
   .menu{display:block;margin-left:auto}
-  .wall{grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(8,1fr)}
-  .t{grid-area:var(--m)}
-  .t[data-m="x"]{display:none}
-  .slot{grid-area:3/2/6/4}
+  .slot{width:64vw;aspect-ratio:4/5}
   .copy{flex-direction:column;align-items:flex-start}
   .note{text-align:left}
   .hero img{object-position:42% 60%}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms!important;transition-delay:0s!important}
+  .track{animation:none}
 }
 .panel{position:fixed;inset:var(--head) 0 auto 0;z-index:6;background:var(--stone);color:var(--ink);padding:8px var(--pad) 20px;display:none;flex-direction:column;font-size:20px;font-weight:500}
 .panel a{padding:8px 0;border-bottom:1px solid #ddd6cc}
@@ -98,27 +102,10 @@ a{color:inherit;text-decoration:none}
 </nav>
 
 <!-- Their real project photos (dssquared.co.uk). Project names to confirm with Kate. -->
-<main class="wall" aria-hidden="true">
-  <div class="t" style="--i:0;--d:1/1/3/4;--m:1/1/3/3;--x:-6%;--y:-6%"><img src="img/living.webp" alt=""></div>
-  <div class="t" style="--i:3;--d:1/4/3/6;--m:1/3/2/5;--y:-8%"><img src="img/spiral.webp" alt=""></div>
-  <div class="t" style="--i:6;--d:1/7/3/10;--m:2/3/3/4;--y:-8%"><img src="img/brick-white.webp" alt=""></div>
-  <div class="t" style="--i:9;--d:1/11/4/13;--m:2/4/4/5;--x:6%;--y:-6%"><img src="img/wine.webp" alt=""></div>
-  <div class="t" style="--i:2;--d:3/1/6/3;--m:3/1/5/2;--x:-8%"><img src="img/bath.webp" alt=""></div>
-  <div class="t" style="--i:5;--d:3/3/5/5;--m:5/1/7/2;--x:-6%"><img src="img/stone-barns.webp" alt=""></div>
-  <div class="t" style="--i:8;--d:3/9/5/11;--m:4/4/6/5;--x:6%"><img src="img/garden.webp" alt=""></div>
-  <div class="t" style="--i:11;--d:4/11/6/13;--m:6/4/8/5;--x:8%"><img src="img/terrace.webp" alt=""></div>
-  <div class="t" style="--i:4;--d:5/3/7/5;--m:6/2/7/4;--x:-6%;--y:4%"><img src="img/games.webp" alt=""></div>
-  <div class="t" style="--i:10;--d:5/9/7/11;--m:x;--x:6%;--y:4%" data-m="x"><img src="img/twin-barns.webp" alt=""></div>
-  <div class="t" style="--i:1;--d:6/1/8/3;--m:x;--x:-8%;--y:6%" data-m="x"><img src="img/patio.webp" alt=""></div>
-  <div class="t" style="--i:7;--d:7/3/9/6;--m:7/1/9/3;--x:-4%;--y:8%"><img src="img/aside.webp" alt=""></div>
-  <div class="t" style="--i:12;--d:7/6/9/8;--m:x;--y:8%" data-m="x"><img src="img/stair-kitchen.webp" alt=""></div>
-  <div class="t" style="--i:13;--d:7/8/9/10;--m:7/3/9/4;--y:8%"><img src="img/blossom.webp" alt=""></div>
-  <div class="t" style="--i:14;--d:7/10/9/13;--m:8/4/9/5;--x:6%;--y:8%"><img src="img/arch-house.webp" alt=""></div>
-  <div class="t" style="--i:15;--d:8/1/9/3;--m:x;--x:-8%;--y:8%" data-m="x"><img src="img/aside-cafe.webp" alt=""></div>
-  <div class="slot"></div>
-</main>
+<main class="wall" aria-hidden="true"></main>
+<div class="slot"></div>
 
-<div class="hero"><img src="img/main.webp" alt="A barn-style new build in black timber and brick, designed by DS Squared"></div>
+<div class="hero"><img src="img/main.webp" alt="A brick and white render family home with dark window frames, designed by DS Squared"></div>
 
 <section class="copy">
   <div>
@@ -134,19 +121,40 @@ a{color:inherit;text-decoration:none}
 (() => {
   const root = document.documentElement, hero = document.querySelector('.hero'), slot = document.querySelector('.slot');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // [file, width/height]
+  const P = [['living',1.94],['spiral',1.33],['wine',.67],['barn',1.78],['bath',.67],['stone-barns',1.33],['garden',1.33],['terrace',1.33],
+    ['games',1.33],['twin-barns',1.78],['patio',1.33],['aside',1.33],['stair-kitchen',1.33],['blossom',1.33],['arch-house',1.78],['aside-cafe',1.33]];
+  const wall = document.querySelector('.wall');
+  function build() {
+    const n = innerWidth <= 760 ? 3 : innerWidth <= 1100 ? 5 : 6, per = n === 3 ? 6 : 4;
+    const speeds = [46, 34, 52, 38, 44, 32];
+    let k = 0, html = '';
+    for (let c = 0; c < n; c++) {
+      let set = '';
+      for (let j = 0; j < per; j++) { const [f, r] = P[(k++ * 7) % P.length]; set += `<div class="t" style="aspect-ratio:${r}"><img src="img/${f}.webp" alt=""></div>`; }
+      html += `<div class="col" style="--i:${c};--sp:${speeds[c]}s"><div class="track" style="animation-delay:-${c * 5}s">${set + set + set}</div></div>`;
+    }
+    wall.innerHTML = html;
+  }
+  build();
+  let bw = innerWidth; addEventListener('resize', () => { if ((bw <= 760) !== (innerWidth <= 760) || (bw <= 1100) !== (innerWidth <= 1100)) build(); bw = innerWidth; });
   let opened = false;
   function fit() {
     if (opened) return;
     const r = slot.getBoundingClientRect(), w = innerWidth, h = innerHeight;
     hero.style.setProperty('--ct', r.top + 'px'); hero.style.setProperty('--cl', r.left + 'px');
     hero.style.setProperty('--cr', (w - r.right) + 'px'); hero.style.setProperty('--cb', (h - r.bottom) + 'px');
+    // shrink the full-screen picture so the whole house sits inside the tile, then it grows with the opening
+    const im = hero.querySelector('img'), sc = Math.max(r.width / w, r.height / h) * 1.02;
+    im.style.setProperty('--s', sc); im.style.setProperty('--ox', (r.left + r.width / 2 + sc * (r.left + r.width / 2 - w / 2) / (1 - sc)) + 'px');
+    im.style.setProperty('--oy', (r.top + r.height / 2 + sc * (r.top + r.height / 2 - h / 2) / (1 - sc)) + 'px');
   }
   function open() { if (opened) return; opened = true; root.classList.add('on'); }
   fit(); addEventListener('resize', fit);
   const img = hero.querySelector('img');
   const start = () => requestAnimationFrame(() => {
     root.classList.add('ready');
-    setTimeout(open, reduce ? 0 : 2300);
+    setTimeout(open, reduce ? 0 : 3200);
   });
   img.complete ? start() : (img.onload = img.onerror = start);
   // Any click or key on the collage skips straight to the landing picture
