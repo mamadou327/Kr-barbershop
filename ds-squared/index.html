@@ -35,7 +35,7 @@ button{font-family:inherit}
 .ltitle{position:fixed;left:0;right:0;top:9vh;text-align:center;font-weight:500;font-stretch:87.5%;font-size:clamp(2rem,4.2vw,3.25rem);letter-spacing:-.02em;line-height:1;z-index:3;opacity:0;transform:translateY(10px);transition:opacity .8s var(--ease-out),transform .9s var(--ease-out)}
 .go .ltitle{opacity:1;transform:none}
 .open .ltitle{opacity:0;transform:translateY(-24px);transition:opacity .5s,transform .7s var(--ease-out)}
-.frame{position:fixed;z-index:2;overflow:hidden;left:50%;top:54%;width:min(46vw,680px);height:calc(min(46vw,680px) / 1.5);border-radius:10px;transform:translate(-50%,-50%) scale(.97);opacity:0;transition:opacity .8s var(--ease-out),transform 1s var(--ease-out)}
+.frame{position:fixed;z-index:2;overflow:hidden;left:50%;top:50%;width:49vw;height:30.4vw;border-radius:12px;transform:translate(-50%,-50%) scale(.97);opacity:0;transition:opacity .8s var(--ease-out),transform 1s var(--ease-out)}
 .go .frame{opacity:1;transform:translate(-50%,-50%)}
 .open .frame{left:0;top:0;width:100%;height:var(--heroH);border-radius:0;transform:none;transition:left 1.2s var(--ease-io),top 1.2s var(--ease-io),width 1.2s var(--ease-io),height 1.2s var(--ease-io),border-radius 1.2s var(--ease-io)}
 .on .frame{position:absolute;transition:none}
@@ -48,6 +48,22 @@ button{font-family:inherit}
 .sl.in{clip-path:inset(0 0 0 0);transition:clip-path .75s var(--ease-io)}
 .sl.in img{animation:settle .9s var(--ease-out)}
 @keyframes settle{from{transform:scale(1.06)}to{transform:none}}
+
+.lwall{position:fixed;inset:0;z-index:1;display:grid;grid-template-columns:21fr 49fr 21fr;gap:1.2vw;padding:0 3.3vw;overflow:hidden;pointer-events:none}
+.lcol{height:100vh;overflow:hidden;opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease-out),transform 1s var(--ease-out)}
+.lmid{height:100vh;display:flex;flex-direction:column;justify-content:center;gap:1.2vw;opacity:0;transition:opacity .8s var(--ease-out) .12s}
+.go .lcol,.go .lmid{opacity:1;transform:none}
+.go .lcol.down{transition-delay:.2s}
+.ltrack{display:flex;flex-direction:column;gap:1.2vw;animation:lup 26s linear infinite}
+.lcol.down .ltrack{animation-name:ldown}
+@keyframes lup{to{transform:translateY(calc(-50% - .6vw))}}
+@keyframes ldown{from{transform:translateY(calc(-50% - .6vw))}to{transform:none}}
+.ltile{flex:none;aspect-ratio:316/350;border-radius:12px;overflow:hidden;background:#e6e1d9}
+.ltile img{width:100%;height:100%;object-fit:cover;display:block}
+.lpair{flex:none;display:grid;grid-template-columns:1fr 1fr;gap:1.2vw}
+.lgap{flex:none;height:30.4vw}
+.open .lwall{opacity:0;transform:scale(1.05);transition:opacity .7s var(--ease-out),transform 1.2s var(--ease-io)}
+.on .lwall{visibility:hidden}
 
 /* Home, as in Mo's Figma: logo, menu and booking button sit on the picture and scale with it. Corners rounded, not sharp. */
 .hero-ui{position:absolute;left:0;top:0;width:100%;height:var(--heroH);z-index:4;pointer-events:none}
@@ -337,6 +353,8 @@ button{font-family:inherit}
 .bk-done p{font-size:17px;color:var(--ink-2)}
 .tick{width:56px;height:56px;border-radius:50%;background:var(--orange);color:var(--ink);display:grid;place-items:center}
 .bk-x{z-index:2}
+.bk-acc{display:flex;align-items:center;gap:clamp(20px,3vw,36px);padding-top:18px;border-top:1px solid #e4ddd3}
+.bk-acc img{height:24px;width:auto;opacity:.8}.bk-acc img.t{height:44px}
 
 /* Projects pages: the four types; each type lists its projects as cards; each project shows all its photos */
 .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr));gap:16px}
@@ -370,6 +388,7 @@ button{font-family:inherit}
   .work-in{width:100%}
   .row{flex-direction:column;align-items:stretch}
   .card .ph{height:auto;aspect-ratio:4/3}
+  .card,.card.sm{flex:none}
   .work{height:auto}
   .rows{display:flex;flex-direction:column}
   .pmain .rows{height:auto;min-height:0}
@@ -401,7 +420,6 @@ button{font-family:inherit}
   .foot2{padding:40px 16px 16px}
   .copy p{color:var(--ink-2)}
   .menu{display:grid!important}
-  .frame{width:80vw;height:100vw;top:52%}
   :root{--band-h:76px}
   .track{gap:56px;padding-right:56px}
   .track img{height:28px}.track img.tall{height:52px}
@@ -409,18 +427,16 @@ button{font-family:inherit}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms!important;transition-delay:0s!important}
   .track{animation:none}
+  .ltrack{animation:none}
 }
 </style>
 </head>
 <body>
 <!-- Loading: the name and one framed picture that wipes through their work, ending on the home picture -->
-<div class="ltitle" aria-hidden="true">DS Squared</div>
+<!-- Loading wall (Mo's sketch): side columns drift, the main picture sits in the middle box, then fills the screen -->
+<div class="lwall" aria-hidden="true"><div class="lcol up"><div class="ltrack"><div class="ltile"><img src="img/living.webp" alt=""></div><div class="ltile"><img src="img/spiral.webp" alt=""></div><div class="ltile"><img src="img/garden.webp" alt=""></div><div class="ltile"><img src="img/games.webp" alt=""></div><div class="ltile"><img src="img/about-2.webp" alt=""></div><div class="ltile"><img src="img/living.webp" alt=""></div><div class="ltile"><img src="img/spiral.webp" alt=""></div><div class="ltile"><img src="img/garden.webp" alt=""></div><div class="ltile"><img src="img/games.webp" alt=""></div><div class="ltile"><img src="img/about-2.webp" alt=""></div></div></div><div class="lmid"><div class="lpair"><div class="ltile"><img src="img/blossom.webp" alt=""></div><div class="ltile"><img src="img/stone-barns.webp" alt=""></div></div><div class="lgap"></div><div class="lpair"><div class="ltile"><img src="img/arch-house.webp" alt=""></div><div class="ltile"><img src="img/about-3.webp" alt=""></div></div></div><div class="lcol down"><div class="ltrack"><div class="ltile"><img src="img/barn.webp" alt=""></div><div class="ltile"><img src="img/wine.webp" alt=""></div><div class="ltile"><img src="img/terrace.webp" alt=""></div><div class="ltile"><img src="img/proj/residential-08.webp" alt=""></div><div class="ltile"><img src="img/proj/interiors-02.webp" alt=""></div><div class="ltile"><img src="img/barn.webp" alt=""></div><div class="ltile"><img src="img/wine.webp" alt=""></div><div class="ltile"><img src="img/terrace.webp" alt=""></div><div class="ltile"><img src="img/proj/residential-08.webp" alt=""></div><div class="ltile"><img src="img/proj/interiors-02.webp" alt=""></div></div></div></div>
 <div class="frame" role="img" aria-label="A concrete and glass building designed by DS Squared">
-  <div class="sl"><img src="img/house-sketch.webp" alt=""></div>
-  <div class="sl" data-d="left"><img src="img/living.webp" alt=""></div>
-  <div class="sl" data-d="up"><img src="img/spiral.webp" alt=""></div>
-  <div class="sl" data-d="down"><img src="img/house.webp" alt=""></div>
-  <div class="sl" data-d="right"><img src="img/civic.webp" alt="" style="object-position:50% 20%"></div>
+  <div class="sl"><img src="img/civic.webp" alt="" style="object-position:50% 20%"></div>
 </div>
 
 <header class="hero-ui">
@@ -429,10 +445,10 @@ button{font-family:inherit}
     <a href="#projects">Projects</a><a href="#about">About us</a><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">What we do <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><button type="button" role="menuitem">Architecture</button><button type="button" role="menuitem">Interior design</button><button type="button" role="menuitem">Planning</button><button type="button" role="menuitem">Extensions</button><button type="button" role="menuitem">New builds</button><button type="button" role="menuitem">Basements</button></div></div><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">Who we help <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><a role="menuitem" href="#who/homeowners">Homeowners</a><a role="menuitem" href="#who/developers">Developers</a><a role="menuitem" href="#who/healthcare">Healthcare</a></div></div><a href="#contact">Contact</a>
   </nav>
   <button class="menu" aria-expanded="false" aria-controls="panel" aria-label="Menu"><span></span></button>
-  <a class="cta caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
+  <a class="cta caps" href="#book">Book a consultation</a>
 </header>
 <nav class="panel" id="panel" aria-label="Menu">
-  <a href="#projects">Projects</a><a href="#about">About us</a><span class="psub">What we do</span><span class="pitem">Architecture</span><span class="pitem">Interior design</span><span class="pitem">Planning</span><span class="pitem">Extensions</span><span class="pitem">New builds</span><span class="pitem">Basements</span><a href="#who">Who we help</a><a class="pitem" href="#who/homeowners">Homeowners</a><a class="pitem" href="#who/developers">Developers</a><a class="pitem" href="#who/healthcare">Healthcare</a><a href="#contact">Contact</a><a href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
+  <a href="#projects">Projects</a><a href="#about">About us</a><span class="psub">What we do</span><span class="pitem">Architecture</span><span class="pitem">Interior design</span><span class="pitem">Planning</span><span class="pitem">Extensions</span><span class="pitem">New builds</span><span class="pitem">Basements</span><a href="#who">Who we help</a><a class="pitem" href="#who/homeowners">Homeowners</a><a class="pitem" href="#who/developers">Developers</a><a class="pitem" href="#who/healthcare">Healthcare</a><a href="#contact">Contact</a><a href="#book">Book a consultation</a>
 </nav>
 
 <section class="copy">
@@ -496,9 +512,9 @@ button{font-family:inherit}
     <button type="button" class="wcard" data-w="developers" aria-haspopup="dialog"><img src="img/who-developers.webp" alt="A grand hotel lobby with a sweeping staircase" loading="lazy"><span class="wmeta"><span>Developers</span><i><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="1.6"/></svg></i></span></button>
     <button type="button" class="wcard" data-w="healthcare" aria-haspopup="dialog"><img src="img/who-healthcare.webp" alt="A bright GP surgery waiting room" loading="lazy"><span class="wmeta"><span>Healthcare</span><i><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="1.6"/></svg></i></span></button>
   </div>
-  <template id="w-homeowners"><img src="img/spiral.webp" alt="A spiral staircase in a family home"><div class="wbody"><h3>Homeowners</h3><p>We support homeowners at every stage of the design and build process, working with you to create your dream home.</p><ul><li>House extensions</li><li>Loft and basement conversions</li><li>New build homes</li><li>Interior design</li></ul><a class="wcta caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a></div></template>
-  <template id="w-developers"><img src="img/who-developers.webp" alt="A grand hotel lobby with a sweeping staircase"><div class="wbody"><h3>Developers</h3><p>Urban design, building services and planning consultancy for property developers across the UK, from feasibility to handover.</p><ul><li>Feasibility studies</li><li>Planning applications</li><li>Tenders and contracts</li><li>Delivery on site</li></ul><a class="wcta caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a></div></template>
-  <template id="w-healthcare"><img src="img/who-healthcare.webp" alt="A bright GP surgery waiting room"><div class="wbody"><h3>Healthcare</h3><p>We create spaces for healing and treatment for NHS and private healthcare partners throughout the UK.</p><ul><li>GP surgeries and medical centres</li><li>Hospital units</li><li>Care and nursing homes</li><li>Wellness centres</li></ul><a class="wcta caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a></div></template>
+  <template id="w-homeowners"><img src="img/spiral.webp" alt="A spiral staircase in a family home"><div class="wbody"><h3>Homeowners</h3><p>We support homeowners at every stage of the design and build process, working with you to create your dream home.</p><ul><li>House extensions</li><li>Loft and basement conversions</li><li>New build homes</li><li>Interior design</li></ul><a class="wcta caps" href="#book">Book a consultation</a></div></template>
+  <template id="w-developers"><img src="img/who-developers.webp" alt="A grand hotel lobby with a sweeping staircase"><div class="wbody"><h3>Developers</h3><p>Urban design, building services and planning consultancy for property developers across the UK, from feasibility to handover.</p><ul><li>Feasibility studies</li><li>Planning applications</li><li>Tenders and contracts</li><li>Delivery on site</li></ul><a class="wcta caps" href="#book">Book a consultation</a></div></template>
+  <template id="w-healthcare"><img src="img/who-healthcare.webp" alt="A bright GP surgery waiting room"><div class="wbody"><h3>Healthcare</h3><p>We create spaces for healing and treatment for NHS and private healthcare partners throughout the UK.</p><ul><li>GP surgeries and medical centres</li><li>Hospital units</li><li>Care and nursing homes</li><li>Wellness centres</li></ul><a class="wcta caps" href="#book">Book a consultation</a></div></template>
   <dialog class="wdlg" aria-labelledby="wdlg-t"><div class="wpanel"></div><button type="button" class="wclose" aria-label="Close"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="m4 4 10 10M14 4 4 14" stroke="currentColor" stroke-width="1.6"/></svg></button></dialog>
 </section>
 
@@ -507,7 +523,7 @@ button{font-family:inherit}
   <header class="pbar">
     <a class="plogo" href="#home" aria-label="DS Squared home"><img src="img/logo.png" alt=""></a>
     <nav class="caps" aria-label="Main"><a href="#projects">Projects</a><a href="#about">About us</a><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">What we do <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><button type="button" role="menuitem">Architecture</button><button type="button" role="menuitem">Interior design</button><button type="button" role="menuitem">Planning</button><button type="button" role="menuitem">Extensions</button><button type="button" role="menuitem">New builds</button><button type="button" role="menuitem">Basements</button></div></div><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">Who we help <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><a role="menuitem" href="#who/homeowners">Homeowners</a><a role="menuitem" href="#who/developers">Developers</a><a role="menuitem" href="#who/healthcare">Healthcare</a></div></div><a href="#contact">Contact</a></nav>
-    <a class="pcta caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
+    <a class="pcta caps" href="#book">Book a consultation</a>
   </header>
   <main class="pmain" id="pmain"></main>
   <template id="t-about">
@@ -561,7 +577,7 @@ button{font-family:inherit}
     <div class="ft-brand">
       <img src="img/logo.png" alt="DS Squared">
       <p>Architecture and interiors from our Fulham and Edgware studios.</p>
-      <a class="pcta3 caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
+      <a class="pcta3 caps" href="#book">Book a consultation</a>
     </div>
     <div class="ft-cols">
       <div><h4>Projects</h4><a href="#residential">Residential</a><a href="#interiors">Interiors</a><a href="#healthcare">Healthcare</a><a href="#commercial">Commercial</a></div>
@@ -599,6 +615,7 @@ button{font-family:inherit}
       <div class="bk-row"><label class="bk-f">Phone<input name="phone" type="tel" autocomplete="tel"></label><label class="bk-f">Budget<select name="budget"><option>Not sure yet</option><option>Under £100k</option><option>£100k to £250k</option><option>£250k to £500k</option><option>£500k to £1m</option><option>Over £1m</option></select></label></div>
       <label class="bk-f">Tell us about your project<textarea name="msg" rows="4" placeholder="What you'd like to build, and any timings"></textarea></label>
       <div class="bk-foot"><button type="submit" class="bk-send caps">Submit</button></div>
+      <div class="bk-acc"><img src="img/acc-riba.png" alt="RIBA Chartered Practice" class="t"><img src="img/acc-arb.png" alt="Architects Registration Board"><img src="img/acc-ciat.png" alt="Chartered Institute of Architectural Technologists" class="t"></div>
     </form>
     <div class="bk-done" hidden><span class="tick" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="m6 13.5 4.5 4.5L20 8" stroke="currentColor" stroke-width="2"/></svg></span><h3>Thank you<span class="bk-name"></span>.</h3><p>We'll be in touch shortly to arrange your consultation.</p><button type="button" class="bk-ok caps">Close</button></div>
   </div>
@@ -625,7 +642,7 @@ button{font-family:inherit}
     void root.offsetWidth;
     if (reduce) { slides.forEach(sl => sl.classList.add('in')); root.classList.add('go', 'open', 'on'); return; }
     requestAnimationFrame(() => root.classList.add('go'));
-    let t = 1300;
+    let t = 3600;   // the wall drifts for a few seconds before the main picture opens
     slides.forEach(sl => { at(t, () => sl.classList.add('in')); t += 1150; });
     t += 250;
     at(t, () => root.classList.add('open'));        // the picture opens out to the full width
@@ -683,7 +700,7 @@ button{font-family:inherit}
         <div class="nextp"><a href="#${type}" class="caps">All ${esc(t.title.toLowerCase())} projects</a>${t.projects.length > 1 ? `<a href="#${type}/${n.slug}" class="caps">Next: ${esc(n.name)} ${ARROW}</a>` : ""}</div>
         <section class="enq">
           <div><h2>Planning something <em>like this?</em></h2><p>Tell us about your project and we'll show you what's possible, from the first sketch to the finished building.</p></div>
-          <div class="acts"><a class="big caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a><a class="ln" href="tel:02087325620">020 8732 5620</a><a class="ln" href="mailto:design@dssquared.co.uk">design@dssquared.co.uk</a></div>
+          <div class="acts"><a class="big caps" href="#book">Book a consultation</a><a class="ln" href="tel:02087325620">020 8732 5620</a><a class="ln" href="mailto:design@dssquared.co.uk">design@dssquared.co.uk</a></div>
         </section>`;
       slider(pmain.querySelector('.slider'));
     }
@@ -768,9 +785,9 @@ button{font-family:inherit}
       if (type) { const r = form.querySelector(`input[name=who][value="${type}"]`); if (r) r.checked = true; }
       bd.showModal(); requestAnimationFrame(() => bd.classList.add('in')); };
     const closeB = () => { bd.classList.remove('in'); setTimeout(() => { bd.close(); form.reset(); form.hidden = false; done.hidden = true; }, reduce ? 0 : 300); };
-    document.addEventListener('click', e => { const a = e.target.closest('a[href*="speak-to-an-expert"]'); if (!a) return; e.preventDefault();
+    document.addEventListener('click', e => { const a = e.target.closest('a[href="#book"]'); if (!a) return; e.preventDefault(); e.stopPropagation();
       let type = null; if (a.closest('.wdlg')) { type = pre[wd.dataset.w]; wd.classList.remove('in'); wd.close(); }
-      openB(type); });
+      openB(type); }, true);
     form.addEventListener('submit', e => { e.preventDefault(); const nm = form.elements.name.value.trim().split(' ')[0];
       bd.querySelector('.bk-name').textContent = nm ? ', ' + nm : ''; form.hidden = true; done.hidden = false; done.querySelector('.bk-ok').focus(); });
     bd.querySelector('.bk-x').onclick = closeB; done.querySelector('.bk-ok').onclick = closeB;
