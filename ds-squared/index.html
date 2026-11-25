@@ -171,6 +171,33 @@ button{font-family:inherit}
 .ft-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid #3a3531;font-size:12px;color:#a69d93}
 .ft-bottom a{color:#a69d93}.ft-bottom a:hover{color:#F4F1EC}
 
+/* Testimonials: rating on the left, one large quote at a time on the right */
+.reviews{display:grid;grid-template-columns:minmax(240px,1fr) minmax(0,2.2fr);gap:clamp(28px,5vw,96px);background:var(--band);padding:clamp(56px,7vw,112px) 2vw;opacity:0;transition:opacity .8s .6s}
+.on .reviews{opacity:1}
+.sub .reviews{display:none}
+.rv-side h2{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3.4vw,3.25rem);line-height:1;letter-spacing:-.02em}
+.rv-side h2 em{font-style:italic;font-weight:300}
+.rv-score{display:flex;align-items:center;gap:14px;margin-top:clamp(20px,2.4vw,36px)}
+.rv-score .num{font-family:var(--serif);font-weight:350;font-size:clamp(2.6rem,4vw,3.6rem);line-height:1}
+.rv-score .stars{display:flex;gap:2px;color:var(--orange)}
+.rv-src{font-size:14px;color:var(--ink-2);margin-top:8px}
+.rv-ctl{display:flex;align-items:center;gap:14px;margin-top:clamp(24px,3vw,44px)}
+.rv-ctl button{width:44px;height:44px;border-radius:50%;border:1px solid #cfc7bd;background:transparent;color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:background .2s,border-color .2s,transform .2s var(--ease-out)}
+.rv-ctl button:hover{background:var(--ink);border-color:var(--ink);color:#fff}.rv-ctl button:active{transform:scale(.94)}
+.rv-count{font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink-2);min-width:52px;text-align:center}
+.rv-slides{display:grid}
+.rv{grid-area:1/1;opacity:0;transform:translateY(14px);transition:opacity .6s var(--ease-out),transform .8s var(--ease-out);pointer-events:none}
+.rv[aria-hidden=false]{opacity:1;transform:none;pointer-events:auto}
+.rv blockquote{font-family:var(--serif);font-weight:350;font-size:clamp(1.55rem,2.6vw,2.6rem);line-height:1.22;letter-spacing:-.015em;text-wrap:pretty;max-width:30ch}
+.rv figcaption{display:flex;flex-direction:column;gap:4px;margin-top:clamp(18px,2vw,28px)}
+.rv figcaption b{font-size:12px}
+.rv figcaption span{font-size:14px;color:var(--ink-2)}
+.rv-bar{height:2px;background:#d8d1c7;margin-top:clamp(28px,3vw,44px);max-width:520px;overflow:hidden}
+.rv-bar i{display:block;height:100%;width:100%;background:var(--orange);transform-origin:left;transform:scaleX(0)}
+.rv-bar i.run{animation:rvbar 7s linear forwards}
+.reviews:hover .rv-bar i.run{animation-play-state:paused}
+@keyframes rvbar{to{transform:scaleX(1)}}
+
 /* Projects pages: the four types; each type lists its projects as cards; each project shows all its photos */
 .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr));gap:16px}
 .plist .card .ph{height:auto;aspect-ratio:3/2}
@@ -212,6 +239,7 @@ button{font-family:inherit}
   .pbar nav{gap:14px}
   .stage{height:auto;aspect-ratio:4/3;min-height:0}
   .enq{grid-template-columns:1fr}
+  .reviews{grid-template-columns:1fr;padding:48px 16px;gap:28px}
   .ft-top{grid-template-columns:1fr}
   .ft-cols{grid-template-columns:1fr 1fr}
   .foot2{padding:40px 16px 16px}
@@ -282,6 +310,27 @@ button{font-family:inherit}
   </div>
   </div>
 </div></section>
+
+<!-- Testimonials: their own clients' words from dssquared.co.uk (lightly trimmed); rating from their Houzz profile -->
+<section class="reviews" aria-labelledby="rv-title">
+  <div class="rv-side">
+    <h2 id="rv-title">Kind <em>words</em></h2>
+    <div class="rv-score"><span class="num">5.0</span><span class="stars" aria-label="5 out of 5 stars"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.5 2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.5 2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.5 2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.5 2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.5 2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span></div>
+    <p class="rv-src">Rated 5 stars on Houzz from 7 reviews</p>
+    <div class="rv-ctl"><button type="button" class="rv-prev" aria-label="Previous review"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.7"/></svg></button><span class="rv-count" aria-live="polite">01 / 06</span><button type="button" class="rv-next" aria-label="Next review"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m6 3 5 5-5 5" stroke="currentColor" stroke-width="1.7"/></svg></button></div>
+  </div>
+  <div class="rv-main">
+    <div class="rv-slides">
+      <figure class="rv" aria-hidden="false"><blockquote>“I spent many days thoroughly researching before deciding on Kate Logue. It was a very good choice. Kate Logue was professional, flexible and easy to work with.”</blockquote><figcaption><b class="caps">Marlene Turner</b><span>Demolition and three new houses</span></figcaption></figure>
+      <figure class="rv" aria-hidden="true"><blockquote>“He is patient, honest and trustworthy. He puts in more dedication and hard work than anyone we know. Not only is he our architect, he remains a good friend to this day.”</blockquote><figcaption><b class="caps">Rekha Mirchandani</b><span>New build with basement, pool and spa</span></figcaption></figure>
+      <figure class="rv" aria-hidden="true"><blockquote>“The 3D walkthrough really helped us visualise the layout and get a proper understanding of the space. If you are looking at honest, prompt and professional service, DS Squared Architects is the one!”</blockquote><figcaption><b class="caps">Arvind Kumar</b><span>Rear, garage and loft conversion</span></figcaption></figure>
+      <figure class="rv" aria-hidden="true"><blockquote>“Having worked with DS Squared on multiple properties, they are my go-to architects. Their designs are innovative and they advise only to benefit the overall project.”</blockquote><figcaption><b class="caps">Atul Shah</b><span>Developer, multiple properties</span></figcaption></figure>
+      <figure class="rv" aria-hidden="true"><blockquote>“Dipesh was always approachable, responsive and supportive with our build. We were able to problem solve together.”</blockquote><figcaption><b class="caps">Sejal Shah</b><span>New build</span></figcaption></figure>
+      <figure class="rv" aria-hidden="true"><blockquote>“Great service from design, planning application, through to build and post build customer service. I would highly recommend DS Squared.”</blockquote><figcaption><b class="caps">Ed Shah</b><span>Design to post-build</span></figcaption></figure>
+    </div>
+    <div class="rv-bar"><i></i></div>
+  </div>
+</section>
 
 <!-- Projects pages (#projects, #residential, #interiors, #healthcare, #commercial). One project per type for the concept; project names to confirm with Kate. -->
 <div class="page" id="page">
@@ -440,6 +489,18 @@ button{font-family:inherit}
     const io = new IntersectionObserver(es => es.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.remove('rise'), i * 90); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
     cards.forEach(c => io.observe(c));
   }
+  // testimonials: one quote at a time, arrows, and a slow auto-advance that pauses on hover
+  (() => {
+    const rv = [...document.querySelectorAll('.rv')], cnt = document.querySelector('.rv-count'), bar = document.querySelector('.rv-bar i'), box = document.querySelector('.reviews');
+    let k = 0, timer = 0, hover = false;
+    const show = n => { k = (n + rv.length) % rv.length; rv.forEach((r, j) => r.setAttribute('aria-hidden', j !== k));
+      cnt.textContent = `${String(k + 1).padStart(2, '0')} / ${String(rv.length).padStart(2, '0')}`; restart(); };
+    const restart = () => { clearTimeout(timer); bar.classList.remove('run'); void bar.offsetWidth; if (reduce) return; bar.classList.add('run'); };
+    bar.addEventListener('animationend', () => show(k + 1));
+    document.querySelector('.rv-prev').onclick = () => show(k - 1);
+    document.querySelector('.rv-next').onclick = () => show(k + 1);
+    show(0);
+  })();
   document.querySelector('.replay').addEventListener('click', play);
   route();
   const btn = document.querySelector('.menu'), panel = document.getElementById('panel');
