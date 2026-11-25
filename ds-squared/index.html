@@ -193,8 +193,8 @@ button{font-family:inherit}
 .rv-ctl button:hover{background:var(--ink);border-color:var(--ink);color:#fff}.rv-ctl button:active{transform:scale(.94)}
 .rv-count{font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink-2);min-width:52px;text-align:center}
 .stack{display:grid;padding-top:34px;max-width:760px;touch-action:pan-y}
-.rcard{grid-area:1/1;margin:0;background:#FAF8F4;border:1px solid #ddd5ca;border-radius:16px;padding:clamp(24px,3vw,44px);display:flex;flex-direction:column;justify-content:space-between;gap:28px;box-shadow:0 22px 44px -24px rgba(31,28,26,.35);transform-origin:50% 100%;transition:transform .6s var(--ease-out),opacity .45s var(--ease-out);user-select:none}
-.rcard>*{transition:opacity .3s}
+.rcard{grid-area:1/1;margin:0;background:#FAF8F4;border:1px solid #ddd5ca;border-radius:16px;padding:clamp(24px,3vw,44px);display:flex;flex-direction:column;justify-content:space-between;gap:28px;box-shadow:0 22px 44px -24px rgba(31,28,26,.35);transform-origin:50% 100%;transition:transform .42s var(--ease-out),opacity .3s var(--ease-out);user-select:none}
+.rcard>*{transition:opacity .18s}
 .rcard[data-d="0"]{z-index:5;cursor:grab}
 .rcard[data-d="0"]:active{cursor:grabbing}
 .rcard[data-d="1"]{z-index:4;background:#F3EFE9;transform:translate(18px,-20px) scale(.97) rotate(2.6deg)}
@@ -210,6 +210,9 @@ button{font-family:inherit}
 .rcard figcaption span:last-child{display:flex;flex-direction:column;gap:2px}
 .rcard b{font-size:12px}
 .rcard i{font-style:normal;font-size:14px;color:var(--ink-2)}
+
+/* the card flying away stays on top while it leaves */
+.rcard.out-l,.rcard.out-r{z-index:6}
 
 /* Who we help: three photo cards; each opens a panel with the picture beside the description */
 .who{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.45fr);gap:clamp(24px,4vw,64px);align-items:center;padding:clamp(56px,7vw,112px) 2vw;opacity:0;transition:opacity .8s .6s}
@@ -257,10 +260,13 @@ button{font-family:inherit}
 .ddm{position:absolute;top:100%;left:-14px;margin-top:8px;min-width:210px;background:#FAF8F4;color:var(--ink);border-radius:12px;padding:8px;box-shadow:0 18px 40px -16px rgba(31,28,26,.35);display:flex;flex-direction:column;text-shadow:none;opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .25s var(--ease-out),transform .35s var(--ease-out),visibility .25s;z-index:8}
 .ddm::before{content:"";position:absolute;left:0;right:0;top:-10px;height:10px}
 .dd:hover .ddm,.dd.open .ddm{opacity:1;visibility:visible;transform:none}
+.ddm a{display:block;padding:10px 12px;border-radius:8px;font:500 14px/1.2 var(--f);font-stretch:100%;letter-spacing:0;text-transform:none;color:var(--ink);transition:background .2s}
+.ddm a:hover{background:var(--band)}
 .ddm button{background:none;border:0;text-align:left;padding:10px 12px;border-radius:8px;font:500 14px/1.2 var(--f);font-stretch:100%;letter-spacing:0;text-transform:none;color:var(--ink);cursor:pointer;transition:background .2s}
 .ddm button:hover{background:var(--band)}
 .panel .psub{padding:12px 0 6px;font-size:24px}
 .panel .pitem{padding:6px 0 6px 14px;font-size:17px;color:var(--ink-2)}
+.panel a.pitem{border:0}
 
 /* About page */
 .ab-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:clamp(24px,4vw,64px);align-items:end}
@@ -288,6 +294,49 @@ button{font-family:inherit}
 .pcard .role{font-size:11px;margin-top:6px;color:var(--ink-2)}
 .pcard p{font-size:16px;line-height:1.6;margin-top:14px}
 .ab-proj{margin-top:clamp(56px,7vw,112px)}
+
+/* Booking pop-up: charcoal side with contact and a client quote, form on warm paper */
+.bdlg{border:0;padding:0;margin:auto;width:min(1040px,94vw);max-height:92svh;border-radius:16px;background:#FAF8F4;color:var(--ink);overflow:auto;opacity:0;transform:translateY(14px) scale(.97);transition:opacity .35s var(--ease-out),transform .5s var(--ease-out)}
+.bdlg[open].in{opacity:1;transform:none}
+.bdlg::backdrop{background:rgba(31,28,26,.6)}
+.bk{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)}
+.bk-side{background:var(--ink);color:#F4F1EC;padding:clamp(28px,3.6vw,52px);display:flex;flex-direction:column;gap:18px}
+.bk-side h3,.bk-done h3{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3vw,2.8rem);line-height:1.02;letter-spacing:-.02em}
+.bk-side h3 em{font-style:italic;font-weight:300}
+.bk-side>p{color:#cfc6bb;font-size:16px;line-height:1.6}
+.bk-contact{list-style:none;padding:0;margin:6px 0 0;border-top:1px solid #3a3531}
+.bk-contact li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:13px 0;border-bottom:1px solid #3a3531}
+.bk-contact span{font-size:11px;color:#a69d93}
+.bk-contact a{font-size:15px;color:#F4F1EC}.bk-contact a:hover{color:var(--orange)}
+.bk-quote{margin:auto 0 0;padding-top:18px}
+.bk-quote blockquote{font-family:var(--serif);font-weight:350;font-size:1.15rem;line-height:1.35}
+.bk-quote figcaption{font-size:11px;color:#a69d93;margin-top:10px}
+.bk-form{padding:clamp(24px,3.4vw,48px);display:flex;flex-direction:column;gap:18px}
+.bk-form[hidden]{display:none}
+.bk-form fieldset{border:0;padding:0;margin:0;min-width:0}
+.bk-form legend{font-size:11px;color:var(--ink-2);margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{position:relative}
+.chips input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.chips span{display:inline-block;padding:9px 14px;border:1px solid #d6d0c8;border-radius:999px;font-size:14px;transition:background .2s,border-color .2s,color .2s}
+.chips label:hover span{border-color:var(--ink)}
+.chips input:checked+span{background:var(--ink);border-color:var(--ink);color:#fff}
+.chips input:focus-visible+span{outline:2px solid var(--orange);outline-offset:2px}
+.bk-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bk-f{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-2)}
+.bk-f input,.bk-f select,.bk-f textarea{font:15px/1.4 var(--f);color:var(--ink);background:#fff;border:1px solid #d6d0c8;border-radius:10px;padding:12px 14px;transition:border-color .2s,box-shadow .2s;width:100%}
+.bk-f textarea{resize:vertical;min-height:96px}
+.bk-f input:focus,.bk-f select:focus,.bk-f textarea:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(236,84,45,.18)}
+.bk-f input:user-invalid{border-color:#c0392b}
+.bk-foot{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:4px}
+.bk-send,.bk-ok{background:var(--orange);color:var(--ink);border:0;border-radius:10px;padding:15px 22px;font-size:12px;cursor:pointer;transition:background .25s,transform .2s var(--ease-out)}
+.bk-send:hover,.bk-ok:hover{background:#f26a45}.bk-send:active,.bk-ok:active{transform:scale(.98)}
+.bk-note{font-size:12px;color:var(--ink-2)}
+.bk-done{padding:clamp(28px,4vw,56px);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:14px}
+.bk-done[hidden]{display:none}
+.bk-done p{font-size:17px;color:var(--ink-2)}
+.tick{width:56px;height:56px;border-radius:50%;background:var(--orange);color:var(--ink);display:grid;place-items:center}
+.bk-x{z-index:2}
 
 /* Projects pages: the four types; each type lists its projects as cards; each project shows all its photos */
 .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr));gap:16px}
@@ -330,6 +379,10 @@ button{font-family:inherit}
   .pbar nav{gap:14px}
   .stage{height:auto;aspect-ratio:4/3;min-height:0}
   .enq{grid-template-columns:1fr}
+  .bk{grid-template-columns:1fr}
+  .bk-quote{display:none}
+  .bk-row{grid-template-columns:1fr}
+  .bdlg{width:100vw;max-height:100svh;border-radius:0}
   .ab-hero,.how,.pgrid{grid-template-columns:minmax(0,1fr)}
   .collage{height:120vw}
   .ddm{position:fixed;left:16px;right:16px;top:58px;margin:0}
@@ -373,13 +426,13 @@ button{font-family:inherit}
 <header class="hero-ui">
   <a class="logo" href="#" aria-label="DS Squared home"><img src="img/logo.png" alt=""></a>
   <nav class="nav caps" aria-label="Main">
-    <a href="#projects">Projects</a><a href="#about">About us</a><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">What we do <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><button type="button" role="menuitem">Architecture</button><button type="button" role="menuitem">Interior design</button><button type="button" role="menuitem">Planning</button><button type="button" role="menuitem">Extensions</button><button type="button" role="menuitem">New builds</button><button type="button" role="menuitem">Basements</button></div></div><a href="#who">Who we help</a><a href="#contact">Contact</a>
+    <a href="#projects">Projects</a><a href="#about">About us</a><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">What we do <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><button type="button" role="menuitem">Architecture</button><button type="button" role="menuitem">Interior design</button><button type="button" role="menuitem">Planning</button><button type="button" role="menuitem">Extensions</button><button type="button" role="menuitem">New builds</button><button type="button" role="menuitem">Basements</button></div></div><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">Who we help <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><a role="menuitem" href="#who/homeowners">Homeowners</a><a role="menuitem" href="#who/developers">Developers</a><a role="menuitem" href="#who/healthcare">Healthcare</a></div></div><a href="#contact">Contact</a>
   </nav>
   <button class="menu" aria-expanded="false" aria-controls="panel" aria-label="Menu"><span></span></button>
   <a class="cta caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
 </header>
 <nav class="panel" id="panel" aria-label="Menu">
-  <a href="#projects">Projects</a><a href="#about">About us</a><span class="psub">What we do</span><span class="pitem">Architecture</span><span class="pitem">Interior design</span><span class="pitem">Planning</span><span class="pitem">Extensions</span><span class="pitem">New builds</span><span class="pitem">Basements</span><a href="#who">Who we help</a><a href="#contact">Contact</a><a href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
+  <a href="#projects">Projects</a><a href="#about">About us</a><span class="psub">What we do</span><span class="pitem">Architecture</span><span class="pitem">Interior design</span><span class="pitem">Planning</span><span class="pitem">Extensions</span><span class="pitem">New builds</span><span class="pitem">Basements</span><a href="#who">Who we help</a><a class="pitem" href="#who/homeowners">Homeowners</a><a class="pitem" href="#who/developers">Developers</a><a class="pitem" href="#who/healthcare">Healthcare</a><a href="#contact">Contact</a><a href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
 </nav>
 
 <section class="copy">
@@ -453,7 +506,7 @@ button{font-family:inherit}
 <div class="page" id="page">
   <header class="pbar">
     <a class="plogo" href="#home" aria-label="DS Squared home"><img src="img/logo.png" alt=""></a>
-    <nav class="caps" aria-label="Main"><a href="#projects">Projects</a><a href="#about">About us</a><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">What we do <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><button type="button" role="menuitem">Architecture</button><button type="button" role="menuitem">Interior design</button><button type="button" role="menuitem">Planning</button><button type="button" role="menuitem">Extensions</button><button type="button" role="menuitem">New builds</button><button type="button" role="menuitem">Basements</button></div></div><a href="#who">Who we help</a><a href="#contact">Contact</a></nav>
+    <nav class="caps" aria-label="Main"><a href="#projects">Projects</a><a href="#about">About us</a><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">What we do <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><button type="button" role="menuitem">Architecture</button><button type="button" role="menuitem">Interior design</button><button type="button" role="menuitem">Planning</button><button type="button" role="menuitem">Extensions</button><button type="button" role="menuitem">New builds</button><button type="button" role="menuitem">Basements</button></div></div><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">Who we help <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><a role="menuitem" href="#who/homeowners">Homeowners</a><a role="menuitem" href="#who/developers">Developers</a><a role="menuitem" href="#who/healthcare">Healthcare</a></div></div><a href="#contact">Contact</a></nav>
     <a class="pcta caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
   </header>
   <main class="pmain" id="pmain"></main>
@@ -525,11 +578,33 @@ button{font-family:inherit}
     </div>
   </div>
   <div class="ft-strip">
-    <div><h4>Who we help</h4><a href="#who">Homeowners</a><span class="sep">·</span><a href="#who">Developers</a><span class="sep">·</span><a href="#who">Healthcare</a></div>
+    <div><h4>Who we help</h4><a href="#who/homeowners">Homeowners</a><span class="sep">·</span><a href="#who/developers">Developers</a><span class="sep">·</span><a href="#who/healthcare">Healthcare</a></div>
     <div><h4>Where we work</h4><a href="#areas">London</a><span class="sep">·</span><a href="#areas">Fulham</a><span class="sep">·</span><a href="#areas">Chelsea</a><span class="sep">·</span><a href="#areas">Richmond</a><span class="sep">·</span><a href="#areas">Clapham</a></div>
   </div>
   <div class="ft-bottom"><span>&copy; 2026 DS Squared. All rights reserved.</span><a href="#legal">Legal information</a></div>
 </footer>
+
+<!-- Book a consultation: a pop-up form (concept only: nothing is sent) -->
+<dialog class="bdlg" aria-labelledby="bk-t">
+  <div class="bk">
+    <aside class="bk-side">
+      <h3 id="bk-t">Book a <em>consultation</em></h3>
+      <p>Tell us a little about your project and we'll call you back to arrange a time that suits you.</p>
+      <ul class="bk-contact"><li><span class="caps">Call</span><a href="tel:02087325620">020 8732 5620</a></li><li><span class="caps">Email</span><a href="mailto:design@dssquared.co.uk">design@dssquared.co.uk</a></li></ul>
+      <figure class="bk-quote"><blockquote>“If you are looking at honest, prompt and professional service, DS Squared Architects is the one!”</blockquote><figcaption class="caps">Arvind Kumar</figcaption></figure>
+    </aside>
+    <form class="bk-form">
+      <fieldset><legend class="caps">I'm a</legend><div class="chips"><label><input type="radio" name="who" value="Homeowner"><span>Homeowner</span></label><label><input type="radio" name="who" value="Developer"><span>Developer</span></label><label><input type="radio" name="who" value="Healthcare provider"><span>Healthcare provider</span></label><label><input type="radio" name="who" value="Other"><span>Other</span></label></div></fieldset>
+      <fieldset><legend class="caps">Project</legend><div class="chips"><label><input type="radio" name="proj" value="Extension"><span>Extension</span></label><label><input type="radio" name="proj" value="New build"><span>New build</span></label><label><input type="radio" name="proj" value="Basement"><span>Basement</span></label><label><input type="radio" name="proj" value="Interiors"><span>Interiors</span></label><label><input type="radio" name="proj" value="Planning"><span>Planning</span></label><label><input type="radio" name="proj" value="Other"><span>Other</span></label></div></fieldset>
+      <div class="bk-row"><label class="bk-f">Name<input name="name" required autocomplete="name"></label><label class="bk-f">Email<input name="email" type="email" required autocomplete="email"></label></div>
+      <div class="bk-row"><label class="bk-f">Phone<input name="phone" type="tel" autocomplete="tel"></label><label class="bk-f">Budget<select name="budget"><option>Not sure yet</option><option>Under £100k</option><option>£100k to £250k</option><option>£250k to £500k</option><option>£500k to £1m</option><option>Over £1m</option></select></label></div>
+      <label class="bk-f">Tell us about your project<textarea name="msg" rows="4" placeholder="What you'd like to build, and any timings"></textarea></label>
+      <div class="bk-foot"><button type="submit" class="bk-send caps">Request a call back</button><p class="bk-note">We'll only use your details to reply to you.</p></div>
+    </form>
+    <div class="bk-done" hidden><span class="tick" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="m6 13.5 4.5 4.5L20 8" stroke="currentColor" stroke-width="2"/></svg></span><h3>Thank you<span class="bk-name"></span>.</h3><p>We'll be in touch shortly to arrange your consultation.</p><button type="button" class="bk-ok caps">Close</button></div>
+  </div>
+  <button type="button" class="wclose bk-x" aria-label="Close"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="m4 4 10 10M14 4 4 14" stroke="currentColor" stroke-width="1.6"/></svg></button>
+</dialog>
 <button class="replay" type="button">Replay</button>
 
 <script>
@@ -570,8 +645,10 @@ button{font-family:inherit}
     const isPage = h === 'projects' || h === 'about' || h.split('/')[0] in TYPES;
     root.classList.toggle('sub', isPage);
     document.querySelectorAll('.pbar nav a').forEach(a => a.toggleAttribute('aria-current', isPage && a.getAttribute('href') === (h === 'about' ? '#about' : '#projects')));
-    if (!isPage) { const tgt = { who: '.who', contact: '.foot2' }[h];
-      if (!played && !tgt) { played = true; startLoading(); } else { played = true; finishHome(); if (tgt) requestAnimationFrame(() => document.querySelector(tgt).scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' })); }
+    if (!isPage) { const [h0, h1] = h.split('/'), tgt = { who: '.who', contact: '.foot2' }[h0];
+      if (!played && !tgt) { played = true; startLoading(); } else { played = true; finishHome();
+        if (tgt) requestAnimationFrame(() => { document.querySelector(tgt).scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+          if (h0 === 'who' && h1) setTimeout(() => document.dispatchEvent(new CustomEvent('openwho', { detail: h1 })), reduce ? 0 : 650); }); }
       return; }
     const esc = x => String(x).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     const [type, slug] = h.split('/'), t = TYPES[type];
@@ -592,7 +669,7 @@ button{font-family:inherit}
       pmain.innerHTML = `<p class="crumb"><a href="#projects">Projects</a> / <a href="#${type}">${esc(t.title)}</a> / ${esc(p.name)}</p>
         <div class="proj">
           <div class="slider" aria-roledescription="carousel" aria-label="${esc(p.name)} photos">
-            <div class="stage"><div class="strack">${p.imgs.map(([src], i) => `<img src="${src}" alt="${esc(p.name)}, photo ${i + 1} of ${p.imgs.length}" ${i > 1 ? 'loading="lazy"' : ''}>`).join('')}</div>
+            <div class="stage"><div class="strack">${p.imgs.map(([src], i) => `<img src="${src}" alt="${esc(p.name)}, photo ${i + 1} of ${p.imgs.length}" decoding="async">`).join('')}</div>
               <span class="count" aria-live="polite"></span>
               <div class="sctl"><button type="button" class="prev" aria-label="Previous photo">${L}</button><button type="button" class="next" aria-label="Next photo">${Rr}</button></div></div>
             <div class="thumbs">${p.imgs.map(([src], i) => `<button type="button" aria-label="Photo ${i + 1}"><img src="${src}" alt="" loading="lazy"></button>`).join('')}</div>
@@ -614,6 +691,7 @@ button{font-family:inherit}
     scrollTo(0, 0);
   }
   addEventListener('hashchange', route);
+  addEventListener('hashchange', () => { document.getElementById('panel').classList.remove('open'); document.querySelector('.menu').setAttribute('aria-expanded', 'false'); });
   function slider(el) {
     const track = el.querySelector('.strack'), imgs = track.children, count = el.querySelector('.count'), th = [...el.querySelectorAll('.thumbs button')];
     let i = 0;
@@ -643,8 +721,8 @@ button{font-family:inherit}
     const lay = () => { cards.forEach((c, j) => { const d = (j - k + n) % n; c.dataset.d = Math.min(d, 3); c.setAttribute('aria-hidden', d !== 0); });
       cnt.textContent = `${String(k + 1).padStart(2, '0')} / ${String(n).padStart(2, '0')}`; };
     const next = dir => { if (busy) return; busy = true; const c = cards[k]; c.classList.remove('drag'); c.style.transform = '';
-      c.classList.add(dir < 0 ? 'out-r' : 'out-l');
-      setTimeout(() => { k = (k + 1) % n; c.classList.remove('out-l', 'out-r'); lay(); busy = false; }, reduce ? 0 : 380); };
+      c.classList.add(dir < 0 ? 'out-r' : 'out-l'); k = (k + 1) % n; lay();
+      setTimeout(() => { c.classList.remove('out-l', 'out-r'); busy = false; }, reduce ? 0 : 300); };
     const prev = () => { if (busy) return; busy = true; k = (k - 1 + n) % n; const c = cards[k];
       c.classList.add('drag', 'out-l'); c.dataset.d = 0; void c.offsetWidth; c.classList.remove('drag'); lay();
       requestAnimationFrame(() => { c.classList.remove('out-l'); setTimeout(() => busy = false, 300); }); };
@@ -663,11 +741,13 @@ button{font-family:inherit}
   // Who we help: open a card's panel; Esc, the close button or a click outside closes it
   (() => {
     const dlg = document.querySelector('.wdlg'), panel = dlg.querySelector('.wpanel');
-    document.querySelectorAll('.wcard,.wrow').forEach(c => c.addEventListener('click', () => {
-      panel.innerHTML = ''; panel.appendChild(document.getElementById('w-' + c.dataset.w).content.cloneNode(true));
-      panel.querySelector('h3').id = 'wdlg-t'; dlg.showModal(); requestAnimationFrame(() => dlg.classList.add('in'));
-    }));
-    const close = () => { dlg.classList.remove('in'); setTimeout(() => dlg.close(), reduce ? 0 : 300); };
+    const open = k => { const t = document.getElementById('w-' + k); if (!t) return; dlg.dataset.w = k;
+      panel.innerHTML = ''; panel.appendChild(t.content.cloneNode(true));
+      panel.querySelector('h3').id = 'wdlg-t'; if (!dlg.open) dlg.showModal(); requestAnimationFrame(() => dlg.classList.add('in')); };
+    document.querySelectorAll('.wcard,.wrow').forEach(c => c.addEventListener('click', () => open(c.dataset.w)));
+    document.addEventListener('openwho', e => open(e.detail));
+    const close = () => { dlg.classList.remove('in'); setTimeout(() => dlg.close(), reduce ? 0 : 300);
+      if (location.hash.startsWith('#who/')) history.replaceState(null, '', '#who'); };
     dlg.querySelector('.wclose').onclick = close;
     dlg.addEventListener('click', e => { if (e.target === dlg) close(); });
     dlg.addEventListener('cancel', e => { e.preventDefault(); close(); });
@@ -677,10 +757,32 @@ button{font-family:inherit}
     const b = e.target.closest('.ddb'), open = document.querySelectorAll('.dd.open');
     open.forEach(d => { if (!b || d !== b.parentElement) { d.classList.remove('open'); d.querySelector('.ddb').setAttribute('aria-expanded', 'false'); } });
     if (b) { const d = b.parentElement, o = d.classList.toggle('open'); b.setAttribute('aria-expanded', o); }
-    if (e.target.closest('.ddm button')) { const d = e.target.closest('.dd'); d.classList.remove('open'); d.querySelector('.ddb').setAttribute('aria-expanded', 'false'); }
+    if (e.target.closest('.ddm button,.ddm a')) { const d = e.target.closest('.dd'); d.classList.remove('open'); d.querySelector('.ddb').setAttribute('aria-expanded', 'false'); }
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.dd.open').forEach(d => d.classList.remove('open')); });
   document.querySelector('.replay').addEventListener('click', play);
+  // Book a consultation: every booking button opens the pop-up instead of leaving the site
+  (() => {
+    const bd = document.querySelector('.bdlg'), form = bd.querySelector('.bk-form'), done = bd.querySelector('.bk-done'), wd = document.querySelector('.wdlg');
+    const pre = { homeowners: 'Homeowner', developers: 'Developer', healthcare: 'Healthcare provider' };
+    const openB = type => { form.hidden = false; done.hidden = true;
+      if (type) { const r = form.querySelector(`input[name=who][value="${type}"]`); if (r) r.checked = true; }
+      bd.showModal(); requestAnimationFrame(() => bd.classList.add('in')); };
+    const closeB = () => { bd.classList.remove('in'); setTimeout(() => { bd.close(); form.reset(); form.hidden = false; done.hidden = true; }, reduce ? 0 : 300); };
+    document.addEventListener('click', e => { const a = e.target.closest('a[href*="speak-to-an-expert"]'); if (!a) return; e.preventDefault();
+      let type = null; if (a.closest('.wdlg')) { type = pre[wd.dataset.w]; wd.classList.remove('in'); wd.close(); }
+      openB(type); });
+    form.addEventListener('submit', e => { e.preventDefault(); const nm = form.elements.name.value.trim().split(' ')[0];
+      bd.querySelector('.bk-name').textContent = nm ? ', ' + nm : ''; form.hidden = true; done.hidden = false; done.querySelector('.bk-ok').focus(); });
+    bd.querySelector('.bk-x').onclick = closeB; done.querySelector('.bk-ok').onclick = closeB;
+    bd.addEventListener('click', e => { if (e.target === bd) closeB(); });
+    bd.addEventListener('cancel', e => { e.preventDefault(); closeB(); });
+  })();
+  // warm the cache: the photos used on the other pages load quietly in the background, so moving between pages feels instant
+  const warm = () => { const urls = ['img/about-main.webp', 'img/about-1.webp', 'img/about-2.webp', 'img/about-3.webp', 'img/who-developers.webp', 'img/who-healthcare.webp'];
+    Object.values(TYPES).forEach(t => t.projects.forEach(p => p.imgs.slice(0, 4).forEach(([u]) => urls.push(u))));
+    urls.forEach(u => { const im = new Image(); im.decoding = 'async'; im.src = u; }); };
+  setTimeout(() => (window.requestIdleCallback || (f => f()))(warm), 2500);
   route();
   const btn = document.querySelector('.menu'), panel = document.getElementById('panel');
   btn.addEventListener('click', () => { const o = panel.classList.toggle('open'); btn.setAttribute('aria-expanded', o); });
