@@ -94,7 +94,7 @@ button{font-family:inherit}
 .on .replay{opacity:.85;transition:opacity .6s 1s}.replay:hover{opacity:1}
 
 /* Selected work: one big and one small card per row, each photo at its own shape (never zoomed or cropped), sized so the section fits one screen */
-.work{margin-top:calc(var(--heroH) + var(--band-h));height:100vh;height:100svh;padding:clamp(14px,1.6vw,24px) 2vw;display:flex;flex-direction:column;opacity:0;transition:opacity .8s .5s}
+.work{margin-top:calc(var(--heroH) + var(--band-h));height:100vh;height:100svh;padding:clamp(36px,3.6vw,56px) 2vw clamp(14px,1.6vw,24px);display:flex;flex-direction:column;opacity:0;transition:opacity .8s .5s}
 .on .work{opacity:1}
 .work-in{width:100%;flex:1;min-height:0;display:flex;flex-direction:column}
 :root{--rowH:calc((100vw - 4vw - 16px) * .5833 / 1.6)}
@@ -238,6 +238,43 @@ button{font-family:inherit}
 .wcta{align-self:flex-start;margin-top:26px;background:var(--orange);color:var(--ink);border-radius:10px;padding:13px 18px;font-size:12px}
 .wclose{position:absolute;top:14px;right:14px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(250,248,244,.95);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 14px rgba(20,18,16,.15)}
 
+/* What we do dropdown: opens on hover or tap; items don't lead to pages in the concept */
+.dd{position:relative;display:flex}
+.ddb{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:4px 0;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer}
+.ddb svg{transition:transform .3s var(--ease-out)}
+.dd:hover .ddb svg,.dd.open .ddb svg{transform:rotate(180deg)}
+.ddm{position:absolute;top:100%;left:-14px;margin-top:8px;min-width:210px;background:#FAF8F4;color:var(--ink);border-radius:12px;padding:8px;box-shadow:0 18px 40px -16px rgba(31,28,26,.35);display:flex;flex-direction:column;text-shadow:none;opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .25s var(--ease-out),transform .35s var(--ease-out),visibility .25s;z-index:8}
+.ddm::before{content:"";position:absolute;left:0;right:0;top:-10px;height:10px}
+.dd:hover .ddm,.dd.open .ddm{opacity:1;visibility:visible;transform:none}
+.ddm button{background:none;border:0;text-align:left;padding:10px 12px;border-radius:8px;font:500 14px/1.2 var(--f);font-stretch:100%;letter-spacing:0;text-transform:none;color:var(--ink);cursor:pointer;transition:background .2s}
+.ddm button:hover{background:var(--band)}
+.panel .psub{padding:12px 0 6px;font-size:24px}
+.panel .pitem{padding:6px 0 6px 14px;font-size:17px;color:var(--ink-2)}
+
+/* About page */
+.ab-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:clamp(24px,4vw,64px);align-items:end}
+.ab-hero h1{font-size:clamp(2.6rem,5vw,4.6rem)}
+.ab-hero p{font-size:17px;line-height:1.6;margin-top:16px;max-width:46ch;color:var(--ink)}
+.ab-hero p+p{color:var(--ink-2)}
+.ab-hero img,.how img{width:100%;height:100%;object-fit:cover;display:block;border-radius:14px}
+.ab-hero figure{margin:0;aspect-ratio:4/3}
+.how{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:clamp(24px,4vw,64px);align-items:center;margin-top:clamp(56px,7vw,112px)}
+.how h2,.people h2{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3.4vw,3.25rem);line-height:1;letter-spacing:-.02em}
+.how h2 em,.people h2 em{font-style:italic;font-weight:300}
+.how p{font-size:17px;line-height:1.6;margin-top:16px;max-width:48ch}
+.how blockquote{font-family:var(--serif);font-weight:350;font-size:clamp(1.3rem,1.9vw,1.75rem);line-height:1.3;margin:26px 0 0;padding-left:18px;border-left:2px solid var(--orange);max-width:36ch}
+.collage{display:grid;grid-template-columns:1.25fr 1fr;grid-template-rows:1fr 1fr;gap:12px;height:clamp(420px,46vw,680px)}
+.collage figure{margin:0;min-height:0}
+.collage figure:first-child{grid-row:1/3}
+.collage figure:nth-child(3){width:82%}
+.people{margin-top:clamp(56px,7vw,112px)}
+.pgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:clamp(16px,2vw,28px)}
+.pcard{background:var(--band);border-radius:14px;padding:clamp(22px,3vw,40px)}
+.pcard h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.6rem,2.3vw,2.2rem);letter-spacing:-.015em}
+.pcard .role{font-size:11px;margin-top:6px;color:var(--ink-2)}
+.pcard p{font-size:16px;line-height:1.6;margin-top:14px}
+.ab-proj{margin-top:clamp(56px,7vw,112px)}
+
 /* Projects pages: the four types; each type lists its projects as cards; each project shows all its photos */
 .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr));gap:16px}
 .plist .card .ph{height:auto;aspect-ratio:3/2}
@@ -248,7 +285,7 @@ button{font-family:inherit}
 .sub body{overflow:auto}
 .pbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:28px;padding:12px 2vw;background:rgba(245,245,245,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .pbar .plogo{width:52px;flex:none}.pbar .plogo img{width:100%;display:block;border-radius:14%}
-.pbar nav{display:flex;gap:1.6vw;margin-left:auto;font-size:13px;overflow-x:auto;min-width:0}
+.pbar nav{display:flex;align-items:center;gap:1.6vw;margin-left:auto;font-size:13px;min-width:0}
 .pbar nav a{padding:4px 0;border-bottom:1.5px solid transparent;white-space:nowrap}
 .pbar nav a:hover,.pbar nav a[aria-current=page]{border-color:var(--orange)}
 .pbar .pcta{flex:none;background:var(--orange);color:var(--ink);border-radius:10px;padding:11px 16px;font-size:12px}
@@ -279,6 +316,9 @@ button{font-family:inherit}
   .pbar nav{gap:14px}
   .stage{height:auto;aspect-ratio:4/3;min-height:0}
   .enq{grid-template-columns:1fr}
+  .ab-hero,.how,.pgrid{grid-template-columns:minmax(0,1fr)}
+  .collage{height:120vw}
+  .ddm{position:fixed;left:16px;right:16px;top:58px;margin:0}
   .who{padding:48px 16px}
   .wgrid{grid-template-columns:1fr}
   .wcard{aspect-ratio:4/3}
@@ -316,13 +356,13 @@ button{font-family:inherit}
 <header class="hero-ui">
   <a class="logo" href="#" aria-label="DS Squared home"><img src="img/logo.png" alt=""></a>
   <nav class="nav caps" aria-label="Main">
-    <a href="#projects">Projects</a><a href="#about">About us</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a>
+    <a href="#projects">Projects</a><a href="#about">About us</a><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">What we do <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><button type="button" role="menuitem">Architecture</button><button type="button" role="menuitem">Interior design</button><button type="button" role="menuitem">Planning</button><button type="button" role="menuitem">Extensions</button><button type="button" role="menuitem">New builds</button><button type="button" role="menuitem">Basements</button></div></div><a href="#who">Who we help</a><a href="#contact">Contact</a>
   </nav>
   <button class="menu" aria-expanded="false" aria-controls="panel" aria-label="Menu"><span></span></button>
   <a class="cta caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
 </header>
 <nav class="panel" id="panel" aria-label="Menu">
-  <a href="#projects">Projects</a><a href="#about">About us</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a><a href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
+  <a href="#projects">Projects</a><a href="#about">About us</a><span class="psub">What we do</span><span class="pitem">Architecture</span><span class="pitem">Interior design</span><span class="pitem">Planning</span><span class="pitem">Extensions</span><span class="pitem">New builds</span><span class="pitem">Basements</span><a href="#who">Who we help</a><a href="#contact">Contact</a><a href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
 </nav>
 
 <section class="copy">
@@ -394,10 +434,37 @@ button{font-family:inherit}
 <div class="page" id="page">
   <header class="pbar">
     <a class="plogo" href="#home" aria-label="DS Squared home"><img src="img/logo.png" alt=""></a>
-    <nav class="caps" aria-label="Main"><a href="#projects">Projects</a><a href="#about">About us</a><a href="#services">What we do</a><a href="#who">Who we help</a><a href="#contact">Contact</a></nav>
+    <nav class="caps" aria-label="Main"><a href="#projects">Projects</a><a href="#about">About us</a><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">What we do <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><button type="button" role="menuitem">Architecture</button><button type="button" role="menuitem">Interior design</button><button type="button" role="menuitem">Planning</button><button type="button" role="menuitem">Extensions</button><button type="button" role="menuitem">New builds</button><button type="button" role="menuitem">Basements</button></div></div><a href="#who">Who we help</a><a href="#contact">Contact</a></nav>
     <a class="pcta caps" href="https://www.dssquared.co.uk/speak-to-an-expert" target="_blank" rel="noopener">Book a consultation</a>
   </header>
   <main class="pmain" id="pmain"></main>
+  <template id="t-about">
+    <section class="ab-hero">
+      <div><h1>About <em>us</em></h1>
+        <p>DS Squared Architects are a RIBA Chartered Practice, delivering contemporary architectural designs, drawings, planning and construction support for residential, commercial and healthcare projects.</p>
+        <p>Founded in 2007 to serve the residential market, the practice now works on everything from a suburban home, a hotel renovation or new build apartments to high street retail units and GP surgeries, always design-led and rooted in architectural good practice.</p></div>
+      <figure><img src="img/about-main.webp" alt="A bright kitchen and dining extension designed by DS Squared"></figure>
+    </section>
+    <section class="how">
+      <div><h2>How we <em>work</em></h2>
+        <p>Our diverse team are passionate about architecture, sustainability and design excellence, combining functionality with elegance and beauty in all projects we undertake. We are friendly, approachable and accommodating in our relationships with clients, taking the time to understand the details of each project and the unique requirements each customer brings to the table.</p>
+        <p>We listen, and give practical solutions so you get the best value from your budget, with support and guidance through the whole design process: feasibility studies and sketch schemes, the planning process, building control, construction detail and site observations.</p>
+        <blockquote>We design workable, living spaces that are sympathetic to the history and style of their surroundings.</blockquote></div>
+      <div class="collage">
+        <figure><img src="img/about-2.webp" alt="A basement swimming pool" loading="lazy"></figure>
+        <figure><img src="img/about-1.webp" alt="Brick apartments with private gardens" loading="lazy"></figure>
+        <figure><img src="img/about-3.webp" alt="A vaulted barn conversion living room" loading="lazy"></figure>
+      </div>
+    </section>
+    <section class="people">
+      <h2>Our <em>people</em></h2>
+      <div class="pgrid">
+        <article class="pcard"><h3>Dipesh Shah</h3><p class="role caps">Founder</p><p>Dipesh launched his own practice in 2007 after working on everything from homes to healthcare and higher education. He believes a successful project stems from clear communication. For Dipesh, there are no problems; there are only opportunities.</p></article>
+        <article class="pcard"><h3>Kate Logue</h3><p class="role caps">Architect</p><p>A creative and thoughtful architect from Scotland, Kate has practised in Scotland, Ireland and London. Her passion is people and places: she is a great listener, drawing clients into the design process and showing the potential of a project before bringing it to reality.</p></article>
+      </div>
+    </section>
+    <div class="ab-proj"></div>
+  </template>
   <template id="t-projects"><div class="work-in"><div class="ptitle"><h1>Our <em>projects</em></h1></div><div class="rows">
   <div class="row">
     <article class="card"><a href="#residential">
@@ -481,13 +548,16 @@ button{font-family:inherit}
   function finishHome() { slides.forEach(sl => sl.classList.add('in')); root.classList.add('go', 'open', 'on'); }
   function route() {
     const h = location.hash.slice(1);
-    const isPage = h === 'projects' || h.split('/')[0] in TYPES;
+    const isPage = h === 'projects' || h === 'about' || h.split('/')[0] in TYPES;
     root.classList.toggle('sub', isPage);
-    document.querySelectorAll('.pbar nav a').forEach(a => a.toggleAttribute('aria-current', a.getAttribute('href') === '#projects' && isPage));
-    if (!isPage) { if (!played) { played = true; startLoading(); } else finishHome(); return; }
+    document.querySelectorAll('.pbar nav a').forEach(a => a.toggleAttribute('aria-current', isPage && a.getAttribute('href') === (h === 'about' ? '#about' : '#projects')));
+    if (!isPage) { const tgt = { who: '.who', contact: '.foot2' }[h];
+      if (!played && !tgt) { played = true; startLoading(); } else { played = true; finishHome(); if (tgt) requestAnimationFrame(() => document.querySelector(tgt).scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' })); }
+      return; }
     const esc = x => String(x).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     const [type, slug] = h.split('/'), t = TYPES[type];
     if (h === 'projects') { pmain.innerHTML = ''; pmain.appendChild(tpl.content.cloneNode(true)); }
+    else if (h === 'about') { pmain.innerHTML = ''; pmain.appendChild(document.getElementById('t-about').content.cloneNode(true)); pmain.querySelector('.ab-proj').appendChild(tpl.content.cloneNode(true)); }
     else if (!slug || !t.projects.some(x => x.slug === slug)) {
       // a type page: one card per project
       pmain.innerHTML = `<p class="crumb"><a href="#projects">Projects</a> / ${esc(t.title)}</p>
@@ -583,6 +653,14 @@ button{font-family:inherit}
     dlg.addEventListener('click', e => { if (e.target === dlg) close(); });
     dlg.addEventListener('cancel', e => { e.preventDefault(); close(); });
   })();
+  // What we do dropdowns: hover opens them; a tap toggles; tapping elsewhere or Esc closes
+  document.addEventListener('click', e => {
+    const b = e.target.closest('.ddb'), open = document.querySelectorAll('.dd.open');
+    open.forEach(d => { if (!b || d !== b.parentElement) { d.classList.remove('open'); d.querySelector('.ddb').setAttribute('aria-expanded', 'false'); } });
+    if (b) { const d = b.parentElement, o = d.classList.toggle('open'); b.setAttribute('aria-expanded', o); }
+    if (e.target.closest('.ddm button')) { const d = e.target.closest('.dd'); d.classList.remove('open'); d.querySelector('.ddb').setAttribute('aria-expanded', 'false'); }
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.dd.open').forEach(d => d.classList.remove('open')); });
   document.querySelector('.replay').addEventListener('click', play);
   route();
   const btn = document.querySelector('.menu'), panel = document.getElementById('panel');
