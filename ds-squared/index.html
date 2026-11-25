@@ -212,13 +212,20 @@ button{font-family:inherit}
 .rcard i{font-style:normal;font-size:14px;color:var(--ink-2)}
 
 /* Who we help: three photo cards; each opens a panel with the picture beside the description */
-.who{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:clamp(24px,4vw,64px);align-items:center;padding:clamp(56px,7vw,112px) 2vw;opacity:0;transition:opacity .8s .6s}
+.who{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.45fr);gap:clamp(24px,4vw,64px);align-items:center;padding:clamp(56px,7vw,112px) 2vw;opacity:0;transition:opacity .8s .6s}
 .on .who{opacity:1}
 .sub .who{display:none}
 .who h2{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3.4vw,3.25rem);line-height:1;letter-spacing:-.02em;margin-bottom:clamp(16px,2vw,28px)}
 .who h2 em{font-style:italic;font-weight:300}
 .wtext p{font-size:17px;line-height:1.6;margin-top:16px;max-width:44ch}
-.wgrid{display:grid;grid-template-columns:1.25fr 1fr;grid-template-rows:1fr 1fr;gap:12px;height:clamp(420px,46vw,680px)}
+.wlist{list-style:none;padding:0;margin:26px 0 0;border-top:1px solid #dcd6ce;max-width:480px}
+.wrow{width:100%;display:grid;grid-template-columns:1fr auto;gap:2px 16px;align-items:center;text-align:left;background:none;border:0;border-bottom:1px solid #dcd6ce;padding:16px 0;cursor:pointer;font:inherit;color:var(--ink)}
+.wrow b{font-family:var(--serif);font-weight:400;font-size:clamp(1.3rem,1.7vw,1.6rem);letter-spacing:-.01em}
+.wrow span{grid-column:1;font-size:15px;color:var(--ink-2)}
+.wrow svg{grid-column:2;grid-row:1/3;transition:transform .3s var(--ease-out)}
+.wrow:hover svg{transform:translateX(4px)}
+.wrow:hover b{color:var(--orange)}
+.wgrid{display:grid;grid-template-columns:1.25fr 1fr;grid-template-rows:1fr 1fr;gap:12px;height:clamp(460px,52vw,780px)}
 .wcard:first-child{grid-row:1/3}
 .wcard:nth-child(3){width:82%}
 .wcard{position:relative;border:0;padding:0;border-radius:12px;overflow:hidden;cursor:pointer;min-height:0;background:#e6e1d9;text-align:left;font:inherit;color:#fff}
@@ -262,7 +269,8 @@ button{font-family:inherit}
 .ab-hero p+p{color:var(--ink-2)}
 .ab-hero img,.how img{width:100%;height:100%;object-fit:cover;display:block;border-radius:14px}
 .ab-hero figure{margin:0;aspect-ratio:4/3}
-.how{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:clamp(24px,4vw,64px);align-items:center;margin-top:clamp(56px,7vw,112px)}
+.how .collage{order:-1}
+.how{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:center;margin-top:clamp(56px,7vw,112px)}
 .how h2,.people h2{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3.4vw,3.25rem);line-height:1;letter-spacing:-.02em}
 .how h2 em,.people h2 em{font-style:italic;font-weight:300}
 .how p{font-size:17px;line-height:1.6;margin-top:16px;max-width:48ch}
@@ -274,6 +282,8 @@ button{font-family:inherit}
 .people{margin-top:clamp(56px,7vw,112px)}
 .pgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:clamp(16px,2vw,28px)}
 .pcard{background:var(--band);border-radius:14px;padding:clamp(22px,3vw,40px)}
+.phead{display:flex;align-items:center;gap:18px}
+.avatar{flex:none;width:clamp(72px,7vw,96px);aspect-ratio:1;border-radius:50%;background:#DDD5CA;color:#8f857a;display:grid;place-items:center;border:2px solid #FAF8F4;box-shadow:0 0 0 1px #d2c9bd}
 .pcard h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.6rem,2.3vw,2.2rem);letter-spacing:-.015em}
 .pcard .role{font-size:11px;margin-top:6px;color:var(--ink-2)}
 .pcard p{font-size:16px;line-height:1.6;margin-top:14px}
@@ -426,7 +436,8 @@ button{font-family:inherit}
 <!-- Who we help: their three client groups, from dssquared.co.uk. Tap a card to open it. -->
 <section class="who" aria-labelledby="who-title">
   <div class="wtext"><h2 id="who-title">Who we <em>help</em></h2>
-    <p>Our diverse team are passionate about architecture, sustainability and design excellence, combining functionality with elegance and beauty in all projects we undertake.</p></div>
+    <p>Our diverse team are passionate about architecture, sustainability and design excellence, combining functionality with elegance and beauty in all projects we undertake.</p>
+    <ul class="wlist"><li><button type="button" class="wrow" data-w="homeowners"><b>Homeowners</b><span>Extensions, conversions and new homes, with you at every stage.</span><svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></button></li><li><button type="button" class="wrow" data-w="developers"><b>Developers</b><span>Feasibility, planning, urban design and building services.</span><svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></button></li><li><button type="button" class="wrow" data-w="healthcare"><b>Healthcare</b><span>Spaces for healing, for NHS and private partners.</span><svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></button></li></ul></div>
   <div class="wgrid">
     <button type="button" class="wcard" data-w="homeowners" aria-haspopup="dialog"><img src="img/spiral.webp" alt="A spiral staircase in a family home" loading="lazy"><span class="wmeta"><span>Homeowners</span><i><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="1.6"/></svg></i></span></button>
     <button type="button" class="wcard" data-w="developers" aria-haspopup="dialog"><img src="img/who-developers.webp" alt="A grand hotel lobby with a sweeping staircase" loading="lazy"><span class="wmeta"><span>Developers</span><i><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="1.6"/></svg></i></span></button>
@@ -467,8 +478,8 @@ button{font-family:inherit}
     <section class="people">
       <h2>Our <em>people</em></h2>
       <div class="pgrid">
-        <article class="pcard"><h3>Dipesh Shah</h3><p class="role caps">Founder</p><p>Dipesh launched his own practice in 2007 after working on everything from homes to healthcare and higher education. He believes a successful project stems from clear communication. For Dipesh, there are no problems; there are only opportunities.</p></article>
-        <article class="pcard"><h3>Kate Logue</h3><p class="role caps">Architect</p><p>A creative and thoughtful architect from Scotland, Kate has practised in Scotland, Ireland and London. Her passion is people and places: she is a great listener, drawing clients into the design process and showing the potential of a project before bringing it to reality.</p></article>
+        <article class="pcard"><div class="phead"><span class="avatar" role="img" aria-label="Profile photo to come"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="15" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M7 35c1.8-7 7-10.5 13-10.5S31.2 28 33 35" stroke="currentColor" stroke-width="1.6"/></svg></span><div><h3>Dipesh Shah</h3><p class="role caps">Founder</p></div></div><p>Dipesh launched his own practice in 2007 after working on everything from homes to healthcare and higher education. He believes a successful project stems from clear communication. For Dipesh, there are no problems; there are only opportunities.</p></article>
+        <article class="pcard"><div class="phead"><span class="avatar" role="img" aria-label="Profile photo to come"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="15" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M7 35c1.8-7 7-10.5 13-10.5S31.2 28 33 35" stroke="currentColor" stroke-width="1.6"/></svg></span><div><h3>Kate Logue</h3><p class="role caps">Architect</p></div></div><p>A creative and thoughtful architect from Scotland, Kate has practised in Scotland, Ireland and London. Her passion is people and places: she is a great listener, drawing clients into the design process and showing the potential of a project before bringing it to reality.</p></article>
       </div>
     </section>
     <div class="ab-proj"></div>
@@ -652,7 +663,7 @@ button{font-family:inherit}
   // Who we help: open a card's panel; Esc, the close button or a click outside closes it
   (() => {
     const dlg = document.querySelector('.wdlg'), panel = dlg.querySelector('.wpanel');
-    document.querySelectorAll('.wcard').forEach(c => c.addEventListener('click', () => {
+    document.querySelectorAll('.wcard,.wrow').forEach(c => c.addEventListener('click', () => {
       panel.innerHTML = ''; panel.appendChild(document.getElementById('w-' + c.dataset.w).content.cloneNode(true));
       panel.querySelector('h3').id = 'wdlg-t'; dlg.showModal(); requestAnimationFrame(() => dlg.classList.add('in'));
     }));
