@@ -35,9 +35,9 @@ button{font-family:inherit}
 .ltitle{position:fixed;left:0;right:0;top:9vh;text-align:center;font-weight:500;font-stretch:87.5%;font-size:clamp(2rem,4.2vw,3.25rem);letter-spacing:-.02em;line-height:1;z-index:3;opacity:0;transform:translateY(10px);transition:opacity .8s var(--ease-out),transform .9s var(--ease-out)}
 .go .ltitle{opacity:1;transform:none}
 .open .ltitle{opacity:0;transform:translateY(-24px);transition:opacity .5s,transform .7s var(--ease-out)}
-.frame{position:fixed;z-index:2;overflow:hidden;left:50%;top:50%;width:49vw;height:30.4vw;border-radius:12px;transform:translate(-50%,-50%) scale(.97);opacity:0;transition:opacity .8s var(--ease-out),transform 1s var(--ease-out)}
-.go .frame{opacity:1;transform:translate(-50%,-50%)}
-.open .frame{left:0;top:0;width:100%;height:var(--heroH);border-radius:0;transform:none;transition:left 1.2s var(--ease-io),top 1.2s var(--ease-io),width 1.2s var(--ease-io),height 1.2s var(--ease-io),border-radius 1.2s var(--ease-io)}
+.frame{position:fixed;z-index:2;overflow:hidden;left:25.5vw;top:calc(50% - 15.2vw);width:49vw;height:30.4vw;border-radius:12px;transform:scale(.97);opacity:0;transition:opacity .8s var(--ease-out),transform 1s var(--ease-out)}
+.go .frame{opacity:1;transform:none}
+.open .frame{left:0;top:0;width:100%;height:var(--heroH);border-radius:0;transform:none;transition:left 1s var(--ease-io),top 1s var(--ease-io),width 1s var(--ease-io),height 1s var(--ease-io),border-radius 1s var(--ease-io)}
 .on .frame{position:absolute;transition:none}
 .sl{position:absolute;inset:0;clip-path:inset(0 0 0 0)}
 .sl img{width:100%;height:100%;object-fit:cover;display:block}
@@ -62,7 +62,7 @@ button{font-family:inherit}
 .ltile img{width:100%;height:100%;object-fit:cover;display:block}
 .lpair{flex:none;display:grid;grid-template-columns:1fr 1fr;gap:1.2vw}
 .lgap{flex:none;height:30.4vw}
-.open .lwall{opacity:0;transform:scale(1.05);transition:opacity .7s var(--ease-out),transform 1.2s var(--ease-io)}
+.open .lwall{opacity:0;transform:scale(1.05);transition:opacity .6s var(--ease-out),transform 1s var(--ease-io)}
 .on .lwall{visibility:hidden}
 
 /* Home, as in Mo's Figma: logo, menu and booking button sit on the picture and scale with it. Corners rounded, not sharp. */
@@ -642,11 +642,11 @@ button{font-family:inherit}
     void root.offsetWidth;
     if (reduce) { slides.forEach(sl => sl.classList.add('in')); root.classList.add('go', 'open', 'on'); return; }
     requestAnimationFrame(() => root.classList.add('go'));
-    let t = 3600;   // the wall drifts for a few seconds before the main picture opens
+    let t = 2100;   // the wall drifts for a few seconds before the main picture opens
     slides.forEach(sl => { at(t, () => sl.classList.add('in')); t += 1150; });
     t += 250;
     at(t, () => root.classList.add('open'));        // the picture opens out to the full width
-    at(t + 1250, () => root.classList.add('on'));   // logo, menu, booking button, logo band
+    at(t + 1000, () => root.classList.add('on'));   // logo, menu, booking button, logo band
   }
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   function startLoading() { let left = 2; for (const src of ['img/house-sketch.webp', 'img/civic.webp']) { const im = new Image(); im.onload = im.onerror = () => { if (--left === 0) play(); }; im.src = src; } }
