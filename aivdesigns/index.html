@@ -26,8 +26,8 @@
 <link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <style>@font-face{font-family:"Anybody";font-style:normal;font-weight:100 900;font-stretch:50% 150%;font-display:swap;src:url(/fonts/anybody.woff2) format("woff2")}@font-face{font-family:"Geist";font-style:normal;font-weight:100 900;font-display:swap;src:url(/fonts/geist.woff2) format("woff2")}</style>
 <style>@font-face{font-family:"Newsreader";font-style:italic;font-weight:400;font-display:swap;src:url(/fonts/newsreader-italic.woff2) format("woff2")}</style>
-<link rel="preload" as="image" href="h/d0.jpg" media="(min-aspect-ratio: 9/10)">
-<link rel="preload" as="image" href="h/m0.jpg" media="(max-aspect-ratio: 9/10)">
+<link rel="preload" as="image" href="h/d0.jpg?v=2611" media="(min-aspect-ratio: 9/10)">
+<link rel="preload" as="image" href="h/m0.jpg?v=2611" media="(max-aspect-ratio: 9/10)">
 <style>
 /* A dark screening room on top, a warm paper studio below.
    The laptop on the plinth opens, wakes, and plays the work. One accent: the red-orange of a recording light. */
@@ -788,7 +788,7 @@ footer .wrap{display:grid;grid-template-columns:auto 1fr auto;gap:16px 32px;alig
 <main id="main">
   <section class="hero" id="hero" data-view="home" aria-labelledby="hero-h">
     <div class="par" id="par"><div class="scene" id="scene" aria-hidden="true">
-      <picture><source media="(max-aspect-ratio: 9/10)" srcset="h/m0.jpg" width="1080" height="1920"><img class="plate" id="plate" src="h/d0.jpg" width="1920" height="1080" alt="" fetchpriority="high"></picture>
+      <picture><source media="(max-aspect-ratio: 9/10)" srcset="h/m0.jpg?v=2611" width="1080" height="1920"><img class="plate" id="plate" src="h/d0.jpg?v=2611" width="1920" height="1080" alt="" fetchpriority="high"></picture>
       <video class="plate" id="film" muted playsinline preload="auto" disablepictureinpicture></video>
       <div class="spill" id="spill"></div>
       <div class="screen" id="screen">
@@ -1293,8 +1293,8 @@ footer .wrap{display:grid;grid-template-columns:auto 1fr auto;gap:16px 32px;alig
   /* ---------- hero: the laptop opens, wakes and plays the work ---------- */
   const hero=$('hero'), scene=$('scene'), film=$('film'), plate=$('plate'), screen=$('screen'), spill=$('spill');
   const V={
-    d:{w:1920,h:1080,box:[470,183,1420,822],lid:[528,168,1346],peek:170,q:[[551.5,196],[1321.6,196],[1334.2,686.5],[545.7,686.5]],src:'h/d.mp4',end:'h/d1.jpg'},
-    m:{w:1080,h:1920,box:[12,652,1052,1346],lid:[114,640,948],peek:230,q:[[141.5,675.7],[919.3,675.7],[935.4,1169.5],[127,1169.5]],src:'h/m.mp4',end:'h/m1.jpg'}
+    d:{w:1920,h:1080,box:[470,183,1420,822],lid:[528,168,1346],peek:170,q:[[551.5,196],[1321.6,196],[1334.2,686.5],[545.7,686.5]],src:'h/d.mp4?v=2611',end:'h/d1.jpg?v=2611'},
+    m:{w:1080,h:1920,box:[12,652,1052,1346],lid:[114,640,948],peek:230,q:[[141.5,675.7],[919.3,675.7],[935.4,1169.5],[127,1169.5]],src:'h/m.mp4?v=2611',end:'h/m1.jpg?v=2611'}
   };
   const portraitMQ=matchMedia('(max-aspect-ratio: 9/10)');
   let vk=portraitMQ.matches?'m':'d', on=false;
