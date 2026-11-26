@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DS Squared</title>
+<meta name="description" content="Unofficial concept by AIV Designs for DS Squared, RIBA Chartered architects.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/civic.webp">
+<style>
+/* Type: Archivo, a grotesk with a width axis. Semi-condensed capitals for the menu and button read like the lettering on architectural drawings. */
+:root{
+  --page:#F5F5F5; --band:#E3E3E3; --ink:#1F1C1A; --ink-2:#6A635C; --orange:#EC542D;
+  --ease-out:cubic-bezier(.16,1,.3,1); --ease-io:cubic-bezier(.77,0,.18,1);
+  --ar:1.7647;                 /* the home picture's own shape: shown whole, never cropped */
+  --heroH:min(calc(100vw / var(--ar)), calc(100svh - var(--band-h)));
+  --band-h:max(calc(100vw * .07),64px);
+  --f:"Archivo",system-ui,sans-serif;
+  --serif:"Newsreader",Georgia,serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0}
+html{overflow-x:hidden;background:var(--page)}
+body{background:var(--page);color:var(--ink);font:400 16px/1.5 var(--f);font-stretch:100%;-webkit-font-smoothing:antialiased;overflow:hidden}
+.on body{overflow:auto}
+::selection{background:var(--orange);color:#fff}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--orange);outline-offset:3px;border-radius:4px}
+button{font-family:inherit}
+.caps{font-stretch:87.5%;font-weight:600;text-transform:uppercase;letter-spacing:.045em}
+
+/* Loading: the name, and one framed picture that wipes through their work */
+.ltitle{position:fixed;left:0;right:0;top:9vh;text-align:center;font-weight:500;font-stretch:87.5%;font-size:clamp(2rem,4.2vw,3.25rem);letter-spacing:-.02em;line-height:1;z-index:3;opacity:0;transform:translateY(10px);transition:opacity .8s var(--ease-out),transform .9s var(--ease-out)}
+.go .ltitle{opacity:1;transform:none}
+.open .ltitle{opacity:0;transform:translateY(-24px);transition:opacity .5s,transform .7s var(--ease-out)}
+.frame{position:fixed;z-index:2;overflow:hidden;left:25.5vw;top:calc(50% - 15.2vw);width:49vw;height:30.4vw;border-radius:12px;transform:scale(.97);opacity:0;transition:opacity .8s var(--ease-out),transform 1s var(--ease-out)}
+.go .frame{opacity:1;transform:none}
+.open .frame{left:0;top:0;width:100%;height:var(--heroH);border-radius:0;transform:none;transition:left 1s var(--ease-io),top 1s var(--ease-io),width 1s var(--ease-io),height 1s var(--ease-io),border-radius 1s var(--ease-io)}
+.on .frame{position:absolute;transition:none}
+.sl{position:absolute;inset:0;clip-path:inset(0 0 0 0)}
+.sl img{width:100%;height:100%;object-fit:cover;display:block}
+.sl[data-d=left]{clip-path:inset(0 0 0 100%)}
+.sl[data-d=up]{clip-path:inset(100% 0 0 0)}
+.sl[data-d=down]{clip-path:inset(0 0 100% 0)}
+.sl[data-d=right]{clip-path:inset(0 100% 0 0)}
+.sl.in{clip-path:inset(0 0 0 0);transition:clip-path .75s var(--ease-io)}
+.sl.in img{animation:settle .9s var(--ease-out)}
+@keyframes settle{from{transform:scale(1.06)}to{transform:none}}
+
+.lwall{position:fixed;inset:0;z-index:1;display:grid;grid-template-columns:21fr 49fr 21fr;gap:1.2vw;padding:0 3.3vw;overflow:hidden;pointer-events:none}
+.lcol{height:100vh;overflow:hidden;opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease-out),transform 1s var(--ease-out)}
+.lmid{height:100vh;display:flex;flex-direction:column;justify-content:center;gap:1.2vw;opacity:0;transition:opacity .8s var(--ease-out) .12s}
+.go .lcol,.go .lmid{opacity:1;transform:none}
+.go .lcol.down{transition-delay:.2s}
+.ltrack{display:flex;flex-direction:column;gap:1.2vw;animation:lup 26s linear infinite}
+.lcol.down .ltrack{animation-name:ldown}
+@keyframes lup{to{transform:translateY(calc(-50% - .6vw))}}
+@keyframes ldown{from{transform:translateY(calc(-50% - .6vw))}to{transform:none}}
+.ltile{flex:none;aspect-ratio:316/350;border-radius:12px;overflow:hidden;background:#e6e1d9}
+.ltile img{width:100%;height:100%;object-fit:cover;display:block}
+.lpair{flex:none;display:grid;grid-template-columns:1fr 1fr;gap:1.2vw}
+.lgap{flex:none;height:30.4vw}
+.open .lwall{opacity:0;transform:scale(1.05);transition:opacity .6s var(--ease-out),transform 1s var(--ease-io)}
+.on .lwall{visibility:hidden}
+
+/* Home, as in Mo's Figma: logo, menu and booking button sit on the picture and scale with it. Corners rounded, not sharp. */
+.hero-ui{position:absolute;left:0;top:0;width:100%;height:var(--heroH);z-index:4;pointer-events:none}
+.hero-ui>*{pointer-events:auto;position:absolute;opacity:0;transition:opacity .8s var(--ease-out),transform .9s var(--ease-out)}
+.on .hero-ui>*{opacity:1;transform:none}
+.logo{left:1%;top:1.5%;width:6.8vw;min-width:44px;transform:translateY(-8px)}
+.logo img{width:100%;display:block;border-radius:14%}
+.nav{right:2vw;top:4.4%;display:flex;gap:1.6vw;font-size:clamp(9px,1.02vw,15px);color:#fff;text-shadow:0 1px 10px rgba(20,18,16,.45);transform:translateY(-8px);transition-delay:.1s}
+.nav a{position:relative;padding:4px 0}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;background:#fff;transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease-out)}
+.nav a:hover::after{transform:scaleX(1)}
+.menu{display:none!important;right:1.4vw;top:2.4%;width:4.2vw;height:4.2vw;min-width:38px;min-height:38px;border:0;border-radius:22%;background:var(--orange);cursor:pointer;display:grid;place-items:center;transform:translateY(-8px);transition-delay:.15s}
+.menu span,.menu span::before,.menu span::after{display:block;width:max(16px,2vw);height:1.6px;border-radius:2px;background:#fff;position:relative;transition:transform .3s var(--ease-out),background .2s}
+.menu span::before,.menu span::after{content:"";position:absolute;left:0;width:100%}
+.menu span::before{top:max(-6px,-.6vw)}.menu span::after{top:min(6px,.6vw)}
+.menu[aria-expanded=true] span{background:transparent}
+.menu[aria-expanded=true] span::before{transform:translateY(min(6px,.6vw)) rotate(45deg)}
+.menu[aria-expanded=true] span::after{transform:translateY(max(-6px,-.6vw)) rotate(-45deg)}
+.cta{right:4.6%;bottom:5.5%;display:flex;align-items:center;justify-content:center;width:16.2vw;height:4.6vw;min-width:150px;min-height:40px;border-radius:min(12px,.8vw);background:var(--orange);color:var(--ink);font-size:clamp(10px,1vw,15px);transform:translateY(10px);transition:opacity .8s var(--ease-out) .25s,transform .9s var(--ease-out) .25s,background .25s;box-shadow:0 6px 18px rgba(20,18,16,.18)}
+.cta:hover{background:#f26a45}.cta:active{transform:scale(.98)}
+.panel{position:fixed;top:0;right:0;width:min(360px,86vw);height:100vh;z-index:6;background:var(--page);padding:88px 28px 28px;display:flex;flex-direction:column;font-size:24px;font-weight:500;font-stretch:87.5%;transform:translateX(100%);transition:transform .5s var(--ease-io);box-shadow:-12px 0 32px rgba(0,0,0,.08)}
+.panel a{padding:12px 0;border-bottom:1px solid #dcdcdc}
+.panel.open{transform:none}
+
+/* Headline, bottom-left: a quiet editorial serif over the picture, Archivo for the line beneath */
+.hero-ui::before{content:"";position:absolute;left:0;bottom:0;width:70%;height:65%;background:radial-gradient(120% 100% at 0% 100%,rgba(20,18,16,.55),rgba(20,18,16,0) 70%);opacity:0;transition:opacity 1s var(--ease-out);pointer-events:none}
+.on .hero-ui::before{opacity:1}
+.copy{position:absolute;left:2vw;bottom:calc(100% - var(--heroH) * .975);z-index:4;color:#fff;max-width:52vw;opacity:0;transform:translateY(14px);filter:blur(6px);transition:opacity .9s var(--ease-out) .35s,transform 1.1s var(--ease-out) .35s,filter .9s var(--ease-out) .35s}
+.on .copy{opacity:1;transform:none;filter:none}
+.copy h1{font-family:var(--serif);font-optical-sizing:auto;font-weight:350;font-size:clamp(2.75rem,6.2vw,6.25rem);line-height:.95;letter-spacing:-.025em;text-wrap:balance}
+.copy h1 em{font-style:italic;font-weight:300}
+.copy p{margin-top:clamp(10px,1.2vw,18px);font-size:clamp(15px,1.25vw,19px);line-height:1.45;max-width:58ch;color:rgba(255,255,255,.9);text-wrap:pretty}
+
+/* Accreditations band directly under the picture: warm stone band, logos in one charcoal tone gliding right to left on a loop */
+:root{--band:#ECE7E0;--band-h:104px}
+.band{position:absolute;left:0;right:0;top:var(--heroH);height:var(--band-h);background:var(--band);overflow:hidden;display:flex;align-items:center;opacity:0}
+.on .band{opacity:1;transition:opacity .8s var(--ease-out) .3s}
+.track{display:flex;align-items:center;gap:96px;padding-right:96px;width:max-content;animation:glide 26s linear infinite}
+.band:hover .track{animation-play-state:paused}
+.track img{height:40px;width:auto;display:block;opacity:.85}
+.track img.tall{height:70px}
+@keyframes glide{to{transform:translateX(-50%)}}
+.replay{position:absolute;right:2vw;top:calc(var(--heroH) * .11);z-index:5;background:var(--ink);color:#fff;border:0;border-radius:8px;font:500 12px/1 var(--f);padding:9px 12px;opacity:0;cursor:pointer}
+.on .replay{opacity:.85;transition:opacity .6s 1s}.replay:hover{opacity:1}
+
+/* Selected work: one big and one small card per row, each photo at its own shape (never zoomed or cropped), sized so the section fits one screen */
+.work{margin-top:calc(var(--heroH) + var(--band-h));height:100vh;height:100svh;padding:clamp(36px,3.6vw,56px) 2vw clamp(14px,1.6vw,24px);display:flex;flex-direction:column;opacity:0;transition:opacity .8s .5s}
+.on .work{opacity:1}
+.work-in{width:100%;flex:1;min-height:0;display:flex;flex-direction:column}
+:root{--rowH:calc((100vw - 4vw - 16px) * .5833 / 1.6)}
+.work-head{margin-bottom:clamp(10px,1vw,16px)}
+.work-head h2,.page h1{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3.4vw,3.25rem);line-height:1;letter-spacing:-.02em}
+.work-head h2 em,.page h1 em{font-style:italic;font-weight:300}
+.rows{flex:1;min-height:0;display:grid;grid-template-rows:1fr 1fr;gap:12px}
+.row{display:flex;gap:12px;min-height:0}
+.card{flex:6.5 1 0;min-width:0;min-height:0;display:flex;transition:opacity .7s var(--ease-out),transform .8s var(--ease-out)}
+.card.sm{flex:5.5 1 0}
+.card>a{position:relative;flex:1;display:block;min-height:0;border-radius:12px;overflow:hidden}
+.card .ph{display:block;height:100%;background:#e6e1d9}
+.card .ph::after{content:"";position:absolute;inset:auto 0 0 0;height:38%;background:linear-gradient(180deg,rgba(20,18,16,0),rgba(20,18,16,.55));pointer-events:none}
+.card .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s var(--ease-out)}
+.card a:hover .ph img{transform:scale(1.03)}
+.card .meta{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding:clamp(12px,1.4vw,20px);color:#fff}
+.card h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.4rem,1.9vw,2rem);line-height:1.05;letter-spacing:-.015em}
+.card .more{flex:none;display:inline-flex;align-items:center;gap:8px;font-size:12px;border-bottom:1.5px solid var(--orange);padding-bottom:3px;color:#fff}
+.card .more svg{transition:transform .3s var(--ease-out)}.card a:hover .more svg{transform:translateX(3px)}
+.card.rise{opacity:0;transform:translateY(24px)}
+
+/* Project page: photo slider on the left, description on the right, enquiry strip below */
+.proj{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(280px,1fr);gap:clamp(20px,2.6vw,40px);align-items:start}
+.slider{position:relative}
+.stage{position:relative;overflow:hidden;border-radius:12px;background:var(--band);height:calc(100svh - 230px);min-height:360px;touch-action:pan-y;user-select:none}
+.strack{display:flex;height:100%;transition:transform .7s var(--ease-io)}
+.strack img{flex:0 0 100%;width:100%;height:100%;object-fit:contain;display:block;-webkit-user-drag:none}
+.sctl{position:absolute;right:14px;bottom:14px;display:flex;gap:8px}
+.sctl button{width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 14px rgba(20,18,16,.12);transition:transform .2s var(--ease-out),background .2s}
+.sctl button:hover{background:#fff}.sctl button:active{transform:scale(.94)}
+.count{position:absolute;left:14px;bottom:14px;background:rgba(255,255,255,.92);border-radius:999px;padding:7px 12px;font-size:12px;font-variant-numeric:tabular-nums}
+.thumbs{display:flex;gap:8px;margin-top:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.thumbs button{flex:none;width:76px;height:54px;border:0;padding:0;border-radius:6px;overflow:hidden;cursor:pointer;opacity:.55;outline:2px solid transparent;outline-offset:-2px;transition:opacity .25s,outline-color .25s}
+.thumbs button[aria-current=true]{opacity:1;outline-color:var(--orange)}
+.thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.pinfo h1{margin-top:2px}
+.pinfo .kick{font-size:15px;color:var(--ink-2);margin-top:10px}
+.pinfo .desc{font-size:17px;line-height:1.6;margin-top:18px;max-width:46ch;text-wrap:pretty}
+.facts{margin-top:22px;border-top:1px solid #dcd6ce}
+.facts div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #dcd6ce;font-size:14px}
+.facts dt{color:var(--ink-2)}
+.pinfo .pcta2{display:inline-flex;margin-top:22px;background:var(--orange);color:var(--ink);border-radius:10px;padding:13px 18px;font-size:12px}
+.enq{margin-top:clamp(24px,3vw,40px);background:var(--band);border-radius:16px;padding:clamp(24px,3.2vw,48px);display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:end}
+.enq h2{font-family:var(--serif);font-weight:350;font-size:clamp(1.8rem,3vw,2.8rem);line-height:1.05;letter-spacing:-.02em}
+.enq h2 em{font-style:italic;font-weight:300}
+.enq p{color:var(--ink-2);margin-top:10px;max-width:44ch}
+.enq .acts{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.enq .acts a.big{background:var(--orange);color:var(--ink);border-radius:10px;padding:14px 20px;font-size:13px}
+.enq .acts a.ln{font-size:15px;border-bottom:1px solid #c9c2b8}
+.nextp{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:clamp(24px,3vw,40px);padding-top:18px;border-top:1px solid #dcd6ce;font-size:13px}
+.nextp a{display:inline-flex;align-items:center;gap:8px;border-bottom:1.5px solid var(--orange);padding-bottom:3px}
+
+/* Footer: charcoal, contact first, then the site map, their socials, and a large serif wordmark */
+.foot2{background:var(--ink);color:#F4F1EC;padding:clamp(40px,5vw,72px) 2vw 20px;opacity:0;transition:opacity .8s .6s}
+.on .foot2,.sub .foot2{opacity:1}
+.ft-top{display:grid;grid-template-columns:1.3fr 2.7fr;gap:clamp(28px,4vw,64px)}
+.ft-brand img{width:56px;display:block;border-radius:14%}
+.ft-brand p{font-family:var(--serif);font-weight:300;font-size:clamp(1.4rem,2vw,1.9rem);line-height:1.2;margin-top:18px;max-width:20ch}
+.ft-brand .pcta3{display:inline-flex;margin-top:22px;background:var(--orange);color:var(--ink);border-radius:10px;padding:13px 18px;font-size:12px}
+.ft-cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.ft-social{display:flex;gap:10px;margin-top:16px}
+.ft-cols .ft-social a{display:grid;place-items:center;width:40px;height:40px;padding:0;border:1px solid #4a443f;border-radius:50%;background:none;color:#F4F1EC;transition:border-color .25s,color .25s,background-color .25s}
+.ft-cols .ft-social a:hover{border-color:#F4F1EC;background:#F4F1EC;color:var(--ink)}
+.ft-strip{display:flex;gap:clamp(20px,4vw,56px);flex-wrap:wrap;margin-top:clamp(32px,4vw,56px);padding-top:18px;border-top:1px solid #3a3531;font-size:14px}
+.ft-strip h4{display:inline;font-size:11px;font-weight:600;font-stretch:87.5%;letter-spacing:.06em;text-transform:uppercase;color:#a69d93;margin-right:12px}
+.ft-strip>div{display:flex;flex-wrap:wrap;align-items:baseline;row-gap:6px}
+.ft-strip h4{white-space:nowrap}
+.ft-strip a{color:#F4F1EC}.ft-strip a:hover{color:var(--orange)}
+.ft-strip span.sep{color:#6a625b;margin:0 8px}
+.ft-cols h4{font-size:11px;font-weight:600;font-stretch:87.5%;letter-spacing:.06em;text-transform:uppercase;color:#a69d93;margin-bottom:12px}
+.ft-cols a,.ft-cols span{display:block;font-size:15px;padding:4px 0;color:#F4F1EC;width:fit-content}
+.ft-cols a{background:linear-gradient(var(--orange),var(--orange)) 0 100%/0 1.5px no-repeat;transition:background-size .35s var(--ease-out)}
+.ft-cols a:hover{background-size:100% 1.5px}
+.ft-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid #3a3531;font-size:12px;color:#a69d93}
+.ft-bottom a{color:#a69d93}.ft-bottom a:hover{color:#F4F1EC}
+
+/* Testimonials: rating on a scale bar, reviews as a stack of cards you swipe or click through */
+.reviews{display:grid;grid-template-columns:minmax(240px,1fr) minmax(0,1.7fr);gap:clamp(28px,5vw,96px);align-items:center;background:var(--band);padding:clamp(56px,7vw,112px) 2vw;opacity:0;transition:opacity .8s .6s;overflow:hidden}
+.on .reviews{opacity:1}
+.sub .reviews{display:none}
+.rv-side h2{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3.4vw,3.25rem);line-height:1;letter-spacing:-.02em}
+.rv-side h2 em{font-style:italic;font-weight:300}
+.rv-score .stars{display:flex;gap:4px;color:var(--orange)}
+.rv-score .stars svg{width:26px;height:26px}
+.rv-score{display:flex;align-items:center;gap:18px;margin-top:clamp(20px,2.4vw,36px)}
+.rv-score .num{font-family:var(--serif);font-weight:350;font-size:clamp(2.6rem,4vw,3.6rem);line-height:.9}
+.sbar{width:min(220px,46vw);padding-bottom:2px}
+.sb{display:flex;height:9px;border:1.5px solid var(--ink)}
+.sb span{flex:1}.sb span:nth-child(odd){background:var(--ink)}
+.sb span:last-child{background:var(--orange)}
+.sb-lab{display:flex;justify-content:space-between;margin:5px -3px 0;font-style:normal;font-size:11px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.sb-lab i{font-style:normal}
+.rv-src{font-size:14px;color:var(--ink-2);margin-top:10px}
+.rv-ctl{display:flex;align-items:center;gap:14px;margin-top:clamp(24px,3vw,44px)}
+.rv-ctl button{width:44px;height:44px;border-radius:50%;border:1px solid #cfc7bd;background:transparent;color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:background .2s,border-color .2s,color .2s,transform .2s var(--ease-out)}
+.rv-ctl button:hover{background:var(--ink);border-color:var(--ink);color:#fff}.rv-ctl button:active{transform:scale(.94)}
+.rv-count{font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink-2);min-width:52px;text-align:center}
+.stack{display:grid;padding-top:34px;max-width:760px;touch-action:pan-y}
+.rcard{grid-area:1/1;margin:0;background:#FAF8F4;border:1px solid #ddd5ca;border-radius:16px;padding:clamp(24px,3vw,44px);display:flex;flex-direction:column;justify-content:space-between;gap:28px;box-shadow:0 22px 44px -24px rgba(31,28,26,.35);transform-origin:50% 100%;transition:transform .42s var(--ease-out),opacity .3s var(--ease-out);user-select:none}
+.rcard>*{transition:opacity .18s}
+.rcard[data-d="0"]{z-index:5;cursor:grab}
+.rcard[data-d="0"]:active{cursor:grabbing}
+.rcard[data-d="1"]{z-index:4;background:#F3EFE9;transform:translate(18px,-20px) scale(.97) rotate(2.6deg)}
+.rcard[data-d="2"]{z-index:3;background:#EFEAE3;transform:translate(-16px,-34px) scale(.94) rotate(-2.4deg)}
+.rcard[data-d="3"]{z-index:2;transform:translate(-16px,-34px) scale(.94) rotate(-2.4deg);opacity:0}
+.rcard[data-d="1"]>*,.rcard[data-d="2"]>*,.rcard[data-d="3"]>*{opacity:0}
+.rcard.out-l{transform:translateX(-115%) rotate(-9deg)!important;opacity:0}
+.rcard.out-r{transform:translateX(115%) rotate(9deg)!important;opacity:0}
+.rcard.drag{transition:none}
+.rcard blockquote{font-family:var(--serif);font-weight:350;font-size:clamp(1.35rem,2.1vw,2.1rem);line-height:1.25;letter-spacing:-.012em;text-wrap:pretty}
+.rcard figcaption{display:flex;align-items:center;gap:14px}
+.rcard .ini{flex:none;width:44px;height:44px;border-radius:50%;background:var(--orange);color:var(--ink);display:grid;place-items:center;font-size:13px}
+.rcard figcaption span:last-child{display:flex;flex-direction:column;gap:2px}
+.rcard b{font-size:12px}
+.rcard i{font-style:normal;font-size:14px;color:var(--ink-2)}
+
+/* the card flying away stays on top while it leaves */
+.rcard.out-l,.rcard.out-r{z-index:6}
+
+/* Who we help: three photo cards; each opens a panel with the picture beside the description */
+.who{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.45fr);gap:clamp(24px,4vw,64px);align-items:center;padding:clamp(56px,7vw,112px) 2vw;opacity:0;transition:opacity .8s .6s}
+.on .who{opacity:1}
+.sub .who{display:none}
+.who h2{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3.4vw,3.25rem);line-height:1;letter-spacing:-.02em;margin-bottom:clamp(16px,2vw,28px)}
+.who h2 em{font-style:italic;font-weight:300}
+.wtext p{font-size:17px;line-height:1.6;margin-top:16px;max-width:44ch}
+.wlist{list-style:none;padding:0;margin:26px 0 0;border-top:1px solid #dcd6ce;max-width:480px}
+.wrow{width:100%;display:grid;grid-template-columns:1fr auto;gap:2px 16px;align-items:center;text-align:left;background:none;border:0;border-bottom:1px solid #dcd6ce;padding:16px 0;cursor:pointer;font:inherit;color:var(--ink)}
+.wrow b{font-family:var(--serif);font-weight:400;font-size:clamp(1.3rem,1.7vw,1.6rem);letter-spacing:-.01em}
+.wrow span{grid-column:1;font-size:15px;color:var(--ink-2)}
+.wrow svg{grid-column:2;grid-row:1/3;transition:transform .3s var(--ease-out)}
+.wrow:hover svg{transform:translateX(4px)}
+.wrow:hover b{color:var(--orange)}
+.wgrid{display:grid;grid-template-columns:1.25fr 1fr;grid-template-rows:1fr 1fr;gap:12px;height:clamp(460px,52vw,780px)}
+.wcard:first-child{grid-row:1/3}
+.wcard:nth-child(3){width:82%}
+.wcard{position:relative;border:0;padding:0;border-radius:12px;overflow:hidden;cursor:pointer;min-height:0;background:#e6e1d9;text-align:left;font:inherit;color:#fff}
+.wcard img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s var(--ease-out)}
+.wcard:hover img{transform:scale(1.04)}
+.wcard::after{content:"";position:absolute;inset:auto 0 0 0;height:40%;background:linear-gradient(180deg,rgba(20,18,16,0),rgba(20,18,16,.6))}
+.wmeta{position:absolute;left:0;right:0;bottom:0;z-index:1;display:flex;justify-content:space-between;align-items:center;padding:clamp(14px,1.6vw,22px)}
+.wmeta>span{font-family:var(--serif);font-size:clamp(1.5rem,2.2vw,2.2rem);letter-spacing:-.015em}
+.wmeta i{width:44px;height:44px;border-radius:50%;background:var(--orange);color:var(--ink);display:grid;place-items:center;transition:transform .35s var(--ease-out)}
+.wcard:hover .wmeta i{transform:rotate(90deg)}
+.wdlg{border:0;padding:0;margin:auto;width:min(1100px,94vw);max-height:90svh;border-radius:16px;background:#FAF8F4;color:var(--ink);overflow:hidden;opacity:0;transform:translateY(14px) scale(.97);transition:opacity .35s var(--ease-out),transform .5s var(--ease-out)}
+.wdlg[open].in{opacity:1;transform:none}
+.wdlg::backdrop{background:rgba(31,28,26,.6)}
+.wpanel{display:grid;grid-template-columns:1.1fr 1fr;min-height:min(560px,80svh)}
+.wpanel>img{width:100%;height:100%;object-fit:cover;display:block}
+.wbody{padding:clamp(28px,4vw,56px);display:flex;flex-direction:column;justify-content:center}
+.wbody h3{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3.4vw,3.25rem);line-height:1;letter-spacing:-.02em}
+.wbody p{font-size:17px;line-height:1.6;margin-top:16px;max-width:42ch}
+.wbody ul{list-style:none;padding:0;margin:22px 0 0;border-top:1px solid #dcd6ce}
+.wbody li{padding:11px 0;border-bottom:1px solid #dcd6ce;font-size:15px}
+.wcta{align-self:flex-start;margin-top:26px;background:var(--orange);color:var(--ink);border-radius:10px;padding:13px 18px;font-size:12px}
+.wclose{position:absolute;top:14px;right:14px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(250,248,244,.95);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 14px rgba(20,18,16,.15)}
+
+/* What we do dropdown: opens on hover or tap; items don't lead to pages in the concept */
+.dd{position:relative;display:flex}
+.ddb{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:4px 0;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer}
+.ddb svg{transition:transform .3s var(--ease-out)}
+.dd:hover .ddb svg,.dd.open .ddb svg{transform:rotate(180deg)}
+.ddm{position:absolute;top:100%;left:-14px;margin-top:8px;min-width:210px;background:#FAF8F4;color:var(--ink);border-radius:12px;padding:8px;box-shadow:0 18px 40px -16px rgba(31,28,26,.35);display:flex;flex-direction:column;text-shadow:none;opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .25s var(--ease-out),transform .35s var(--ease-out),visibility .25s;z-index:8}
+.ddm::before{content:"";position:absolute;left:0;right:0;top:-10px;height:10px}
+.dd:hover .ddm,.dd.open .ddm{opacity:1;visibility:visible;transform:none}
+.ddm a{display:block;padding:10px 12px;border-radius:8px;font:500 14px/1.2 var(--f);font-stretch:100%;letter-spacing:0;text-transform:none;color:var(--ink);transition:background .2s}
+.ddm a:hover{background:var(--band)}
+.ddm button{background:none;border:0;text-align:left;padding:10px 12px;border-radius:8px;font:500 14px/1.2 var(--f);font-stretch:100%;letter-spacing:0;text-transform:none;color:var(--ink);cursor:pointer;transition:background .2s}
+.ddm button:hover{background:var(--band)}
+.panel .psub{padding:12px 0 6px;font-size:24px}
+.panel .pitem{padding:6px 0 6px 14px;font-size:17px;color:var(--ink-2)}
+.panel a.pitem{border:0}
+
+/* About page */
+.ab-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:clamp(24px,4vw,64px);align-items:end}
+.ab-hero h1{font-size:clamp(2.6rem,5vw,4.6rem)}
+.ab-hero p{font-size:17px;line-height:1.6;margin-top:16px;max-width:46ch;color:var(--ink)}
+.ab-hero p+p{color:var(--ink-2)}
+.ab-hero img,.how img{width:100%;height:100%;object-fit:cover;display:block;border-radius:14px}
+.ab-hero figure{margin:0;aspect-ratio:4/3}
+.how .collage{order:-1}
+.how{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:center;margin-top:clamp(56px,7vw,112px)}
+.how h2,.people h2{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3.4vw,3.25rem);line-height:1;letter-spacing:-.02em}
+.how h2 em,.people h2 em{font-style:italic;font-weight:300}
+.how p{font-size:17px;line-height:1.6;margin-top:16px;max-width:48ch}
+.how blockquote{font-family:var(--serif);font-weight:350;font-size:clamp(1.3rem,1.9vw,1.75rem);line-height:1.3;margin:26px 0 0;padding-left:18px;border-left:2px solid var(--orange);max-width:36ch}
+.collage{display:grid;grid-template-columns:1.25fr 1fr;grid-template-rows:1fr 1fr;gap:12px;height:clamp(420px,46vw,680px)}
+.collage figure{margin:0;min-height:0}
+.collage figure:first-child{grid-row:1/3}
+.collage figure:nth-child(3){width:82%}
+.people{margin-top:clamp(56px,7vw,112px)}
+.pgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:clamp(16px,2vw,28px)}
+.pcard{background:var(--band);border-radius:14px;padding:clamp(22px,3vw,40px)}
+.phead{display:flex;align-items:center;gap:18px}
+.avatar{flex:none;width:clamp(72px,7vw,96px);aspect-ratio:1;border-radius:50%;background:#DDD5CA;color:#8f857a;display:grid;place-items:center;border:2px solid #FAF8F4;box-shadow:0 0 0 1px #d2c9bd}
+.pcard h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.6rem,2.3vw,2.2rem);letter-spacing:-.015em}
+.pcard .role{font-size:11px;margin-top:6px;color:var(--ink-2)}
+.pcard p{font-size:16px;line-height:1.6;margin-top:14px}
+.ab-proj{margin-top:clamp(56px,7vw,112px)}
+
+/* Booking pop-up: charcoal side with contact and a client quote, form on warm paper */
+.bdlg{border:0;padding:0;margin:auto;width:min(1040px,94vw);max-height:92svh;border-radius:16px;background:#FAF8F4;color:var(--ink);overflow:auto;opacity:0;transform:translateY(14px) scale(.97);transition:opacity .35s var(--ease-out),transform .5s var(--ease-out)}
+.bdlg[open].in{opacity:1;transform:none}
+.bdlg::backdrop{background:rgba(31,28,26,.6)}
+.bk{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)}
+.bk-side{background:var(--ink);color:#F4F1EC;padding:clamp(28px,3.6vw,52px);display:flex;flex-direction:column;gap:18px}
+.bk-side h3,.bk-done h3{font-family:var(--serif);font-weight:350;font-size:clamp(2rem,3vw,2.8rem);line-height:1.02;letter-spacing:-.02em}
+.bk-side h3 em{font-style:italic;font-weight:300}
+.bk-side>p{color:#cfc6bb;font-size:16px;line-height:1.6}
+.bk-contact{list-style:none;padding:0;margin:6px 0 0;border-top:1px solid #3a3531}
+.bk-contact li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:13px 0;border-bottom:1px solid #3a3531}
+.bk-contact span{font-size:11px;color:#a69d93}
+.bk-contact a{font-size:15px;color:#F4F1EC}.bk-contact a:hover{color:var(--orange)}
+.bk-quote{margin:auto 0 0;padding-top:18px}
+.bk-quote blockquote{font-family:var(--serif);font-weight:350;font-size:1.15rem;line-height:1.35}
+.bk-quote figcaption{font-size:11px;color:#a69d93;margin-top:10px}
+.bk-form{padding:clamp(24px,3.4vw,48px);display:flex;flex-direction:column;gap:18px}
+.bk-form[hidden]{display:none}
+.bk-form fieldset{border:0;padding:0;margin:0;min-width:0}
+.bk-form legend{font-size:11px;color:var(--ink-2);margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{position:relative}
+.chips input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.chips span{display:inline-block;padding:9px 14px;border:1px solid #d6d0c8;border-radius:999px;font-size:14px;transition:background .2s,border-color .2s,color .2s}
+.chips label:hover span{border-color:var(--ink)}
+.chips input:checked+span{background:var(--ink);border-color:var(--ink);color:#fff}
+.chips input:focus-visible+span{outline:2px solid var(--orange);outline-offset:2px}
+.bk-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bk-f{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-2)}
+.bk-f input,.bk-f select,.bk-f textarea{font:15px/1.4 var(--f);color:var(--ink);background:#fff;border:1px solid #d6d0c8;border-radius:10px;padding:12px 14px;transition:border-color .2s,box-shadow .2s;width:100%}
+.bk-f textarea{resize:vertical;min-height:96px}
+.bk-f input:focus,.bk-f select:focus,.bk-f textarea:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(236,84,45,.18)}
+.bk-f input:user-invalid{border-color:#c0392b}
+.bk-foot{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:4px}
+.bk-send,.bk-ok{background:var(--orange);color:var(--ink);border:0;border-radius:10px;padding:15px 22px;font-size:12px;cursor:pointer;transition:background .25s,transform .2s var(--ease-out)}
+.bk-send:hover,.bk-ok:hover{background:#f26a45}.bk-send:active,.bk-ok:active{transform:scale(.98)}
+.bk-note{font-size:12px;color:var(--ink-2)}
+.bk-done{padding:clamp(28px,4vw,56px);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:14px}
+.bk-done[hidden]{display:none}
+.bk-done p{font-size:17px;color:var(--ink-2)}
+.tick{width:56px;height:56px;border-radius:50%;background:var(--orange);color:var(--ink);display:grid;place-items:center}
+.bk-x{z-index:2}
+.bk-acc{display:flex;align-items:center;gap:clamp(20px,3vw,36px);padding-top:18px;border-top:1px solid #e4ddd3}
+.bk-acc img{height:24px;width:auto;opacity:.8}.bk-acc img.t{height:44px}
+
+/* Projects pages: the four types; each type lists its projects as cards; each project shows all its photos */
+.plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr));gap:16px}
+.plist .card .ph{height:auto;aspect-ratio:3/2}
+.pmain .rows{height:calc(100svh - 200px);min-height:520px}
+.page{display:none}
+.sub .page{display:block}
+.sub .frame,.sub .hero-ui,.sub .copy,.sub .band,.sub .work,.sub .replay,.sub .ltitle{display:none!important}
+.sub body{overflow:auto}
+.pbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:28px;padding:12px 2vw;background:rgba(245,245,245,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.pbar .plogo{width:52px;flex:none}.pbar .plogo img{width:100%;display:block;border-radius:14%}
+.pbar nav{display:flex;align-items:center;gap:1.6vw;margin-left:auto;font-size:13px;min-width:0}
+.pbar nav a{padding:4px 0;border-bottom:1.5px solid transparent;white-space:nowrap}
+.pbar nav a:hover,.pbar nav a[aria-current=page]{border-color:var(--orange)}
+.pbar .pcta{flex:none;background:var(--orange);color:var(--ink);border-radius:10px;padding:11px 16px;font-size:12px}
+.pmain{padding:clamp(20px,3vw,44px) 2vw clamp(48px,6vw,96px)}
+.crumb{font-size:12px;color:var(--ink-2);margin-bottom:10px}
+.crumb a{border-bottom:1px solid currentColor}
+.ptitle{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:clamp(16px,2vw,28px)}
+.ptitle p{font-size:15px;color:var(--ink-2)}
+.lead{margin:0 0 16px}
+.lead img{display:block;max-width:100%;max-height:78svh;width:auto;height:auto;border-radius:12px}
+.gallery{columns:3 280px;column-gap:16px}
+.gallery img{display:block;width:100%;height:auto;border-radius:10px;margin-bottom:16px;break-inside:avoid}
+
+@media (max-width:760px){
+  .nav{display:none}
+  .hero-ui::before{display:none}
+  .copy{position:relative;left:auto;right:auto;bottom:auto;top:auto;margin:calc(var(--heroH) + var(--band-h) + 28px) 16px 0;max-width:none;color:var(--ink)}
+  .work{margin-top:0;padding:40px 16px 56px;min-height:0;display:block}
+  .work-in{width:100%}
+  .row{flex-direction:column;align-items:stretch}
+  .card .ph{height:auto;aspect-ratio:4/3}
+  .card,.card.sm{flex:none}
+  .work{height:auto}
+  .rows{display:flex;flex-direction:column}
+  .pmain .rows{height:auto;min-height:0}
+  .pbar{gap:14px;padding:10px 16px}.pbar .plogo{width:40px}.pbar .pcta{display:none}
+  .pmain{padding:20px 16px 56px}
+  .proj{grid-template-columns:minmax(0,1fr)}
+  .pbar nav{gap:14px}
+  .stage{height:auto;aspect-ratio:4/3;min-height:0}
+  .enq{grid-template-columns:1fr}
+  .bk{grid-template-columns:1fr}
+  .bk-quote{display:none}
+  .bk-row{grid-template-columns:1fr}
+  .bdlg{width:100vw;max-height:100svh;border-radius:0}
+  .ab-hero,.how,.pgrid{grid-template-columns:minmax(0,1fr)}
+  .collage{height:120vw}
+  .ddm{position:fixed;left:16px;right:16px;top:58px;margin:0}
+  .who{padding:48px 16px}
+  .who{grid-template-columns:minmax(0,1fr)}
+  .wgrid{grid-template-columns:1fr;grid-template-rows:none;height:auto}
+  .wcard{aspect-ratio:4/3}
+  .wcard:first-child{grid-row:auto}
+  .wcard:nth-child(3){width:100%}
+  .wpanel{grid-template-columns:1fr}
+  .wpanel>img{height:38svh}
+  .reviews{grid-template-columns:1fr;padding:48px 16px;gap:20px}
+  .rcard{padding:22px}
+  .ft-top{grid-template-columns:1fr}
+  .ft-cols{grid-template-columns:1fr 1fr}
+  .foot2{padding:40px 16px 16px}
+  .copy p{color:var(--ink-2)}
+  .menu{display:grid!important}
+  :root{--band-h:76px}
+  .track{gap:56px;padding-right:56px}
+  .track img{height:28px}.track img.tall{height:52px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;transition-delay:0s!important}
+  .track{animation:none}
+  .ltrack{animation:none}
+}
+</style>
+</head>
+<body>
+<!-- Loading: the name and one framed picture that wipes through their work, ending on the home picture -->
+<!-- Loading wall (Mo's sketch): side columns drift, the main picture sits in the middle box, then fills the screen -->
+<div class="lwall" aria-hidden="true"><div class="lcol up"><div class="ltrack"><div class="ltile"><img src="img/living.webp" alt=""></div><div class="ltile"><img src="img/spiral.webp" alt=""></div><div class="ltile"><img src="img/garden.webp" alt=""></div><div class="ltile"><img src="img/games.webp" alt=""></div><div class="ltile"><img src="img/about-2.webp" alt=""></div><div class="ltile"><img src="img/living.webp" alt=""></div><div class="ltile"><img src="img/spiral.webp" alt=""></div><div class="ltile"><img src="img/garden.webp" alt=""></div><div class="ltile"><img src="img/games.webp" alt=""></div><div class="ltile"><img src="img/about-2.webp" alt=""></div></div></div><div class="lmid"><div class="lpair"><div class="ltile"><img src="img/blossom.webp" alt=""></div><div class="ltile"><img src="img/stone-barns.webp" alt=""></div></div><div class="lgap"></div><div class="lpair"><div class="ltile"><img src="img/arch-house.webp" alt=""></div><div class="ltile"><img src="img/about-3.webp" alt=""></div></div></div><div class="lcol down"><div class="ltrack"><div class="ltile"><img src="img/barn.webp" alt=""></div><div class="ltile"><img src="img/wine.webp" alt=""></div><div class="ltile"><img src="img/terrace.webp" alt=""></div><div class="ltile"><img src="img/proj/residential-08.webp" alt=""></div><div class="ltile"><img src="img/proj/interiors-02.webp" alt=""></div><div class="ltile"><img src="img/barn.webp" alt=""></div><div class="ltile"><img src="img/wine.webp" alt=""></div><div class="ltile"><img src="img/terrace.webp" alt=""></div><div class="ltile"><img src="img/proj/residential-08.webp" alt=""></div><div class="ltile"><img src="img/proj/interiors-02.webp" alt=""></div></div></div></div>
+<div class="frame" role="img" aria-label="A concrete and glass building designed by DS Squared">
+  <div class="sl"><img src="img/civic.webp" alt="" style="object-position:50% 20%"></div>
+</div>
+
+<header class="hero-ui">
+  <a class="logo" href="#" aria-label="DS Squared home"><img src="img/logo.png" alt=""></a>
+  <nav class="nav caps" aria-label="Main">
+    <a href="#projects">Projects</a><a href="#about">About us</a><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">What we do <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><button type="button" role="menuitem">Architecture</button><button type="button" role="menuitem">Interior design</button><button type="button" role="menuitem">Planning</button><button type="button" role="menuitem">Extensions</button><button type="button" role="menuitem">New builds</button><button type="button" role="menuitem">Basements</button></div></div><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">Who we help <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><a role="menuitem" href="#who/homeowners">Homeowners</a><a role="menuitem" href="#who/developers">Developers</a><a role="menuitem" href="#who/healthcare">Healthcare</a></div></div><a href="#contact">Contact</a>
+  </nav>
+  <button class="menu" aria-expanded="false" aria-controls="panel" aria-label="Menu"><span></span></button>
+  <a class="cta caps" href="#book">Book a consultation</a>
+</header>
+<nav class="panel" id="panel" aria-label="Menu">
+  <a href="#projects">Projects</a><a href="#about">About us</a><span class="psub">What we do</span><span class="pitem">Architecture</span><span class="pitem">Interior design</span><span class="pitem">Planning</span><span class="pitem">Extensions</span><span class="pitem">New builds</span><span class="pitem">Basements</span><a href="#who">Who we help</a><a class="pitem" href="#who/homeowners">Homeowners</a><a class="pitem" href="#who/developers">Developers</a><a class="pitem" href="#who/healthcare">Healthcare</a><a href="#contact">Contact</a><a href="#book">Book a consultation</a>
+</nav>
+
+<section class="copy">
+  <h1>People and <em>places.</em></h1>
+  <p>Since 2007, DS Squared has designed homes, developments and healing spaces, made to be lived in and loved.</p>
+</section>
+
+<section class="band" aria-label="Architects Registration Board, Chartered Institute of Architectural Technologists, RIBA Chartered Practice">
+  <div class="track" aria-hidden="true"></div>
+</section>
+
+<!-- Their four project types, as on dssquared.co.uk, each with a photo Mo chose from their portfolio -->
+<section class="work" aria-labelledby="work-title"><div class="work-in">
+  <div class="work-head"><h2 id="work-title">Selected <em>work</em></h2></div>
+  <div class="rows">
+  <div class="row">
+    <article class="card"><a href="#residential">
+      <span class="ph" style="--a:1.333"><img src="img/work-residential.webp" alt="Brick and white new build family home" loading="lazy" style="object-position:50% 12%"></span>
+      <div class="meta"><h3>Residential</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+    <article class="card sm"><a href="#interiors">
+      <span class="ph" style="--a:1.333"><img src="img/work-interiors.webp" alt="Games room with a pool table and a lit bar behind" loading="lazy"></span>
+      <div class="meta"><h3>Interiors</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+  </div>
+  <div class="row">
+    <article class="card sm"><a href="#commercial">
+      <span class="ph" style="--a:1.333"><img src="img/work-commercial.webp" alt="Peckham Gallery and Studios: a white gallery building beside a brick house" loading="lazy"></span>
+      <div class="meta"><h3>Commercial</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+    <article class="card"><a href="#healthcare">
+      <span class="ph" style="--a:1.939"><img src="img/work-healthcare.webp" alt="Wellness centre: timber pavilions around a landscaped garden" loading="lazy"></span>
+      <div class="meta"><h3>Healthcare</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+  </div>
+  </div>
+</div></section>
+
+<!-- Testimonials: a stack of cards you swipe through. Clients' words from dssquared.co.uk (lightly trimmed); rating from their Houzz profile -->
+<section class="reviews" aria-labelledby="rv-title">
+  <div class="rv-side">
+    <h2 id="rv-title">Kind <em>words</em></h2>
+    <div class="rv-score"><span class="num">5.0</span>
+      <span class="stars" role="img" aria-label="5 out of 5 stars"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.5 2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.5 2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.5 2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.5 2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.5 2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span></div>
+    <p class="rv-src">Rated 5 stars on Houzz from 7 reviews</p>
+    <div class="rv-ctl"><button type="button" class="rv-prev" aria-label="Previous review"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.7"/></svg></button><span class="rv-count" aria-live="polite">01 / 06</span><button type="button" class="rv-next" aria-label="Next review"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m6 3 5 5-5 5" stroke="currentColor" stroke-width="1.7"/></svg></button></div>
+  </div>
+  <div class="stack" aria-roledescription="carousel" aria-label="Client reviews">
+      <figure class="rcard"><blockquote>“I spent many days thoroughly researching before deciding on Kate Logue. It was a very good choice. Kate Logue was professional, flexible and easy to work with.”</blockquote><figcaption><span class="ini caps" aria-hidden="true">MT</span><span><b class="caps">Marlene Turner</b><i>Demolition and three new houses</i></span></figcaption></figure>
+      <figure class="rcard"><blockquote>“He is patient, honest and trustworthy. He puts in more dedication and hard work than anyone we know. Not only is he our architect, he remains a good friend to this day.”</blockquote><figcaption><span class="ini caps" aria-hidden="true">RM</span><span><b class="caps">Rekha Mirchandani</b><i>New build with basement, pool and spa</i></span></figcaption></figure>
+      <figure class="rcard"><blockquote>“The 3D walkthrough really helped us visualise the layout and get a proper understanding of the space. If you are looking at honest, prompt and professional service, DS Squared Architects is the one!”</blockquote><figcaption><span class="ini caps" aria-hidden="true">AK</span><span><b class="caps">Arvind Kumar</b><i>Rear, garage and loft conversion</i></span></figcaption></figure>
+      <figure class="rcard"><blockquote>“Having worked with DS Squared on multiple properties, they are my go-to architects. Their designs are innovative and they advise only to benefit the overall project.”</blockquote><figcaption><span class="ini caps" aria-hidden="true">AS</span><span><b class="caps">Atul Shah</b><i>Developer, multiple properties</i></span></figcaption></figure>
+      <figure class="rcard"><blockquote>“Dipesh was always approachable, responsive and supportive with our build. We were able to problem solve together.”</blockquote><figcaption><span class="ini caps" aria-hidden="true">SS</span><span><b class="caps">Sejal Shah</b><i>New build</i></span></figcaption></figure>
+      <figure class="rcard"><blockquote>“Great service from design, planning application, through to build and post build customer service. I would highly recommend DS Squared.”</blockquote><figcaption><span class="ini caps" aria-hidden="true">ES</span><span><b class="caps">Ed Shah</b><i>Design to post-build</i></span></figcaption></figure>
+  </div>
+</section>
+
+<!-- Who we help: their three client groups, from dssquared.co.uk. Tap a card to open it. -->
+<section class="who" aria-labelledby="who-title">
+  <div class="wtext"><h2 id="who-title">Who we <em>help</em></h2>
+    <p>Our diverse team are passionate about architecture, sustainability and design excellence, combining functionality with elegance and beauty in all projects we undertake.</p>
+    <ul class="wlist"><li><button type="button" class="wrow" data-w="homeowners"><b>Homeowners</b><span>Extensions, conversions and new homes, with you at every stage.</span><svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></button></li><li><button type="button" class="wrow" data-w="developers"><b>Developers</b><span>Feasibility, planning, urban design and building services.</span><svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></button></li><li><button type="button" class="wrow" data-w="healthcare"><b>Healthcare</b><span>Spaces for healing, for NHS and private partners.</span><svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></button></li></ul></div>
+  <div class="wgrid">
+    <button type="button" class="wcard" data-w="homeowners" aria-haspopup="dialog"><img src="img/spiral.webp" alt="A spiral staircase in a family home" loading="lazy"><span class="wmeta"><span>Homeowners</span><i><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="1.6"/></svg></i></span></button>
+    <button type="button" class="wcard" data-w="developers" aria-haspopup="dialog"><img src="img/who-developers.webp" alt="A grand hotel lobby with a sweeping staircase" loading="lazy"><span class="wmeta"><span>Developers</span><i><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="1.6"/></svg></i></span></button>
+    <button type="button" class="wcard" data-w="healthcare" aria-haspopup="dialog"><img src="img/who-healthcare.webp" alt="A bright GP surgery waiting room" loading="lazy"><span class="wmeta"><span>Healthcare</span><i><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="1.6"/></svg></i></span></button>
+  </div>
+  <template id="w-homeowners"><img src="img/spiral.webp" alt="A spiral staircase in a family home"><div class="wbody"><h3>Homeowners</h3><p>We support homeowners at every stage of the design and build process, working with you to create your dream home.</p><ul><li>House extensions</li><li>Loft and basement conversions</li><li>New build homes</li><li>Interior design</li></ul><a class="wcta caps" href="#book">Book a consultation</a></div></template>
+  <template id="w-developers"><img src="img/who-developers.webp" alt="A grand hotel lobby with a sweeping staircase"><div class="wbody"><h3>Developers</h3><p>Urban design, building services and planning consultancy for property developers across the UK, from feasibility to handover.</p><ul><li>Feasibility studies</li><li>Planning applications</li><li>Tenders and contracts</li><li>Delivery on site</li></ul><a class="wcta caps" href="#book">Book a consultation</a></div></template>
+  <template id="w-healthcare"><img src="img/who-healthcare.webp" alt="A bright GP surgery waiting room"><div class="wbody"><h3>Healthcare</h3><p>We create spaces for healing and treatment for NHS and private healthcare partners throughout the UK.</p><ul><li>GP surgeries and medical centres</li><li>Hospital units</li><li>Care and nursing homes</li><li>Wellness centres</li></ul><a class="wcta caps" href="#book">Book a consultation</a></div></template>
+  <dialog class="wdlg" aria-labelledby="wdlg-t"><div class="wpanel"></div><button type="button" class="wclose" aria-label="Close"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="m4 4 10 10M14 4 4 14" stroke="currentColor" stroke-width="1.6"/></svg></button></dialog>
+</section>
+
+<!-- Projects pages (#projects, #residential, #interiors, #healthcare, #commercial). One project per type for the concept; project names to confirm with Kate. -->
+<div class="page" id="page">
+  <header class="pbar">
+    <a class="plogo" href="#home" aria-label="DS Squared home"><img src="img/logo.png" alt=""></a>
+    <nav class="caps" aria-label="Main"><a href="#projects">Projects</a><a href="#about">About us</a><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">What we do <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><button type="button" role="menuitem">Architecture</button><button type="button" role="menuitem">Interior design</button><button type="button" role="menuitem">Planning</button><button type="button" role="menuitem">Extensions</button><button type="button" role="menuitem">New builds</button><button type="button" role="menuitem">Basements</button></div></div><div class="dd"><button type="button" class="ddb" aria-expanded="false" aria-haspopup="true">Who we help <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="m2 3.5 3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button><div class="ddm" role="menu"><a role="menuitem" href="#who/homeowners">Homeowners</a><a role="menuitem" href="#who/developers">Developers</a><a role="menuitem" href="#who/healthcare">Healthcare</a></div></div><a href="#contact">Contact</a></nav>
+    <a class="pcta caps" href="#book">Book a consultation</a>
+  </header>
+  <main class="pmain" id="pmain"></main>
+  <template id="t-about">
+    <section class="ab-hero">
+      <div><h1>About <em>us</em></h1>
+        <p>DS Squared Architects are a RIBA Chartered Practice, delivering contemporary architectural designs, drawings, planning and construction support for residential, commercial and healthcare projects.</p>
+        <p>Founded in 2007 to serve the residential market, the practice now works on everything from a suburban home, a hotel renovation or new build apartments to high street retail units and GP surgeries, always design-led and rooted in architectural good practice.</p></div>
+      <figure><img src="img/about-main.webp" alt="A bright kitchen and dining extension designed by DS Squared"></figure>
+    </section>
+    <section class="how">
+      <div><h2>How we <em>work</em></h2>
+        <p>Our diverse team are passionate about architecture, sustainability and design excellence, combining functionality with elegance and beauty in all projects we undertake. We are friendly, approachable and accommodating in our relationships with clients, taking the time to understand the details of each project and the unique requirements each customer brings to the table.</p>
+        <p>We listen, and give practical solutions so you get the best value from your budget, with support and guidance through the whole design process: feasibility studies and sketch schemes, the planning process, building control, construction detail and site observations.</p>
+        <blockquote>We design workable, living spaces that are sympathetic to the history and style of their surroundings.</blockquote></div>
+      <div class="collage">
+        <figure><img src="img/about-2.webp" alt="A basement swimming pool" loading="lazy"></figure>
+        <figure><img src="img/about-1.webp" alt="Brick apartments with private gardens" loading="lazy"></figure>
+        <figure><img src="img/about-3.webp" alt="A vaulted barn conversion living room" loading="lazy"></figure>
+      </div>
+    </section>
+    <section class="people">
+      <h2>Our <em>people</em></h2>
+      <div class="pgrid">
+        <article class="pcard"><div class="phead"><span class="avatar" role="img" aria-label="Profile photo to come"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="15" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M7 35c1.8-7 7-10.5 13-10.5S31.2 28 33 35" stroke="currentColor" stroke-width="1.6"/></svg></span><div><h3>Dipesh Shah</h3><p class="role caps">Founder</p></div></div><p>Dipesh launched his own practice in 2007 after working on everything from homes to healthcare and higher education. He believes a successful project stems from clear communication. For Dipesh, there are no problems; there are only opportunities.</p></article>
+        <article class="pcard"><div class="phead"><span class="avatar" role="img" aria-label="Profile photo to come"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="15" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M7 35c1.8-7 7-10.5 13-10.5S31.2 28 33 35" stroke="currentColor" stroke-width="1.6"/></svg></span><div><h3>Kate Logue</h3><p class="role caps">Architect</p></div></div><p>A creative and thoughtful architect from Scotland, Kate has practised in Scotland, Ireland and London. Her passion is people and places: she is a great listener, drawing clients into the design process and showing the potential of a project before bringing it to reality.</p></article>
+      </div>
+    </section>
+    <div class="ab-proj"></div>
+  </template>
+  <template id="t-projects"><div class="work-in"><div class="ptitle"><h1>Our <em>projects</em></h1></div><div class="rows">
+  <div class="row">
+    <article class="card"><a href="#residential">
+      <span class="ph" style="--a:1.333"><img src="img/work-residential.webp" alt="Brick and white new build family home" loading="lazy" style="object-position:50% 12%"></span>
+      <div class="meta"><h3>Residential</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+    <article class="card sm"><a href="#interiors">
+      <span class="ph" style="--a:1.333"><img src="img/work-interiors.webp" alt="Games room with a pool table and a lit bar behind" loading="lazy"></span>
+      <div class="meta"><h3>Interiors</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+  </div>
+  <div class="row">
+    <article class="card sm"><a href="#commercial">
+      <span class="ph" style="--a:1.333"><img src="img/work-commercial.webp" alt="Peckham Gallery and Studios: a white gallery building beside a brick house" loading="lazy"></span>
+      <div class="meta"><h3>Commercial</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+    <article class="card"><a href="#healthcare">
+      <span class="ph" style="--a:1.939"><img src="img/work-healthcare.webp" alt="Wellness centre: timber pavilions around a landscaped garden" loading="lazy"></span>
+      <div class="meta"><h3>Healthcare</h3><span class="more caps">View projects <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg></span></div></a></article>
+  </div>
+  </div></div></template>
+</div>
+<footer class="foot2">
+  <div class="ft-top">
+    <div class="ft-brand">
+      <img src="img/logo.png" alt="DS Squared">
+      <p>Architecture and interiors from our Fulham and Edgware studios.</p>
+      <a class="pcta3 caps" href="#book">Book a consultation</a>
+    </div>
+    <div class="ft-cols">
+      <div><h4>Projects</h4><a href="#residential">Residential</a><a href="#interiors">Interiors</a><a href="#healthcare">Healthcare</a><a href="#commercial">Commercial</a></div>
+      <div><h4>What we do</h4><a href="#services">Architecture</a><a href="#services">Interior design</a><a href="#services">Planning</a><a href="#services">Extensions</a><a href="#services">New builds</a><a href="#services">Basements</a></div>
+      <div><h4>Resources</h4><a href="#resources">Case studies</a><a href="#resources">Project costs</a><a href="#resources">Blog</a></div>
+      <div><h4>Contact</h4><a href="tel:02087325620">020 8732 5620</a><a href="mailto:design@dssquared.co.uk">design@dssquared.co.uk</a>
+        <div class="ft-social">
+          <a href="https://www.linkedin.com/company/ds-squared-architects/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM.22 8h4.56v14H.22V8zm7.4 0h4.37v1.92h.06c.61-1.15 2.1-2.36 4.32-2.36 4.62 0 5.47 3.04 5.47 7V22h-4.56v-6.6c0-1.57-.03-3.6-2.2-3.6-2.2 0-2.53 1.72-2.53 3.49V22H7.62V8z"/></svg></a>
+          <a href="https://www.facebook.com/DS-Squared-Architects-108608531844338" target="_blank" rel="noopener" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg></a>
+          <a href="https://twitter.com/squared_ds" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.68l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64z"/></svg></a>
+          <!-- Instagram: not linked on their current site; add their handle here -->
+          <a href="#contact" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+        </div></div>
+    </div>
+  </div>
+  <div class="ft-strip">
+    <div><h4>Who we help</h4><a href="#who/homeowners">Homeowners</a><span class="sep">·</span><a href="#who/developers">Developers</a><span class="sep">·</span><a href="#who/healthcare">Healthcare</a></div>
+    <div><h4>Where we work</h4><a href="#areas">London</a><span class="sep">·</span><a href="#areas">Fulham</a><span class="sep">·</span><a href="#areas">Chelsea</a><span class="sep">·</span><a href="#areas">Richmond</a><span class="sep">·</span><a href="#areas">Clapham</a></div>
+  </div>
+  <div class="ft-bottom"><span>&copy; 2026 DS Squared. All rights reserved.</span><a href="#legal">Legal information</a></div>
+</footer>
+
+<!-- Book a consultation: a pop-up form (concept only: nothing is sent) -->
+<dialog class="bdlg" aria-labelledby="bk-t">
+  <div class="bk">
+    <aside class="bk-side">
+      <h3 id="bk-t">Book a <em>consultation</em></h3>
+      <p>At DS Squared Architects, we're passionate about creating exceptional spaces that reflect your unique vision. Whether you have a question, need professional advice, or want to discuss your upcoming project, our team of talented architects is here to assist you.</p>
+      <p>Contact us today and let's bring your architectural dreams to life.</p>
+      <ul class="bk-contact"><li><span class="caps">Call</span><a href="tel:02087325620">020 8732 5620</a></li><li><span class="caps">Email</span><a href="mailto:design@dssquared.co.uk">design@dssquared.co.uk</a></li></ul>
+      <figure class="bk-quote"><blockquote>“If you are looking at honest, prompt and professional service, DS Squared Architects is the one!”</blockquote><figcaption class="caps">Arvind Kumar</figcaption></figure>
+    </aside>
+    <form class="bk-form">
+      <div class="bk-row"><label class="bk-f">Name<input name="name" required autocomplete="name"></label><label class="bk-f">Email<input name="email" type="email" required autocomplete="email"></label></div>
+      <div class="bk-row"><label class="bk-f">Phone<input name="phone" type="tel" autocomplete="tel"></label><label class="bk-f">Budget<select name="budget"><option>Not sure yet</option><option>Under £100k</option><option>£100k to £250k</option><option>£250k to £500k</option><option>£500k to £1m</option><option>Over £1m</option></select></label></div>
+      <label class="bk-f">Tell us about your project<textarea name="msg" rows="4" placeholder="What you'd like to build, and any timings"></textarea></label>
+      <div class="bk-foot"><button type="submit" class="bk-send caps">Submit</button></div>
+      <div class="bk-acc"><img src="img/acc-riba.png" alt="RIBA Chartered Practice" class="t"><img src="img/acc-arb.png" alt="Architects Registration Board"><img src="img/acc-ciat.png" alt="Chartered Institute of Architectural Technologists" class="t"></div>
+    </form>
+    <div class="bk-done" hidden><span class="tick" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="m6 13.5 4.5 4.5L20 8" stroke="currentColor" stroke-width="2"/></svg></span><h3>Thank you<span class="bk-name"></span>.</h3><p>We'll be in touch shortly to arrange your consultation.</p><button type="button" class="bk-ok caps">Close</button></div>
+  </div>
+  <button type="button" class="wclose bk-x" aria-label="Close"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="m4 4 10 10M14 4 4 14" stroke="currentColor" stroke-width="1.6"/></svg></button>
+</dialog>
+<button class="replay" type="button">Replay</button>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // logo band: one set repeated until it is wider than the screen, twice over, so the loop never shows a gap
+  const set = '<img src="img/acc-riba.png" alt="" class="tall"><img src="img/acc-arb.png" alt=""><img src="img/acc-ciat.png" alt="" class="tall">';
+  let half = ''; for (let i = 0; i < 4; i++) half += set;
+  document.querySelector('.track').innerHTML = half + half;
+
+  let timers = [];
+  const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const slides = [...document.querySelectorAll('.sl[data-d]')];
+  function play() {
+    timers.forEach(clearTimeout); timers = [];
+    scrollTo(0, 0);
+    root.classList.remove('go', 'open', 'on'); slides.forEach(sl => sl.classList.remove('in'));
+    void root.offsetWidth;
+    if (reduce) { slides.forEach(sl => sl.classList.add('in')); root.classList.add('go', 'open', 'on'); return; }
+    requestAnimationFrame(() => root.classList.add('go'));
+    let t = 2100;   // the wall drifts for a few seconds before the main picture opens
+    slides.forEach(sl => { at(t, () => sl.classList.add('in')); t += 1150; });
+    t += 250;
+    at(t, () => root.classList.add('open'));        // the picture opens out to the full width
+    at(t + 1000, () => root.classList.add('on'));   // logo, menu, booking button, logo band
+  }
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  function startLoading() { let left = 2; for (const src of ['img/house-sketch.webp', 'img/civic.webp']) { const im = new Image(); im.onload = im.onerror = () => { if (--left === 0) play(); }; im.src = src; } }
+  // Projects pages: a small hash router. #projects shows the four types; each type shows its project and photos.
+  const TYPES = {"residential": {"title": "Residential", "projects": [{"slug": "the-marble-stair-house", "name": "The Marble Stair House", "line": "A new build family home", "imgs": [["img/proj/residential-00.webp", 1.333], ["img/proj/residential-01.webp", 1.333], ["img/proj/residential-02.webp", 1.333], ["img/proj/residential-03.webp", 1.333], ["img/proj/residential-04.webp", 1.333], ["img/proj/residential-05.webp", 0.667], ["img/proj/residential-06.webp", 0.667], ["img/proj/residential-07.webp", 0.667], ["img/proj/residential-08.webp", 0.667], ["img/proj/residential-09.webp", 0.667], ["img/proj/residential-10.webp", 0.667], ["img/proj/residential-11.webp", 0.667], ["img/proj/residential-12.webp", 0.667]], "desc": "A new build family home in brick and white render. Inside, a sculpted marble staircase rises through the house, framed by dark timber doors and full-height glazing.", "facts": [["Sector", "Residential"], ["Project", "New build home"], ["Highlights", "Marble staircase, bespoke joinery"]]}]}, "interiors": {"title": "Interiors", "projects": [{"slug": "the-games-room", "name": "The Games Room", "line": "A basement games room, bar and cinema", "imgs": [["img/proj/interiors-00.webp", 1.333], ["img/proj/interiors-01.webp", 1.333], ["img/proj/interiors-02.webp", 1.333], ["img/proj/interiors-03.webp", 1.333], ["img/proj/interiors-04.webp", 1.333], ["img/proj/interiors-05.webp", 1.333]], "desc": "A basement made for entertaining: a games room under a long rooflight, a backlit bar and drinks display, and a home cinema with a starlit ceiling.", "facts": [["Sector", "Interiors"], ["Project", "Basement fit-out"], ["Highlights", "Games room, bar, cinema"]]}]}, "healthcare": {"title": "Healthcare", "projects": [{"slug": "the-wellness-centre", "name": "The Wellness Centre", "line": "Timber pavilions around a landscaped garden", "imgs": [["img/proj/healthcare-00.webp", 1.939], ["img/proj/healthcare-01.webp", 1.939], ["img/proj/healthcare-02.webp", 1.939]], "desc": "Timber-roofed pavilions set around a landscaped garden, with glazed walls that open the treatment rooms onto the planting outside.", "facts": [["Sector", "Healthcare"], ["Project", "Wellness centre"], ["Highlights", "Garden setting, natural light"]]}]}, "commercial": {"title": "Commercial", "projects": [{"slug": "peckham-gallery-and-studios", "name": "Peckham Gallery and Studios", "line": "Artist studios and gallery space", "imgs": [["img/proj/commercial-00.webp", 1.333], ["img/proj/commercial-01.webp", 1.333], ["img/proj/commercial-02.webp", 1.333], ["img/proj/commercial-03.webp", 1.333], ["img/proj/commercial-04.webp", 1.333], ["img/proj/commercial-05.webp", 1.333], ["img/proj/commercial-06.webp", 1.333], ["img/proj/commercial-07.webp", 1.333], ["img/proj/commercial-08.webp", 1.333], ["img/proj/commercial-09.webp", 1.333], ["img/proj/commercial-10.webp", 0.667], ["img/proj/commercial-11.webp", 0.667]], "desc": "Artist studios and a gallery in Peckham, opened up with rooflights and tall sash windows so every space works in daylight.", "facts": [["Sector", "Commercial"], ["Project", "Studios and gallery"], ["Highlights", "Rooflights, flexible studios"]]}]}};
+  const ARROW = '<svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 7h11M7.5 2.5 12 7l-4.5 4.5" stroke="currentColor" stroke-width="1.6"/></svg>';
+  const pmain = document.getElementById('pmain'), tpl = document.getElementById('t-projects');
+  let played = false;
+  function finishHome() { slides.forEach(sl => sl.classList.add('in')); root.classList.add('go', 'open', 'on'); }
+  function route() {
+    const h = location.hash.slice(1);
+    const isPage = h === 'projects' || h === 'about' || h.split('/')[0] in TYPES;
+    root.classList.toggle('sub', isPage);
+    document.querySelectorAll('.pbar nav a').forEach(a => a.toggleAttribute('aria-current', isPage && a.getAttribute('href') === (h === 'about' ? '#about' : '#projects')));
+    if (!isPage) { const [h0, h1] = h.split('/'), tgt = { who: '.who', contact: '.foot2' }[h0];
+      if (!played && !tgt) { played = true; startLoading(); } else { played = true; finishHome();
+        if (tgt) requestAnimationFrame(() => { document.querySelector(tgt).scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+          if (h0 === 'who' && h1) setTimeout(() => document.dispatchEvent(new CustomEvent('openwho', { detail: h1 })), reduce ? 0 : 650); }); }
+      return; }
+    const esc = x => String(x).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const [type, slug] = h.split('/'), t = TYPES[type];
+    if (h === 'projects') { pmain.innerHTML = ''; pmain.appendChild(tpl.content.cloneNode(true)); }
+    else if (h === 'about') { pmain.innerHTML = ''; pmain.appendChild(document.getElementById('t-about').content.cloneNode(true)); pmain.querySelector('.ab-proj').appendChild(tpl.content.cloneNode(true)); }
+    else if (!slug || !t.projects.some(x => x.slug === slug)) {
+      // a type page: one card per project
+      pmain.innerHTML = `<p class="crumb"><a href="#projects">Projects</a> / ${esc(t.title)}</p>
+        <div class="ptitle"><h1>${esc(t.title)}</h1></div>
+        <div class="plist">${t.projects.map(p => `<article class="card"><a href="#${type}/${p.slug}">
+          <span class="ph"><img src="${p.imgs[0][0]}" alt="${esc(p.name)}"></span>
+          <div class="meta"><h3>${esc(p.name)}</h3><span class="more caps">View project ${ARROW}</span></div></a></article>`).join('')}</div>`;
+    } else {
+      // project page: slider + description, links to the type and to the next project of the same type, then the enquiry strip
+      const idx = t.projects.findIndex(x => x.slug === slug), p = t.projects[idx], n = t.projects[(idx + 1) % t.projects.length];
+      const L = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.7"/></svg>';
+      const Rr = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m6 3 5 5-5 5" stroke="currentColor" stroke-width="1.7"/></svg>';
+      pmain.innerHTML = `<p class="crumb"><a href="#projects">Projects</a> / <a href="#${type}">${esc(t.title)}</a> / ${esc(p.name)}</p>
+        <div class="proj">
+          <div class="slider" aria-roledescription="carousel" aria-label="${esc(p.name)} photos">
+            <div class="stage"><div class="strack">${p.imgs.map(([src], i) => `<img src="${src}" alt="${esc(p.name)}, photo ${i + 1} of ${p.imgs.length}" decoding="async">`).join('')}</div>
+              <span class="count" aria-live="polite"></span>
+              <div class="sctl"><button type="button" class="prev" aria-label="Previous photo">${L}</button><button type="button" class="next" aria-label="Next photo">${Rr}</button></div></div>
+            <div class="thumbs">${p.imgs.map(([src], i) => `<button type="button" aria-label="Photo ${i + 1}"><img src="${src}" alt="" loading="lazy"></button>`).join('')}</div>
+          </div>
+          <aside class="pinfo">
+            <h1>${esc(p.name)}</h1>
+            <p class="kick">${esc(p.line)}</p>
+            <p class="desc">${esc(p.desc)}</p>
+            <dl class="facts">${p.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+          </aside>
+        </div>
+        <div class="nextp"><a href="#${type}" class="caps">All ${esc(t.title.toLowerCase())} projects</a>${t.projects.length > 1 ? `<a href="#${type}/${n.slug}" class="caps">Next: ${esc(n.name)} ${ARROW}</a>` : ""}</div>
+        <section class="enq">
+          <div><h2>Planning something <em>like this?</em></h2><p>Tell us about your project and we'll show you what's possible, from the first sketch to the finished building.</p></div>
+          <div class="acts"><a class="big caps" href="#book">Book a consultation</a><a class="ln" href="tel:02087325620">020 8732 5620</a><a class="ln" href="mailto:design@dssquared.co.uk">design@dssquared.co.uk</a></div>
+        </section>`;
+      slider(pmain.querySelector('.slider'));
+    }
+    scrollTo(0, 0);
+  }
+  addEventListener('hashchange', route);
+  addEventListener('hashchange', () => { document.getElementById('panel').classList.remove('open'); document.querySelector('.menu').setAttribute('aria-expanded', 'false'); });
+  function slider(el) {
+    const track = el.querySelector('.strack'), imgs = track.children, count = el.querySelector('.count'), th = [...el.querySelectorAll('.thumbs button')];
+    let i = 0;
+    const go = k => { i = (k + imgs.length) % imgs.length; track.style.transform = `translateX(${-i * 100}%)`;
+      count.textContent = `${String(i + 1).padStart(2, '0')} / ${String(imgs.length).padStart(2, '0')}`;
+      th.forEach((b, j) => b.setAttribute('aria-current', j === i)); th[i].scrollIntoView({ block: 'nearest', inline: 'nearest' }); };
+    el.querySelector('.prev').onclick = () => go(i - 1); el.querySelector('.next').onclick = () => go(i + 1);
+    th.forEach((b, j) => b.onclick = () => go(j));
+    el.tabIndex = 0; el.onkeydown = e => { if (e.key === 'ArrowLeft') go(i - 1); if (e.key === 'ArrowRight') go(i + 1); };
+    let x0 = null; const stage = el.querySelector('.stage');
+    stage.onpointerdown = e => { x0 = e.clientX; };
+    stage.onpointerup = e => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 40) go(i + (dx < 0 ? 1 : -1)); };
+    go(0);
+  }
+
+  // a gentle rise as each card comes into view
+  const cards = [...document.querySelectorAll('.card')];
+  if (!reduce && 'IntersectionObserver' in window) {
+    cards.forEach(c => c.classList.add('rise'));
+    const io = new IntersectionObserver(es => es.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.remove('rise'), i * 90); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+    cards.forEach(c => io.observe(c));
+  }
+  // testimonials: a stack of cards. Swipe or drag the front card away, or use the arrows; it goes to the back of the pile.
+  (() => {
+    const cards = [...document.querySelectorAll('.rcard')], n = cards.length, cnt = document.querySelector('.rv-count');
+    let k = 0, busy = false;
+    const lay = () => { cards.forEach((c, j) => { const d = (j - k + n) % n; c.dataset.d = Math.min(d, 3); c.setAttribute('aria-hidden', d !== 0); });
+      cnt.textContent = `${String(k + 1).padStart(2, '0')} / ${String(n).padStart(2, '0')}`; };
+    const next = dir => { if (busy) return; busy = true; const c = cards[k]; c.classList.remove('drag'); c.style.transform = '';
+      c.classList.add(dir < 0 ? 'out-r' : 'out-l'); k = (k + 1) % n; lay();
+      setTimeout(() => { c.classList.remove('out-l', 'out-r'); busy = false; }, reduce ? 0 : 300); };
+    const prev = () => { if (busy) return; busy = true; k = (k - 1 + n) % n; const c = cards[k];
+      c.classList.add('drag', 'out-l'); c.dataset.d = 0; void c.offsetWidth; c.classList.remove('drag'); lay();
+      requestAnimationFrame(() => { c.classList.remove('out-l'); setTimeout(() => busy = false, 300); }); };
+    document.querySelector('.rv-next').onclick = () => next(1);
+    document.querySelector('.rv-prev').onclick = prev;
+    let x0 = null, dx = 0;
+    cards.forEach(c => {
+      c.addEventListener('pointerdown', e => { if (c.dataset.d !== '0' || busy) return; x0 = e.clientX; dx = 0; c.classList.add('drag'); c.setPointerCapture(e.pointerId); });
+      c.addEventListener('pointermove', e => { if (x0 === null) return; dx = e.clientX - x0; c.style.transform = `translateX(${dx}px) rotate(${dx / 28}deg)`; });
+      const up = () => { if (x0 === null) return; x0 = null; c.classList.remove('drag');
+        if (Math.abs(dx) > 90) next(dx < 0 ? 1 : -1); else c.style.transform = ''; };
+      c.addEventListener('pointerup', up); c.addEventListener('pointercancel', up);
+    });
+    lay();
+  })();
+  // Who we help: open a card's panel; Esc, the close button or a click outside closes it
+  (() => {
+    const dlg = document.querySelector('.wdlg'), panel = dlg.querySelector('.wpanel');
+    const open = k => { const t = document.getElementById('w-' + k); if (!t) return; dlg.dataset.w = k;
+      panel.innerHTML = ''; panel.appendChild(t.content.cloneNode(true));
+      panel.querySelector('h3').id = 'wdlg-t'; if (!dlg.open) dlg.showModal(); requestAnimationFrame(() => dlg.classList.add('in')); };
+    document.querySelectorAll('.wcard,.wrow').forEach(c => c.addEventListener('click', () => open(c.dataset.w)));
+    document.addEventListener('openwho', e => open(e.detail));
+    const close = () => { dlg.classList.remove('in'); setTimeout(() => dlg.close(), reduce ? 0 : 300);
+      if (location.hash.startsWith('#who/')) history.replaceState(null, '', '#who'); };
+    dlg.querySelector('.wclose').onclick = close;
+    dlg.addEventListener('click', e => { if (e.target === dlg) close(); });
+    dlg.addEventListener('cancel', e => { e.preventDefault(); close(); });
+  })();
+  // What we do dropdowns: hover opens them; a tap toggles; tapping elsewhere or Esc closes
+  document.addEventListener('click', e => {
+    const b = e.target.closest('.ddb'), open = document.querySelectorAll('.dd.open');
+    open.forEach(d => { if (!b || d !== b.parentElement) { d.classList.remove('open'); d.querySelector('.ddb').setAttribute('aria-expanded', 'false'); } });
+    if (b) { const d = b.parentElement, o = d.classList.toggle('open'); b.setAttribute('aria-expanded', o); }
+    if (e.target.closest('.ddm button,.ddm a')) { const d = e.target.closest('.dd'); d.classList.remove('open'); d.querySelector('.ddb').setAttribute('aria-expanded', 'false'); }
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.dd.open').forEach(d => d.classList.remove('open')); });
+  document.querySelector('.replay').addEventListener('click', play);
+  // Book a consultation: every booking button opens the pop-up instead of leaving the site
+  (() => {
+    const bd = document.querySelector('.bdlg'), form = bd.querySelector('.bk-form'), done = bd.querySelector('.bk-done'), wd = document.querySelector('.wdlg');
+    const pre = { homeowners: 'Homeowner', developers: 'Developer', healthcare: 'Healthcare provider' };
+    const openB = type => { form.hidden = false; done.hidden = true;
+      if (type) { const r = form.querySelector(`input[name=who][value="${type}"]`); if (r) r.checked = true; }
+      bd.showModal(); requestAnimationFrame(() => bd.classList.add('in')); };
+    const closeB = () => { bd.classList.remove('in'); setTimeout(() => { bd.close(); form.reset(); form.hidden = false; done.hidden = true; }, reduce ? 0 : 300); };
+    document.addEventListener('click', e => { const a = e.target.closest('a[href="#book"]'); if (!a) return; e.preventDefault(); e.stopPropagation();
+      let type = null; if (a.closest('.wdlg')) { type = pre[wd.dataset.w]; wd.classList.remove('in'); wd.close(); }
+      openB(type); }, true);
+    form.addEventListener('submit', e => { e.preventDefault(); const nm = form.elements.name.value.trim().split(' ')[0];
+      bd.querySelector('.bk-name').textContent = nm ? ', ' + nm : ''; form.hidden = true; done.hidden = false; done.querySelector('.bk-ok').focus(); });
+    bd.querySelector('.bk-x').onclick = closeB; done.querySelector('.bk-ok').onclick = closeB;
+    bd.addEventListener('click', e => { if (e.target === bd) closeB(); });
+    bd.addEventListener('cancel', e => { e.preventDefault(); closeB(); });
+  })();
+  // warm the cache: the photos used on the other pages load quietly in the background, so moving between pages feels instant
+  const warm = () => { const urls = ['img/about-main.webp', 'img/about-1.webp', 'img/about-2.webp', 'img/about-3.webp', 'img/who-developers.webp', 'img/who-healthcare.webp'];
+    Object.values(TYPES).forEach(t => t.projects.forEach(p => p.imgs.slice(0, 4).forEach(([u]) => urls.push(u))));
+    urls.forEach(u => { const im = new Image(); im.decoding = 'async'; im.src = u; }); };
+  setTimeout(() => (window.requestIdleCallback || (f => f()))(warm), 2500);
+  route();
+  const btn = document.querySelector('.menu'), panel = document.getElementById('panel');
+  btn.addEventListener('click', () => { const o = panel.classList.toggle('open'); btn.setAttribute('aria-expanded', o); });
+})();
+</script>
+</body>
+</html>
